@@ -6,33 +6,32 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Main">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Main">
    <children>
       <VBox prefHeight="700.0" prefWidth="200.0" style="-fx-background-color: #1d3557;">
          <children>
-            <ImageView fitHeight="195.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../../../../4bd4f60e3e848ec80f21b3030d88e751.jpg" />
-               </image>
-            </ImageView>
-            <VBox depthTest="DISABLE" prefHeight="200.0" prefWidth="100.0">
+            <ImageView fitHeight="195.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox depthTest="DISABLE" prefWidth="100.0" spacing="5">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Button">
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Accueil" textFill="WHITE">
+                     <font>
+                        <Font name="Calibri" size="24.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </opaqueInsets>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Inventaire(stock)" textFill="WHITE">
                      <font>
                         <Font name="Calibri" size="24.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Button">
-                     <font>
-                        <Font name="Calibri" size="24.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Button">
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Clients" textFill="WHITE">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="51.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Button">
+                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #457b9d;" text="Movements" textFill="WHITE">
                      <font>
                         <Font size="24.0" />
                      </font>
