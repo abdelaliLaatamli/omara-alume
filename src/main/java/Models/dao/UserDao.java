@@ -118,7 +118,7 @@ public class UserDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfUser = session.createQuery("from User").getResultList();
+            listOfUser = session.createQuery("from users").getResultList();
 
             // commit transaction
             transaction.commit();
