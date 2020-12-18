@@ -7,7 +7,7 @@ import java.util.List;
 //public class JavaFxApplication extends Application {
 public class JavaFxApplication {
 
-    private static UserDao userDao;
+    private static UserDao userDao = new UserDao();
 /*
     @Override
     public void start(Stage stage) throws Exception {

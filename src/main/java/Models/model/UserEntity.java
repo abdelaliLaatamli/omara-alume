@@ -8,6 +8,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+
 @Entity
 @Table(name="users")
 public class UserEntity {
@@ -17,23 +23,25 @@ public class UserEntity {
     @Column(name="id")
     protected int id;
 
-    @Column
+    @Column(name="username")
     protected String username;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     protected String email ;
 
-    @Column
+    @Column(name = "password")
     protected String password ;
 
-    public UserEntity() {
+/*    public UserEntity() {
     }
 
     public UserEntity(int id, String username, String email, String password) {
+
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+
     }
 
     public int getId() {
@@ -66,5 +74,5 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 }

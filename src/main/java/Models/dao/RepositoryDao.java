@@ -7,19 +7,20 @@ import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class UserDao {
+public class RepositoryDao<T> {
+
 
     /**
      * Save User
-     * @param user
+     * @param
      */
-    public void saveUser(UserEntity user) {
+    public void save(T entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
-            session.save(user);
+            session.save(entity);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -32,15 +33,15 @@ public class UserDao {
 
     /**
      * Update User
-     * @param user
+     * @param
      */
-    public void updateUser(UserEntity user) {
+    public void update(T entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
-            session.update(user);
+            session.update(entity);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class UserDao {
      * Delete User
      * @param id
      */
-    public void deleteUser(int id) {
+    public void delete(int id , String className) {
 
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -63,9 +64,9 @@ public class UserDao {
             transaction = session.beginTransaction();
 
             // Delete a user object
-            UserEntity user = session.get(UserEntity.class, id);
-            if (user != null) {
-                session.delete(user);
+            T entity = (T) session.get(className, id);
+            if (entity != null) {
+                session.delete(entity);
                 System.out.println("user is deleted");
             }
 
@@ -84,15 +85,15 @@ public class UserDao {
      * @param id
      * @return
      */
-    public UserEntity getUser(int id) {
+    public T get(int id , String className ) {
 
         Transaction transaction = null;
-        UserEntity user = null;
+        T entity = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
-            user = session.get(UserEntity.class, id);
+            entity = (T) session.get(className, id);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -101,7 +102,7 @@ public class UserDao {
             }
             e.printStackTrace();
         }
-        return user;
+        return entity;
     }
 
     /**
@@ -109,16 +110,16 @@ public class UserDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public List< UserEntity > getAllUser() {
+    public List< T > getAll( String className ) {
 
         Transaction transaction = null;
-        List < UserEntity > listOfUser = null;
+        List < T > listOfEntities = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfUser = session.createQuery("from UserEntity").getResultList();
+            listOfEntities = session.createQuery("from "+className).getResultList();
 
             // commit transaction
             transaction.commit();
@@ -128,6 +129,7 @@ public class UserDao {
             }
             e.printStackTrace();
         }
-        return listOfUser;
+        return listOfEntities;
     }
+
 }
