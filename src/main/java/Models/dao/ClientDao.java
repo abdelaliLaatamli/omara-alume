@@ -1,46 +1,47 @@
 package Models.dao;
 
-import Models.entities.UserEntity;
+import Models.entities.ClientEntity;
 import Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class UserDao {
+public class ClientDao {
 
     /**
      * Save User
-     * @param user
+     * @param client
      */
-    public void saveUser(UserEntity user) {
+    public void save(ClientEntity client) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
-            session.save(user);
+            session.save(client);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
+/*            if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            e.printStackTrace();*/
+            System.out.println( e.getMessage() );
         }
     }
 
     /**
      * Update User
-     * @param user
+     * @param clientEntity
      */
-    public void updateUser(UserEntity user) {
+    public void update(ClientEntity clientEntity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
-            session.update(user);
+            session.update(clientEntity);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -52,10 +53,10 @@ public class UserDao {
     }
 
     /**
-     * Delete User
+     * Delete ClientEntity
      * @param id
      */
-    public void deleteUser(int id) {
+    public void delete(int id) {
 
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -63,9 +64,9 @@ public class UserDao {
             transaction = session.beginTransaction();
 
             // Delete a user object
-            UserEntity user = session.get(UserEntity.class, id);
-            if (user != null) {
-                session.delete(user);
+            ClientEntity client = session.get(ClientEntity.class, id);
+            if (client != null) {
+                session.delete(client);
                 System.out.println("user is deleted");
             }
 
@@ -84,15 +85,15 @@ public class UserDao {
      * @param id
      * @return
      */
-    public UserEntity getUser(int id) {
+    public ClientEntity get(int id) {
 
         Transaction transaction = null;
-        UserEntity user = null;
+        ClientEntity client = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
-            user = session.get(UserEntity.class, id);
+            client = session.get(ClientEntity.class, id);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -101,7 +102,7 @@ public class UserDao {
             }
             e.printStackTrace();
         }
-        return user;
+        return client;
     }
 
     /**
@@ -109,16 +110,16 @@ public class UserDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public List< UserEntity > getAllUser() {
+    public List< ClientEntity > getAll() {
 
         Transaction transaction = null;
-        List < UserEntity > listOfUser = null;
+        List < ClientEntity > listOf = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfUser = session.createQuery("from UserEntity").getResultList();
+            listOf = session.createQuery("from ClientEntity").getResultList();
 
             // commit transaction
             transaction.commit();
@@ -128,6 +129,6 @@ public class UserDao {
             }
             e.printStackTrace();
         }
-        return listOfUser;
+        return listOf;
     }
 }

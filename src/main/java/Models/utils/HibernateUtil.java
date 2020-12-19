@@ -1,12 +1,13 @@
 package Models.utils;
 
-import Models.model.UserEntity;
-import java.util.Properties;
+import Models.entities.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
+
+import java.util.Properties;
 
 
 public class HibernateUtil {
@@ -23,7 +24,7 @@ public class HibernateUtil {
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/test");
+                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/omar_alum");
                 settings.put(Environment.USER, "root");
                 settings.put(Environment.PASS, "");
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
@@ -32,11 +33,25 @@ public class HibernateUtil {
 
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
-                //settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-                settings.put(Environment.HBM2DDL_AUTO, "update");
+                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
+                //settings.put(Environment.HBM2DDL_AUTO, "update");
 
                 configuration.setProperties(settings);
+
+
                 configuration.addAnnotatedClass(UserEntity.class);
+                configuration.addAnnotatedClass(ClientEntity.class);
+                configuration.addAnnotatedClass(ArticleEntity.class);
+                configuration.addAnnotatedClass(GlassEntity.class);
+                configuration.addAnnotatedClass(AluminumEntity.class);
+                configuration.addAnnotatedClass(AccessorieEntity.class);
+                configuration.addAnnotatedClass(ArticleCommandEntity.class);
+                configuration.addAnnotatedClass(CommandEntity.class);
+                configuration.addAnnotatedClass(PaymentsMadeEntity.class);
+                configuration.addAnnotatedClass(PriceEntity.class);
+
+
+
 
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();

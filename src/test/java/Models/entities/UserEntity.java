@@ -1,4 +1,4 @@
-package Models.model;
+package Models.entities;
 
 public class UserEntity {
 }

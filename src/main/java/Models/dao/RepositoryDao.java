@@ -1,6 +1,5 @@
 package Models.dao;
 
-import Models.model.UserEntity;
 import Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
