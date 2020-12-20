@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.ClientController">
+   <children>
+      <TableView fx:id="listClients" layoutX="400.0" layoutY="11.0" prefHeight="679.0" prefWidth="790.0">
+        <columns>
+          <TableColumn fx:id="clientName" prefWidth="115.0" text="Client" />
+          <TableColumn fx:id="clientTele" prefWidth="110.0" text="Tele" />
+            <TableColumn fx:id="clientCin" prefWidth="119.0" text="CIN" />
+            <TableColumn fx:id="clientAddress" prefWidth="219.0" text="Address" />
+            <TableColumn fx:id="clientCreationDate" minWidth="0.0" prefWidth="125.0" text="Date de Creation  " />
+            <TableColumn fx:id="clientNumberCommand" prefWidth="101.0" text="N° Commands" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>
