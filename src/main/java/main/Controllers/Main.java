@@ -6,13 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
 import java.io.IOException;
 
 public class Main {
-
-    @FXML
-    Button clientBtn;
 
     public void display(MouseEvent mouseEvent) throws IOException {
 
