@@ -22,6 +22,7 @@ public class RepositoryDao<T> {
             session.save(entity);
             // commit transaction
             transaction.commit();
+
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -30,11 +31,34 @@ public class RepositoryDao<T> {
         }
     }
 
+    public T save(T entity , String className) {
+        Transaction transaction = null;
+        T newRntity = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // save the student object
+            //session.save(entity);
+            int idEntity = (int) session.save(entity);
+            // commit transaction
+            transaction.commit();
+
+            newRntity = this.get(idEntity , className );
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return newRntity ;
+    }
+
     /**
      * Update User
      * @param
      */
-    public void update(T entity) {
+    public void update( T entity ) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
@@ -50,6 +74,7 @@ public class RepositoryDao<T> {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Delete User

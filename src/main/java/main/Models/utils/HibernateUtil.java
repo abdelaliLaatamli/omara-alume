@@ -51,8 +51,6 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(PriceEntity.class);
 
 
-
-
                 ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties()).build();
                 System.out.println("Hibernate Java Config serviceRegistry created");

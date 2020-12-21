@@ -38,7 +38,7 @@ public class ClientEntity implements Serializable {
     protected String address;
 
     @Column
-    protected Instant createdAt ;
+    protected Instant createdAt = Instant.now() ;
 
     @OneToMany
     @JoinColumn(name = "cleint_id")
