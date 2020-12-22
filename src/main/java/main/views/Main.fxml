@@ -12,7 +12,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button fx:id="cltBtn" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#display"  prefHeight="88.0" prefWidth="126.0" text="Clients">
+                        <Button fx:id="cltBtn" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayClientsPage"  prefHeight="88.0" prefWidth="126.0" text="Clients">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -20,7 +20,7 @@
                      </children></AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Products">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Products" onMouseClicked="#displayProductsPage">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -32,7 +32,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Commands">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" onMouseClicked="#displayCommandsPage" text="Commands">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -41,7 +41,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Accounting">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" onMouseClicked="#displayAccountingPage" text="Accounting">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>

@@ -19,7 +19,7 @@ public class JavaFxApplication extends Application {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/Main.fxml"));
         mainStage.setScene(new Scene(root));
-        mainStage.setTitle("Aluminium et verre");
+        mainStage.setTitle("Home -- Aluminium et verre");
         mainStage.show();
 
     }
