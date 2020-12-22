@@ -50,10 +50,7 @@ public class ClientController implements Initializable {
     @FXML
     TableColumn clientEdit;
 
-    // ObservableList<ClientEntity> observableClients = FXCollections.observableArrayList();
-
-    ObservableList<ClientEntity> observableClients ; // = FXCollections.observableArrayList();
-
+    ObservableList<ClientEntity> observableClients = FXCollections.observableArrayList();
 
     @FXML
     TextField idClientForm ;
@@ -86,19 +83,17 @@ public class ClientController implements Initializable {
     private void loadData(){
 
         List<ClientEntity> clients =  clientsDao.getAll("ClientEntity") ;
-        System.out.println( "--------------------------" );
-        System.out.println( clients.size() );
-        System.out.println( "--------------------------" );
 
-        this.observableClients = FXCollections.observableArrayList();
-
-        this.observableClients.addAll( clients );
+        observableClients.addAll( clients );
 
         clientName.setCellValueFactory(new PropertyValueFactory<>("name"));
         clientTele.setCellValueFactory(new PropertyValueFactory<>("tele"));
         clientCin.setCellValueFactory(new PropertyValueFactory<>("cin"));
         clientAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         clientCreationDate.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        //clientCreationDate.setCellValueFactory( cellData -> new ReadOnlyStringWrapper((new SimpleDateFormat("MM-dd-yyyy")).format(cellData.getValue().getCreatedAt()))  );
+
+
         clientNumberCommand.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper<>(cellDate.getValue().getCommands().size()) );
 
         Callback<TableColumn<ClientEntity, Void>, TableCell<ClientEntity, Void>> cellFactory = new Callback<TableColumn<ClientEntity, Void>, TableCell<ClientEntity, Void>>() {
@@ -135,12 +130,11 @@ public class ClientController implements Initializable {
                 return cell;
             }
         };
-        listClients.getItems().clear();
+
         clientEdit.setCellFactory(cellFactory);
-        listClients.getColumns().add(clientEdit);
         listClients.setItems( FXCollections.observableArrayList(clients) );
-        //listClients.setItems( this.observableClients );
-        listClients.refresh();
+        listClients.setItems( this.observableClients );
+
     }
 
 
@@ -163,14 +157,19 @@ public class ClientController implements Initializable {
         client.setTele( teleClientForm.getText() );
         client.setAddress( addressClientForm.getText() );
 
-        if( idClientForm.getText() != null ){
-            // System.out.println("edit");
+
+        if( idClientForm.getText() == null || idClientForm.getText().equals("") ){
+
+            System.out.println( "add" );
+            newClient = clientsDao.save( client , "main.Models.entities.ClientEntity"  );
+
+        }else{
+
+            System.out.println("edit");
             client.setId( Integer.valueOf( idClientForm.getText() ) );
             clientsDao.update( client  );
             newClient = client ;
-        }else{
-            //System.out.println( "add" );
-            newClient = clientsDao.save( client , "main.Models.entities.ClientEntity"  );
+
         }
 
 
@@ -190,7 +189,6 @@ public class ClientController implements Initializable {
             this.listClients.refresh();
             this.loadData();
 
-            //listClients.refresh();
         }
 
 
