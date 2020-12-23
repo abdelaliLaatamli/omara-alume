@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="main.Controllers.AluminumController"
-            prefHeight="700.0" prefWidth="1200.0"
-            style="-fx-background-color: #a8dadc;">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="main.Controllers.AluminumController">
 
     <children>
         <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="150.0">
             <children>
-                <Button mnemonicParsing="false" prefHeight="40.0" text="&lt;&lt;" onMouseClicked="#goBack">
+                <Button mnemonicParsing="false" onMouseClicked="#goBack" prefHeight="40.0" text="&lt;&lt;">
                     <font>
                         <Font name="Segoe UI Bold" size="15.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="40.0" text="Accueil" onMouseClicked="#goHome">
+                <Button mnemonicParsing="false" onMouseClicked="#goHome" prefHeight="40.0" text="Accueil">
                     <font>
                         <Font name="Segoe UI Bold" size="18.0" />
                     </font>
@@ -29,6 +24,35 @@
             </children>
         </HBox>
 
+        <TableView fx:id="listClients" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
+            <columns>
+                <TableColumn fx:id="clientName" prefWidth="115.0" text="Nom de produit" />
+                <TableColumn fx:id="clientTele" prefWidth="110.0" text="Color" />
+                <TableColumn fx:id="clientCin" prefWidth="113.0" text="Prix d'achat" />
+                <TableColumn fx:id="clientAddress" prefWidth="102.0" text="Faite par" />
+                <TableColumn fx:id="clientCreationDate" minWidth="0.0" prefWidth="158.0" text="Date de Creation" />
+                <TableColumn fx:id="clientNumberCommand" prefWidth="123.0" text="Prix de vente" />
+                <TableColumn fx:id="clientEdit" prefWidth="108.0" text="Edit Client" />
+            </columns>
+        </TableView>
+
+        <AnchorPane layoutX="14.0" layoutY="78.0" prefHeight="612.0" prefWidth="340.0" style="-fx-background-color: white;">
+            <children>
+                <Label layoutX="14.0" layoutY="90.0" prefHeight="17.0" prefWidth="96.0" text="Nom de Client * : " />
+                <TextField layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" fx:id="nameClientForm" />
+                <Label layoutX="14.0" layoutY="152.0" prefHeight="17.0" prefWidth="127.0" text="Tele : " />
+                <TextField layoutX="14.0" layoutY="169.0" prefHeight="25.0" prefWidth="310.0" fx:id="teleClientForm" />
+                <Label layoutX="14.0" layoutY="217.0" prefHeight="17.0" prefWidth="127.0" text="Cin :" />
+                <TextField layoutX="14.0" layoutY="234.0" prefHeight="25.0" prefWidth="310.0" fx:id="cinClientForm" />
+                <Label layoutX="14.0" layoutY="283.0" prefHeight="17.0" prefWidth="127.0" text="Address :" />
+                <TextField layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" fx:id="addressClientForm" />
+                <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="127.0" text="ID :" />
+                <TextField fx:id="idClientForm" disable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="310.0" />
+                <Button layoutX="14.0" layoutY="358.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Enregistrer"
+                        onMouseClicked="#saveAluminumForm"
+                />
+            </children>
+        </AnchorPane>
 
     </children>
 

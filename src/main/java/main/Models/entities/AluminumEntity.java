@@ -1,7 +1,7 @@
 package main.Models.entities;
 
 import main.Models.enums.AluminumColors;
-import main.Models.enums.ContryType;
+import main.Models.enums.MadeBy;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -15,6 +15,6 @@ public class AluminumEntity extends ArticleEntity {
     protected AluminumColors color ;
 
     @Column
-    protected ContryType contryType ;
+    protected MadeBy madeBy ;
 
 }

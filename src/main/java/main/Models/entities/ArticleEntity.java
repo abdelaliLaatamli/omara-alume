@@ -27,6 +27,9 @@ public abstract class ArticleEntity {
     protected String name ;
 
     @Column
+    protected String priceOfBuy;
+
+    @Column
     protected Instant createdAt = Instant.now() ;
 
     @OneToMany
