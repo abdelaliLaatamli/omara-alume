@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.ProductController">
+    <children>
+
+        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#goToHome" prefHeight="40.0" prefWidth="140.0" text="Accueil">
+            <font>
+                <Font name="Cambria Bold" size="17.0" />
+            </font>
+        </Button>
+      <HBox layoutX="250.0" layoutY="225.0" prefHeight="250.0" prefWidth="750.0" style="-fx-background-color: #1d355780;">
+         <children>
+            <AnchorPane prefHeight="250.0" prefWidth="250.0">
+               <children>
+                  <Button layoutX="65.0" layoutY="75.0" onMouseClicked="#goToAluminumPage" mnemonicParsing="false" prefHeight="100.0" prefWidth="120.0" text="Aluminum">
+                     <font>
+                        <Font name="Segoe UI Bold" size="17.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="250.0" prefWidth="250.0">
+               <children>
+                  <Button layoutX="65.0" layoutY="75.0" onMouseClicked="#goToAccessoiresPage" mnemonicParsing="false" prefHeight="100.0" prefWidth="120.0" text="Accessoires" >
+                     <font>
+                        <Font name="Segoe UI Bold" size="17.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="250.0" prefWidth="250.0">
+               <children>
+                  <Button layoutX="65.0" layoutY="75.0" onMouseClicked="#goToVerrePage" mnemonicParsing="false" prefHeight="100.0" prefWidth="120.0" text="Verre">
+                     <font>
+                        <Font name="Segoe UI Bold" size="17.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+         </children></HBox>
+
+    </children>
+
+</AnchorPane>

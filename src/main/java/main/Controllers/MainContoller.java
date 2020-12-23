@@ -1,6 +1,5 @@
 package main.Controllers;
 
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
-public class Main {
+public class MainContoller {
 
     public void displayClientsPage(MouseEvent mouseEvent) throws IOException {
 
@@ -21,7 +20,7 @@ public class Main {
 
     public void displayProductsPage(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ProductsPage.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ProductsView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Products -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
@@ -29,7 +28,7 @@ public class Main {
 
     public void displayCommandsPage(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/CommandsPage.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/CommandsView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Commands -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
@@ -38,7 +37,7 @@ public class Main {
 
     public void displayAccountingPage(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/AccountingPage.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/AccountingView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Accounting -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();

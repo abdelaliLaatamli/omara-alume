@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="main.Controllers.VerreController"
+            prefHeight="700.0" prefWidth="1200.0"
+            style="-fx-background-color: #a8dadc;">
+
+    <children>
+        <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="150.0">
+            <children>
+                <Button mnemonicParsing="false" prefHeight="40.0" text="&lt;&lt;" onMouseClicked="#goBack">
+                    <font>
+                        <Font name="Segoe UI Bold" size="15.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" prefHeight="40.0" text="Accueil" onMouseClicked="#goHome">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18.0" />
+                    </font>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+
+</AnchorPane>

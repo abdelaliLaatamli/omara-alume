@@ -17,7 +17,7 @@ public class JavaFxApplication extends Application {
 
         mainStage = stage;
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/Main.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/MainView.fxml"));
         mainStage.setScene(new Scene(root));
         mainStage.setTitle("Home -- Aluminium et verre");
         mainStage.show();
