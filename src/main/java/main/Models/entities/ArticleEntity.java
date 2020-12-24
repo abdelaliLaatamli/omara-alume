@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -34,6 +35,6 @@ public abstract class ArticleEntity {
 
     @OneToMany
     @JoinColumn(name = "article_id")
-    protected Set<PriceEntity> prices ;
+    protected Set<PriceEntity> prices = new HashSet<>();
 
 }

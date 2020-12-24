@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AluminumController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AluminumController">
 
     <children>
         <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="150.0">
@@ -22,33 +22,42 @@
             </children>
         </HBox>
 
-        <TableView fx:id="listClients" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
+        <TableView fx:id="tableViewOfAlumProducts" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
             <columns>
-                <TableColumn fx:id="clientName" prefWidth="115.0" text="Nom de produit" />
-                <TableColumn fx:id="clientTele" prefWidth="110.0" text="Color" />
-                <TableColumn fx:id="clientCin" prefWidth="113.0" text="Prix d'achat" />
-                <TableColumn fx:id="clientAddress" prefWidth="102.0" text="Faite par" />
-                <TableColumn fx:id="clientCreationDate" minWidth="0.0" prefWidth="158.0" text="Date de Creation" />
-                <TableColumn fx:id="clientNumberCommand" prefWidth="123.0" text="Prix de vente" />
-                <TableColumn fx:id="clientEdit" prefWidth="108.0" text="Edit Client" />
+                <TableColumn fx:id="productName" prefWidth="115.0" text="Nom de produit" />
+                <TableColumn fx:id="productColor" prefWidth="110.0" text="Color" />
+                <TableColumn fx:id="productBuyPrice" prefWidth="113.0" text="Prix d'achat" />
+                <TableColumn fx:id="productCountryManufacture" prefWidth="102.0" text="Faite par" />
+                <TableColumn fx:id="productCreationDate" minWidth="0.0" prefWidth="158.0" text="Date de Creation" />
+                <TableColumn fx:id="productSellingPrice" prefWidth="123.0" text="Prix de vente" />
+                <TableColumn fx:id="productEdit" prefWidth="108.0" text="Edit Product" />
             </columns>
         </TableView>
 
         <AnchorPane layoutX="14.0" layoutY="78.0" prefHeight="612.0" prefWidth="340.0" style="-fx-background-color: white;">
             <children>
-                <Label layoutX="14.0" layoutY="90.0" prefHeight="17.0" prefWidth="127.0" text="Nom de Produit* : " />
-                <TextField fx:id="nameClientForm" layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" />
-                <Label layoutX="14.0" layoutY="152.0" prefHeight="17.0" prefWidth="127.0" text="Prix d'achat : " />
-                <Label layoutX="14.0" layoutY="217.0" prefHeight="17.0" prefWidth="127.0" text="Cin :" />
-                <TextField fx:id="cinClientForm" layoutX="14.0" layoutY="169.0" prefHeight="25.0" prefWidth="310.0" />
-                <Label layoutX="14.0" layoutY="289.0" prefHeight="17.0" prefWidth="127.0" text="Pays de fabrication :" />
-                <TextField fx:id="addressClientForm" layoutX="14.0" layoutY="369.0" prefHeight="25.0" prefWidth="310.0" />
                 <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="127.0" text="ID :" />
-                <TextField fx:id="idClientForm" disable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="310.0" />
+                <TextField fx:id="productIdForm" disable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="310.0" />
+
+                <Label layoutX="14.0" layoutY="90.0" prefHeight="17.0" prefWidth="127.0" text="Nom de Produit* : " />
+                <TextField fx:id="productNameForm" layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" />
+
+                <Label layoutX="14.0" layoutY="152.0" prefHeight="17.0" prefWidth="127.0" text="Prix d'achat : " />
+                <TextField fx:id="buyPriceProductForm" layoutX="14.0" layoutY="169.0" prefHeight="25.0" prefWidth="310.0" />
+
+                <Label layoutX="14.0" layoutY="217.0" prefHeight="17.0" prefWidth="127.0" text="Color :" />
+                <ComboBox fx:id="colorProductForm" layoutX="15.0" layoutY="240.0" prefHeight="25.0" prefWidth="310.0" />
+
+                <Label layoutX="14.0" layoutY="289.0" prefHeight="17.0" prefWidth="127.0" text="Pays de fabrication :" />
+                <ComboBox fx:id="productCountryManufactureForm" layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" />
+
+                <Label layoutX="14.0" layoutY="352.0" prefHeight="17.0" prefWidth="127.0" text="Prix de vente :" />
+                <TextField fx:id="sellPriceForm" layoutX="14.0" layoutY="369.0" prefHeight="25.0" prefWidth="310.0" />
+
                 <Button layoutX="14.0" layoutY="430.0" mnemonicParsing="false" onMouseClicked="#saveAluminumForm" prefHeight="25.0" prefWidth="127.0" text="Enregistrer" />
-            <ComboBox layoutX="15.0" layoutY="240.0" prefHeight="25.0" prefWidth="310.0" />
-            <ComboBox layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" />
-            <Label layoutX="14.0" layoutY="352.0" prefHeight="17.0" prefWidth="127.0" text="Prix de vente :" />
+
+
+
             </children>
         </AnchorPane>
 
