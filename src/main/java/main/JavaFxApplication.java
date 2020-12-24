@@ -16,6 +16,7 @@ public class JavaFxApplication extends Application {
     public void start(Stage stage) throws Exception {
 
         mainStage = stage;
+        mainStage.setResizable(false);
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/MainView.fxml"));
         mainStage.setScene(new Scene(root));
