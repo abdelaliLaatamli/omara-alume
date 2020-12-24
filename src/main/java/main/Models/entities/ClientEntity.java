@@ -41,7 +41,7 @@ public class ClientEntity implements Serializable {
     protected Instant createdAt = Instant.now() ;
 
     @OneToMany
-    @JoinColumn(name = "cleint_id")
+    @JoinColumn(name = "client_id")
     protected Set<PriceEntity> prices;
 
 

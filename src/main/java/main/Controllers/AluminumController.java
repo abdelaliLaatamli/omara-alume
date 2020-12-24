@@ -82,7 +82,6 @@ public class AluminumController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //aluminumDoa = new RepositoryDao<AluminumEntity>();
 
         colorProductForm.setItems( FXCollections.observableArrayList( AluminumColors.values() ) );
         colorProductForm.getSelectionModel().selectFirst();
@@ -107,19 +106,31 @@ public class AluminumController implements Initializable {
         productCountryManufacture.setCellValueFactory(new PropertyValueFactory<>("madeBy"));
         productCreationDate.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
 
-        //productSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(cellDate.getValue().getPrices().size()) );
+        productSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
+                ( cellDate.getValue().getPrices().size() > 0 ) ?
+                        cellDate.getValue().getPrices().stream().findFirst().get().getPrice() :
+                        cellDate.getValue().getPrices().size()
+                )
+        );
 
-        Callback<TableColumn<ClientEntity, Void>, TableCell<ClientEntity, Void>> cellFactory = new Callback<TableColumn<ClientEntity, Void>, TableCell<ClientEntity, Void>>() {
+        Callback<TableColumn<AluminumEntity, Void>, TableCell<AluminumEntity, Void>> cellFactory = new Callback<TableColumn<AluminumEntity, Void>, TableCell<AluminumEntity, Void>>() {
             @Override
-            public TableCell<ClientEntity, Void> call(final TableColumn<ClientEntity, Void> param) {
-                final TableCell<ClientEntity, Void> cell = new TableCell<ClientEntity, Void>() {
+            public TableCell<AluminumEntity, Void> call(final TableColumn<AluminumEntity, Void> param) {
+                final TableCell<AluminumEntity, Void> cell = new TableCell<AluminumEntity, Void>() {
 
                     private final Button btn = new Button("Edit");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            ClientEntity data = getTableView().getItems().get(getIndex());
+                            AluminumEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data.getId());
+
+                            productIdForm.setText( String.valueOf( data.getId() ) );
+                            productNameForm.setText( data.getName() );
+                            buyPriceProductForm.setText( String.valueOf( data.getPriceOfBuy() ) );
+                            colorProductForm.getSelectionModel().select( data.getColor() );
+                            productCountryManufactureForm.getSelectionModel().select( data.getMadeBy() );// getSelectedItem();
+                            sellPriceForm.setText( String.valueOf( data.getPrices().stream().findFirst().get().getPrice() ) );
 
                         });
                     }
@@ -142,15 +153,6 @@ public class AluminumController implements Initializable {
         tableViewOfAlumProducts.setItems( FXCollections.observableArrayList(listAlum) );
         tableViewOfAlumProducts.setItems( observableEntities );
 
-/*        TableColumn<AluminumEntity , String> productName;
-        TableColumn<AluminumEntity , String> productColor;
-        TableColumn<AluminumEntity , Float> productBuyPrice;
-        TableColumn<AluminumEntity , String> productCountryManufacture;
-        TableColumn<AluminumEntity, Instant> productCreationDate;
-        TableColumn<AluminumEntity , String> productSellingPrice;
-        TableColumn productEdit ;*/
-
-        System.out.println( listAlum.size() );
     }
 
 
@@ -171,40 +173,55 @@ public class AluminumController implements Initializable {
 
     public void saveAluminumForm(MouseEvent mouseEvent) {
 
-        System.out.println(productIdForm.getText());
-        System.out.println(productNameForm.getText());
-        System.out.println(buyPriceProductForm.getText());
-        System.out.println(colorProductForm.getSelectionModel().getSelectedItem());
-        System.out.println(productCountryManufactureForm.getSelectionModel().getSelectedItem());
-        System.out.println(sellPriceForm.getText());
 
         if( productIdForm.getText() == null || productIdForm.getText().equals("") ) {
 
             AluminumEntity aluminumEntity = new AluminumEntity();
-
             aluminumEntity.setName(productNameForm.getText());
-            aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
+            aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0.0f );
             aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
             aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
-
-/*            PriceEntity defaultPrice = new PriceEntity();
+            PriceEntity defaultPrice  = new PriceEntity();
             defaultPrice.setName( "default" );
-            defaultPrice.setPrice( Float.valueOf( sellPriceForm.getText()) );
+            defaultPrice.setPrice( (!sellPriceForm.getText().equals("")) ? Float.valueOf( sellPriceForm.getText()) : 0.0f );
+            aluminumEntity.getPrices().add( defaultPrice );
 
-            aluminumEntity.getPrices().add( defaultPrice );*/
 
-            boolean added = aluminumService.addProductAlum( aluminumEntity );
+            boolean added = aluminumService.addProductAlum( aluminumEntity , defaultPrice);
 
             System.out.println( added );
-            loadData();
+
             System.out.println("add");
 
         }else {
 
+            AluminumEntity aluminumEntity = aluminumService.getAlumenuim( Integer.valueOf( productIdForm.getText() ) );
 
-            System.out.println("edit");
+            aluminumEntity.setName(productNameForm.getText());
+
+            if( !buyPriceProductForm.getText().equals("") )
+                aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
+
+            aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
+
+            aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
+
+            if(!sellPriceForm.getText().equals(""))
+                aluminumEntity
+                        .getPrices()
+                        .stream()
+                        .filter( price -> price.getName().equals("default") )
+                        .findFirst()
+                        .get()
+                        .setPrice( Float.valueOf( sellPriceForm.getText()) );
+
+            AluminumEntity updated = aluminumService.saveProduct( aluminumEntity );
+
+            System.out.println( updated );
+            System.out.println("updated");
 
         }
+        loadData();
 
     }
 

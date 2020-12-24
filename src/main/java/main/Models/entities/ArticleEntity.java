@@ -33,7 +33,7 @@ public abstract class ArticleEntity {
     @Column
     protected Instant createdAt = Instant.now() ;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "article_id")
     protected Set<PriceEntity> prices = new HashSet<>();
 

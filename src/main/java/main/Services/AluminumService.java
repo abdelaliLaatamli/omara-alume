@@ -1,41 +1,44 @@
 package main.Services;
 
-import main.Models.dao.RepositoryDao;
+import main.Models.dao.AluminumDao;
 import main.Models.entities.AluminumEntity;
+import main.Models.entities.PriceEntity;
 
 import java.util.List;
 
 
 public class AluminumService {
 
-    private RepositoryDao<AluminumEntity> aluminumDoa = new RepositoryDao<AluminumEntity>();
+    private AluminumDao aluminumDao = new AluminumDao();
 
     public List<AluminumEntity> getAllAlumunuimProducts(){
 
-        List<AluminumEntity> listAlum = aluminumDoa.getAll("main.Models.entities.AluminumEntity");
+        List<AluminumEntity> listAlum = aluminumDao.getAll();
 
         return listAlum;
 
     }
 
-    public boolean addProductAlum( AluminumEntity alum ){
+    public boolean addProductAlum(AluminumEntity alum, PriceEntity defaultPrice){
 
-        AluminumEntity newAlum = aluminumDoa.save( alum , "main.Models.entities.AluminumEntity" );
+        AluminumEntity newAlum = aluminumDao.save( alum , defaultPrice);
 
         return newAlum != null ;
     }
 
 
-    public boolean saveProduct( AluminumEntity alum ){
+    public AluminumEntity saveProduct( AluminumEntity alum ){
 
-        return false;
+        AluminumEntity updatedAlum = aluminumDao.update( alum );
+
+        return updatedAlum ;
     }
 
     public AluminumEntity getAlumenuim( int id ){
 
+        AluminumEntity newAlum = aluminumDao.get( id );
 
-
-        return null;
+        return newAlum;
     }
 
 

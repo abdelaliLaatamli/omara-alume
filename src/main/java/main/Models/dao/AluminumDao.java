@@ -1,6 +1,7 @@
 package main.Models.dao;
 
 import main.Models.entities.AluminumEntity;
+import main.Models.entities.PriceEntity;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -13,12 +14,20 @@ public class AluminumDao {
     /**
      * Save User
      * @param entity
+     * @param defaultPrice
+     * @return
      */
-    public void save(AluminumEntity entity) {
+    public AluminumEntity save(AluminumEntity entity, PriceEntity defaultPrice) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
+
+            if( defaultPrice != null ){
+                session.save(defaultPrice);
+                entity.getPrices().add( defaultPrice );
+            }
+
             // save the student object
             session.save(entity);
             // commit transaction
@@ -29,18 +38,30 @@ public class AluminumDao {
             }
             e.printStackTrace();
         }
+        return entity;
     }
 
     /**
      * Update User
      * @param entity
+     * @return
      */
-    public void update(AluminumEntity entity) {
+    public AluminumEntity update(AluminumEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
+
+            session.update(
+                    entity
+                            .getPrices()
+                            .stream()
+                            .filter( price -> price.getName().equals("default") )
+                            .findFirst()
+                            .get()
+                );
+
             session.update(entity);
             // commit transaction
             transaction.commit();
@@ -50,6 +71,7 @@ public class AluminumDao {
             }
             e.printStackTrace();
         }
+        return entity;
     }
 
     /**
@@ -119,7 +141,7 @@ public class AluminumDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfEntities = session.createQuery("from AluminumEntity").getResultList();
+            listOfEntities = session.createQuery("from main.Models.entities.AluminumEntity").getResultList();
 
             // commit transaction
             transaction.commit();
