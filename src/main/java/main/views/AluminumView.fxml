@@ -62,8 +62,6 @@
                 <Button layoutX="14.0" layoutY="515.0" mnemonicParsing="false" onMouseClicked="#saveAluminumForm" prefHeight="25.0" prefWidth="127.0" text="Enregistrer" />
 
 
-
-
             </children>
         </AnchorPane>
 

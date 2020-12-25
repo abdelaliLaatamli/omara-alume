@@ -1,5 +1,5 @@
 package main.Models.enums;
 
-public enum AluminumColors {
+public enum AluminumColor {
     WHITE , BROWN
 }

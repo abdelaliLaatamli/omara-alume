@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import main.Models.enums.AluminumColors;
+import main.Models.enums.AluminumColor;
 import main.Models.enums.MadeBy;
 
 import javax.persistence.Column;
@@ -23,7 +23,7 @@ import javax.persistence.Entity;
 public class AluminumEntity extends ArticleEntity {
 
     @Column
-    protected AluminumColors color ;
+    protected AluminumColor color ;
 
     @Column
     protected MadeBy madeBy ;

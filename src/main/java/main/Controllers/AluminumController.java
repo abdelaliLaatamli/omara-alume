@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.AluminumEntity;
 import main.Models.entities.PriceEntity;
-import main.Models.enums.AluminumColors;
+import main.Models.enums.AluminumColor;
 import main.Models.enums.MadeBy;
 import main.Services.AluminumService;
 
@@ -77,7 +77,7 @@ public class AluminumController implements Initializable {
     TextField buyPriceProductForm;
 
     @FXML
-    ComboBox<AluminumColors> colorProductForm;
+    ComboBox<AluminumColor> colorProductForm;
 
     @FXML
     ComboBox<MadeBy> productCountryManufactureForm;
@@ -89,7 +89,7 @@ public class AluminumController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        colorProductForm.setItems( FXCollections.observableArrayList( AluminumColors.values() ) );
+        colorProductForm.setItems( FXCollections.observableArrayList( AluminumColor.values() ) );
         colorProductForm.getSelectionModel().selectFirst();
         productCountryManufactureForm.setItems( FXCollections.observableArrayList( MadeBy.values() ) );
         productCountryManufactureForm.getSelectionModel().selectFirst();
