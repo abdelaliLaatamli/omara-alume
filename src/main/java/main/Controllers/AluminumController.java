@@ -13,9 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import main.Models.dao.RepositoryDao;
 import main.Models.entities.AluminumEntity;
-import main.Models.entities.ClientEntity;
 import main.Models.entities.PriceEntity;
 import main.Models.enums.AluminumColors;
 import main.Models.enums.MadeBy;
@@ -25,8 +23,11 @@ import main.Services.AluminumService;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
+
 
 public class AluminumController implements Initializable {
 
@@ -99,6 +100,7 @@ public class AluminumController implements Initializable {
 
     private void loadData(){
 
+
         this.tableViewOfAlumProducts.getItems().clear();
         this.tableViewOfAlumProducts.refresh();
         List<AluminumEntity> listAlum = aluminumService.getAllAlumunuimProducts();
@@ -106,12 +108,13 @@ public class AluminumController implements Initializable {
         observableEntities.addAll( listAlum );
 
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        //productQuantity.setCellValueFactory( new PropertyValueFactory<>("quantity") );
         productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ) );
         productColor.setCellValueFactory(new PropertyValueFactory<>("color"));
         productBuyPrice.setCellValueFactory(new PropertyValueFactory<>("priceOfBuy"));
         productCountryManufacture.setCellValueFactory(new PropertyValueFactory<>("madeBy"));
-        productCreationDate.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        productCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+        ));
 
         productSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
                 ( cellDate.getValue().getPrices().size() > 0 ) ?
@@ -201,7 +204,18 @@ public class AluminumController implements Initializable {
 
             System.out.println( added );
 
-            System.out.println("add");
+            if( added ){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("l'ajout de produit réussi");
+                alert.setHeaderText("le produit est bien ajouté");
+                alert.showAndWait();
+            }else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error D'ajouter");
+                alert.setHeaderText("Oups, il y a eu une erreur!");
+                alert.showAndWait();
+            }
+
 
         }else {
 
@@ -228,10 +242,22 @@ public class AluminumController implements Initializable {
                         .get()
                         .setPrice( Float.valueOf( sellPriceForm.getText()) );
 
-            AluminumEntity updated = aluminumService.saveProduct( aluminumEntity );
+            //AluminumEntity updated = aluminumService.saveProduct( aluminumEntity );
+            boolean updated = aluminumService.updateProduct( aluminumEntity );
 
-            System.out.println( updated );
-            System.out.println("updated");
+
+            if( updated ){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Réussite de la mise à jour");
+                alert.setHeaderText("le produit est mise à jour");
+                alert.showAndWait();
+            }else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error D'ajouter");
+                alert.setHeaderText("Oups, il y a eu une erreur!");
+                alert.showAndWait();
+            }
+
 
         }
         loadData();

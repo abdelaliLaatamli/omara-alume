@@ -46,7 +46,7 @@ public class AluminumDao {
      * @param entity
      * @return
      */
-    public AluminumEntity update(AluminumEntity entity) {
+    public AluminumEntity updateEntity(AluminumEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
@@ -72,6 +72,37 @@ public class AluminumDao {
             e.printStackTrace();
         }
         return entity;
+    }
+
+    public boolean update(AluminumEntity entity) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // save the student object
+
+            session.update(
+                    entity
+                            .getPrices()
+                            .stream()
+                            .filter( price -> price.getName().equals("default") )
+                            .findFirst()
+                            .get()
+            );
+
+            session.update(entity);
+            // commit transaction
+            transaction.commit();
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+        //return entity;
     }
 
     /**

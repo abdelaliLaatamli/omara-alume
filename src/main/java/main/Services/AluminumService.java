@@ -29,9 +29,16 @@ public class AluminumService {
 
     public AluminumEntity saveProduct( AluminumEntity alum ){
 
-        AluminumEntity updatedAlum = aluminumDao.update( alum );
+        AluminumEntity updatedAlum = aluminumDao.updateEntity( alum );
 
         return updatedAlum ;
+    }
+
+    public boolean updateProduct( AluminumEntity alum ){
+
+        boolean isSaved = aluminumDao.update( alum );
+
+        return isSaved ;
     }
 
     public AluminumEntity getAlumenuim( int id ){
