@@ -28,4 +28,5 @@ public class AluminumEntity extends ArticleEntity {
     @Column
     protected MadeBy madeBy ;
 
+
 }

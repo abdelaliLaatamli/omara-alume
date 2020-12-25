@@ -31,6 +31,9 @@ public abstract class ArticleEntity {
     protected Float priceOfBuy;
 
     @Column
+    protected float quantity;
+
+    @Column
     protected Instant createdAt = Instant.now() ;
 
     @OneToMany(fetch = FetchType.EAGER)
