@@ -28,10 +28,10 @@
                 <TableColumn fx:id="glassBuyPrice" prefWidth="108.0" text="Prix d'achat" />
                 <TableColumn fx:id="glassQuantity" prefWidth="108.0" text="Quantité" />
                 <TableColumn fx:id="glassColor" prefWidth="98.0" text="Color" />
-                <TableColumn fx:id="glassThicknessType" prefWidth="98.0" text="Épaisseur" />
-                <TableColumn fx:id="glassCreationDate" minWidth="0.0" prefWidth="144.0" text="Date de Creation" />
-                <TableColumn fx:id="glassSellingPrice" prefWidth="122.0" text="Prix de vente" />
-                <TableColumn fx:id="glassEdit" prefWidth="124.0" text="Edit Glass" />
+                <TableColumn fx:id="glassThicknessType" prefWidth="62.0" text="Épaisseur" />
+                <TableColumn fx:id="glassCreationDate" minWidth="0.0" prefWidth="150.0" text="Date de Creation" />
+                <TableColumn fx:id="glassSellingPrice" prefWidth="98.0" text="Prix de vente" />
+                <TableColumn fx:id="glassEdit" text="Edit Glass" />
             </columns>
         </TableView>
 
