@@ -34,9 +34,9 @@ public class GlassService {
         return updatedAlum ;
     }
 
-    public boolean updateProduct( GlassEntity alum ){
+    public boolean updateProduct( GlassEntity glass ){
 
-        boolean isSaved = glassDao.update( alum );
+        boolean isSaved = glassDao.update( glass );
 
         return isSaved ;
     }
