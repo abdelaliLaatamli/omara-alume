@@ -186,80 +186,11 @@ public class AluminumController implements Initializable {
 
 
         if( productIdForm.getText() == null || productIdForm.getText().equals("") ) {
-
-            AluminumEntity aluminumEntity = new AluminumEntity();
-            aluminumEntity.setName(productNameForm.getText());
-            aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0f );
-            aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
-            aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
-            aluminumEntity.setQuantity( !productQuantityForm.getText().equals("") ? Float.valueOf( productQuantityForm.getText() ) : 0f );
-
-            PriceEntity defaultPrice  = new PriceEntity();
-            defaultPrice.setName( "default" );
-            defaultPrice.setPrice( (!sellPriceForm.getText().equals("")) ? Float.valueOf( sellPriceForm.getText()) : 0f );
-            aluminumEntity.getPrices().add( defaultPrice );
-
-
-            boolean added = aluminumService.addProductAlum( aluminumEntity , defaultPrice);
-
-            System.out.println( added );
-
-            if( added ){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("l'ajout de produit réussi");
-                alert.setHeaderText("le produit est bien ajouté");
-                alert.showAndWait();
-            }else{
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error D'ajouter");
-                alert.setHeaderText("Oups, il y a eu une erreur!");
-                alert.showAndWait();
-            }
-
-
+            addProduct();
         }else {
-
-            AluminumEntity aluminumEntity = aluminumService.getAlumenuim( Integer.valueOf( productIdForm.getText() ) );
-
-            aluminumEntity.setName(productNameForm.getText());
-
-            if( !productQuantityForm.getText().equals("") )
-                aluminumEntity.setQuantity( Float.valueOf( productQuantityForm.getText() ) );
-
-            if( !buyPriceProductForm.getText().equals("") )
-                aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
-
-            aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
-
-            aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
-
-            if(!sellPriceForm.getText().equals(""))
-                aluminumEntity
-                        .getPrices()
-                        .stream()
-                        .filter( price -> price.getName().equals("default") )
-                        .findFirst()
-                        .get()
-                        .setPrice( Float.valueOf( sellPriceForm.getText()) );
-
-            //AluminumEntity updated = aluminumService.saveProduct( aluminumEntity );
-            boolean updated = aluminumService.updateProduct( aluminumEntity );
-
-
-            if( updated ){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Réussite de la mise à jour");
-                alert.setHeaderText("le produit est mise à jour");
-                alert.showAndWait();
-            }else{
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error D'ajouter");
-                alert.setHeaderText("Oups, il y a eu une erreur!");
-                alert.showAndWait();
-            }
-
-
+            updateProduct();
         }
+
         loadData();
 
         productIdForm.setText("");
@@ -270,6 +201,77 @@ public class AluminumController implements Initializable {
         productQuantityForm.setText("");
         sellPriceForm.setText("");
 
+    }
+
+    private void updateProduct() {
+        AluminumEntity aluminumEntity = aluminumService.getAlumenuim( Integer.valueOf( productIdForm.getText() ) );
+
+        aluminumEntity.setName(productNameForm.getText());
+
+        if( !productQuantityForm.getText().equals("") )
+            aluminumEntity.setQuantity( Float.valueOf( productQuantityForm.getText() ) );
+
+        if( !buyPriceProductForm.getText().equals("") )
+            aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
+
+        aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
+
+        aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
+
+        if(!sellPriceForm.getText().equals(""))
+            aluminumEntity
+                    .getPrices()
+                    .stream()
+                    .filter( price -> price.getName().equals("default") )
+                    .findFirst()
+                    .get()
+                    .setPrice( Float.valueOf( sellPriceForm.getText()) );
+
+        boolean updated = aluminumService.updateProduct( aluminumEntity );
+
+
+        if( updated ){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Réussite de la mise à jour");
+            alert.setHeaderText("le produit est mise à jour");
+            alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'ajouter");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
+    }
+
+    private void addProduct() {
+        AluminumEntity aluminumEntity = new AluminumEntity();
+        aluminumEntity.setName(productNameForm.getText());
+        aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0f );
+        aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
+        aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
+        aluminumEntity.setQuantity( !productQuantityForm.getText().equals("") ? Float.valueOf( productQuantityForm.getText() ) : 0f );
+
+        PriceEntity defaultPrice  = new PriceEntity();
+        defaultPrice.setName( "default" );
+        defaultPrice.setPrice( (!sellPriceForm.getText().equals("")) ? Float.valueOf( sellPriceForm.getText()) : 0f );
+        aluminumEntity.getPrices().add( defaultPrice );
+
+
+        boolean added = aluminumService.addProductAlum( aluminumEntity , defaultPrice);
+
+        System.out.println( added );
+
+        if( added ){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'ajout de produit réussi");
+            alert.setHeaderText("le produit est bien ajouté");
+            alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'ajouter");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
     }
 
 

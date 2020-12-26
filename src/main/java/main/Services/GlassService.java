@@ -1,8 +1,7 @@
 package main.Services;
 
-import main.Models.dao.AccessoryDao;
+
 import main.Models.dao.GlassDao;
-import main.Models.entities.AccessoryEntity;
 import main.Models.entities.GlassEntity;
 import main.Models.entities.PriceEntity;
 

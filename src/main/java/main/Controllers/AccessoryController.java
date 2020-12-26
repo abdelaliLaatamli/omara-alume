@@ -128,76 +128,10 @@ public class AccessoryController implements Initializable {
 
     public void saveAccessoryForm(MouseEvent mouseEvent) {
 
-        AccessoryEntity accessoryEntity = null ;
         if( accessoryIdForm.getText() == null || accessoryIdForm.getText().equals("") ) {
-
-            accessoryEntity = new AccessoryEntity();
-            accessoryEntity.setName(accessoryNameForm.getText());
-            accessoryEntity.setPriceOfBuy(!accessoryBuyPriceForm.getText().equals("") ? Float.valueOf(accessoryBuyPriceForm.getText()) : 0f);
-
-            accessoryEntity.setColor(accessoryColorForm.getSelectionModel().getSelectedItem());
-            accessoryEntity.setQuantity(!accessoryQuantityForm.getText().equals("") ? Float.valueOf(accessoryQuantityForm.getText()) : 0f);
-
-            PriceEntity defaultPrice = new PriceEntity();
-            defaultPrice.setName("default");
-            defaultPrice.setPrice((!accessorySellPriceForm.getText().equals("")) ? Float.valueOf(accessorySellPriceForm.getText()) : 0f);
-            accessoryEntity.getPrices().add(defaultPrice);
-
-
-            boolean added = accessoryService.addProduct(accessoryEntity, defaultPrice);
-
-            System.out.println(added);
-
-            if (added) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("l'ajout de produit réussi");
-                alert.setHeaderText("le produit est bien ajouté");
-                alert.showAndWait();
-            } else {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error D'ajouter");
-                alert.setHeaderText("Oups, il y a eu une erreur!");
-                alert.showAndWait();
-            }
-
+            addProduct();
         }else {
-
-            accessoryEntity = accessoryService.getAlumenuim( Integer.valueOf( accessoryIdForm.getText() ) );
-
-            accessoryEntity.setName(accessoryNameForm.getText());
-
-            if( !accessoryQuantityForm.getText().equals("") )
-                accessoryEntity.setQuantity( Float.valueOf( accessoryQuantityForm.getText() ) );
-
-            if( !accessoryBuyPriceForm.getText().equals("") )
-                accessoryEntity.setPriceOfBuy( Float.valueOf( accessoryBuyPriceForm.getText() ) );
-
-            accessoryEntity.setColor( accessoryColorForm.getSelectionModel().getSelectedItem());
-
-            if(!accessorySellPriceForm.getText().equals(""))
-                    accessoryEntity
-                            .getPrices()
-                            .stream()
-                            .filter( price -> price.getName().equals("default") )
-                            .findFirst()
-                            .get()
-                            .setPrice( Float.valueOf( accessorySellPriceForm.getText()) );
-
-            boolean updated = accessoryService.updateProduct( accessoryEntity );
-
-            if( updated ){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Réussite de la mise à jour");
-                alert.setHeaderText("le produit est mise à jour");
-                alert.showAndWait();
-            }else{
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error D'ajouter");
-                alert.setHeaderText("Oups, il y a eu une erreur!");
-                alert.showAndWait();
-            }
-
-
+            updateProducts();
         }
 
         loadData();
@@ -209,6 +143,74 @@ public class AccessoryController implements Initializable {
         accessoryQuantityForm.setText("");
         accessorySellPriceForm.setText("");
 
+    }
+
+    private void updateProducts() {
+        AccessoryEntity accessoryEntity = accessoryService.getAlumenuim( Integer.valueOf( accessoryIdForm.getText() ) );
+
+        accessoryEntity.setName(accessoryNameForm.getText());
+
+        if( !accessoryQuantityForm.getText().equals("") )
+            accessoryEntity.setQuantity( Float.valueOf( accessoryQuantityForm.getText() ) );
+
+        if( !accessoryBuyPriceForm.getText().equals("") )
+            accessoryEntity.setPriceOfBuy( Float.valueOf( accessoryBuyPriceForm.getText() ) );
+
+        accessoryEntity.setColor( accessoryColorForm.getSelectionModel().getSelectedItem());
+
+        if(!accessorySellPriceForm.getText().equals(""))
+                accessoryEntity
+                        .getPrices()
+                        .stream()
+                        .filter( price -> price.getName().equals("default") )
+                        .findFirst()
+                        .get()
+                        .setPrice( Float.valueOf( accessorySellPriceForm.getText()) );
+
+        boolean updated = accessoryService.updateProduct( accessoryEntity );
+
+        if( updated ){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Réussite de la mise à jour");
+            alert.setHeaderText("le produit est mise à jour");
+            alert.showAndWait();
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'ajouter");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
+    }
+
+    private void addProduct() {
+        AccessoryEntity accessoryEntity = new AccessoryEntity();
+        accessoryEntity.setName(accessoryNameForm.getText());
+        accessoryEntity.setPriceOfBuy(!accessoryBuyPriceForm.getText().equals("") ? Float.valueOf(accessoryBuyPriceForm.getText()) : 0f);
+
+        accessoryEntity.setColor(accessoryColorForm.getSelectionModel().getSelectedItem());
+        accessoryEntity.setQuantity(!accessoryQuantityForm.getText().equals("") ? Float.valueOf(accessoryQuantityForm.getText()) : 0f);
+
+        PriceEntity defaultPrice = new PriceEntity();
+        defaultPrice.setName("default");
+        defaultPrice.setPrice((!accessorySellPriceForm.getText().equals("")) ? Float.valueOf(accessorySellPriceForm.getText()) : 0f);
+        accessoryEntity.getPrices().add(defaultPrice);
+
+
+        boolean added = accessoryService.addProduct(accessoryEntity, defaultPrice);
+
+        System.out.println(added);
+
+        if (added) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'ajout de produit réussi");
+            alert.setHeaderText("le produit est bien ajouté");
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'ajouter");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
     }
 
     public void goBack(MouseEvent mouseEvent) throws IOException {
