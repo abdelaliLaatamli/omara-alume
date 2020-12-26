@@ -262,6 +262,7 @@ public class AluminumController implements Initializable {
         }
         loadData();
 
+        productIdForm.setText("");
         productNameForm.setText("");
         buyPriceProductForm.setText("");
         colorProductForm.getSelectionModel().selectFirst();

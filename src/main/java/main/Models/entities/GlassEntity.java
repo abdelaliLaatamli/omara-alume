@@ -1,10 +1,17 @@
 package main.Models.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+import main.Models.enums.GlassColor;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-@Entity(name = "Glass")
+@Setter
+@Getter
+
+@Entity(name = "glass")
 @DiscriminatorValue("gls")
 public class GlassEntity extends ArticleEntity {
 
@@ -14,6 +21,9 @@ public class GlassEntity extends ArticleEntity {
     // سماكة / كثافة
     @Column
     protected String thicknessType ;
+
+    @Column
+    protected GlassColor color;
 
 
 

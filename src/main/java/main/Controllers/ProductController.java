@@ -22,7 +22,7 @@ public class ProductController {
 
     public void goToAccessoiresPage(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/AccessoiresView.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/AccessoryView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle("Accessoires -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
@@ -30,7 +30,7 @@ public class ProductController {
 
     public void goToVerrePage(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/VerreView.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/GlassView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle("Verre -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
