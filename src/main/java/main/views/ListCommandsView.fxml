@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="main.Controllers.ListCommandsController"
-            prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.ListCommandsController">
     <children>
 
-        <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="150.0">
+        <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="319.0">
             <children>
                 <Button mnemonicParsing="false" onMouseClicked="#goBack" prefHeight="40.0" text="&lt;&lt;">
                     <font>
                         <Font name="Segoe UI Bold" size="15.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" onMouseClicked="#goHome" prefHeight="40.0" text="Accueil">
+<!--                <Button mnemonicParsing="false" onMouseClicked="#goHome" prefHeight="40.0" text="Accueil">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18.0" />
+                    </font>
+                </Button>-->
+                <Button mnemonicParsing="false" onMouseClicked="#goToCommandGenerator" prefHeight="40.0" text="Ajouter Commande">
                     <font>
                         <Font name="Segoe UI Bold" size="18.0" />
                     </font>
                 </Button>
+
             </children>
         </HBox>
 
