@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="main.Controllers.CommandController"
-            prefHeight="700.0" prefWidth="1200.0"
-            style="-fx-background-color: #a8dadc;">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.CommandController">
 
     <children>
 
@@ -20,6 +13,29 @@
                 <Font name="Cambria Bold" size="17.0" />
             </font>
         </Button>
+
+        <HBox layoutX="350.0" layoutY="225.0" prefHeight="250.0" prefWidth="500.0" style="-fx-background-color: #1d355780;">
+            <children>
+                <AnchorPane prefHeight="250.0" prefWidth="250.0">
+                    <children>
+                        <Button layoutX="65.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#goToCommandGenerator" prefHeight="100.0" prefWidth="120.0" text="Command Generator">
+                            <font>
+                                <Font name="Segoe UI Bold" size="10.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </AnchorPane>
+                <AnchorPane prefHeight="250.0" prefWidth="250.0">
+                    <children>
+                        <Button layoutX="65.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#goToListCommand" prefHeight="100.0" prefWidth="120.0" text="List Command">
+                            <font>
+                                <Font name="Segoe UI Bold" size="10.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </AnchorPane>
+            </children>
+        </HBox>
 
     </children>
 

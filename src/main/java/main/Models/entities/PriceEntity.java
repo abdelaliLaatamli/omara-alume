@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,5 +32,9 @@ public class PriceEntity {
 
     @ManyToOne
     protected ArticleEntity article;
+
+    @OneToMany
+    @JoinColumn(name = "price_id")
+    protected Set<ArticleCommandEntity> articleCommands ;
 
 }

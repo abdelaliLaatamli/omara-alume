@@ -20,16 +20,22 @@ public class ArticleCommandEntity {
     @GeneratedValue
     protected int id ;
 
+    @Column String name ;
 
     @Column
-    protected float numberOfArticle;
+    protected float quantity;
+
+    @Column
+    protected float price ;
+
+    @ManyToOne
+    protected CommandEntity command ;
 
     @ManyToOne
     protected ArticleEntity article ;
 
     @ManyToOne
-    protected CommandEntity command ;
-
-
+    protected PriceEntity priceOfArticle ;
 
 }
+

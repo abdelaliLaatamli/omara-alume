@@ -18,4 +18,21 @@ public class CommandController {
 
     }
 
+    public void goToListCommand(MouseEvent mouseEvent) throws IOException {
+
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle("List Commands -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
+
+    }
+
+    public void goToCommandGenerator(MouseEvent mouseEvent) throws IOException {
+
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/CommandGeneratorView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
+
+    }
 }

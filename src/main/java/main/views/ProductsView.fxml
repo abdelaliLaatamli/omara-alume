@@ -41,7 +41,8 @@
                   </Button>
                </children>
             </AnchorPane>
-         </children></HBox>
+         </children>
+      </HBox>
 
     </children>
 
