@@ -14,11 +14,6 @@
                         <Font name="Segoe UI Bold" size="15.0" />
                     </font>
                 </Button>
-<!--                <Button mnemonicParsing="false" onMouseClicked="#goHome" prefHeight="40.0" text="Accueil">
-                    <font>
-                        <Font name="Segoe UI Bold" size="18.0" />
-                    </font>
-                </Button>-->
                 <Button mnemonicParsing="false" onMouseClicked="#goToCommandGenerator" prefHeight="40.0" text="Ajouter Commande">
                     <font>
                         <Font name="Segoe UI Bold" size="18.0" />
