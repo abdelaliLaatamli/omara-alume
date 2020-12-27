@@ -24,15 +24,31 @@
       <AnchorPane layoutX="14.0" layoutY="61.0" prefHeight="630.0" prefWidth="1180.0" style="-fx-background-color: #fff;">
          <children>
             <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="120.0" text="Nom De client :" />
-            <ComboBox fx:id="clientNameForm" editable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="270.0" />
-            <TableView layoutX="771.0" layoutY="14.0" prefHeight="610.0" prefWidth="402.0">
+            <ComboBox fx:id="clientNameForm" editable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="210.0" />
+            <TableView layoutX="621.0" layoutY="14.0" prefHeight="610.0" prefWidth="552.0">
               <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                    <TableColumn prefWidth="139.0" text="Name" />
+                    <TableColumn prefWidth="111.0" text="Produit Name" />
+                    <TableColumn prefWidth="58.0" text="Price" />
+                    <TableColumn prefWidth="58.0" text="Quentity" />
+                    <TableColumn prefWidth="94.0" text="Price Command" />
+                    <TableColumn prefWidth="38.0" text="Edit" />
+                    <TableColumn prefWidth="53.0" text="Delete" />
               </columns>
             </TableView>
-            <AnchorPane layoutX="391.0" layoutY="14.0" prefHeight="610.0" prefWidth="371.0" style="-fx-background-color: #2a9d8f;" />
-            <Button layoutX="291.0" layoutY="31.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="93.0" text="Button" />
+            <AnchorPane layoutX="233.0" layoutY="14.0" prefHeight="610.0" prefWidth="371.0" style="-fx-background-color: #2a9d8f;">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="170.0" text="Product Type :" />
+                  <ComboBox layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="350.0" />
+                  <Label layoutX="14.0" layoutY="91.0" prefHeight="17.0" prefWidth="170.0" text="Product :" />
+                  <ComboBox layoutX="14.0" layoutY="108.0" prefHeight="25.0" prefWidth="350.0" />
+                  <Label layoutX="14.0" layoutY="173.0" prefHeight="17.0" prefWidth="170.0" text="Name :" />
+                  <TextField layoutX="14.0" layoutY="190.0" prefHeight="25.0" prefWidth="350.0" />
+                  <Label layoutX="14.0" layoutY="254.0" prefHeight="17.0" prefWidth="170.0" text="Quentite :" />
+                  <TextField layoutX="14.0" layoutY="271.0" prefHeight="25.0" prefWidth="350.0" />
+                  <Button layoutX="14.0" layoutY="331.0" mnemonicParsing="false" text="Ajouter Produit " />
+               </children></AnchorPane>
+            <Button layoutX="14.0" layoutY="69.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="93.0" text="Button" />
          </children>
       </AnchorPane>
 
