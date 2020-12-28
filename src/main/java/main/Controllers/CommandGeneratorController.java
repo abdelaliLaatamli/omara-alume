@@ -63,6 +63,12 @@ public class CommandGeneratorController implements Initializable {
     }
 
 
+    public void goToClientView(MouseEvent mouseEvent) throws IOException {
 
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ClientView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle(" Clients -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
 
+    }
 }
