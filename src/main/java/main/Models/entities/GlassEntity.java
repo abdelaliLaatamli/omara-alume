@@ -26,6 +26,4 @@ public class GlassEntity extends ArticleEntity {
     @Column
     protected GlassColor color;
 
-
-
 }

@@ -37,4 +37,9 @@ public class PriceEntity {
     @JoinColumn(name = "price_id")
     protected Set<ArticleCommandEntity> articleCommands ;
 
+    @Override
+    public String toString(){
+        return this.name + " - " + this.price + "DH" ;
+    }
+
 }

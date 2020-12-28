@@ -40,4 +40,10 @@ public abstract class ArticleEntity {
     @JoinColumn(name = "article_id")
     protected Set<PriceEntity> prices = new HashSet<>();
 
+    @Override
+    public String toString(){
+        return this.name;
+    }
+
+
 }
