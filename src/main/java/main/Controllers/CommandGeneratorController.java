@@ -1,12 +1,15 @@
 package main.Controllers;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import main.Models.entities.*;
 import main.Services.AccessoryService;
@@ -16,6 +19,7 @@ import main.Services.GlassService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -33,12 +37,42 @@ public class CommandGeneratorController implements Initializable {
 
     @FXML ComboBox<AluminumEntity> aluminuimProduct;
 
+    @FXML TextField aluminuimLabel;
+
+    @FXML ComboBox<PriceEntity> priceAluminumCombo ;
+
+    @FXML TextField aluminuimContity;
+
+
+    @FXML Label priceAlumnuimShow;
+
+
+
+
+
+    // --------------------
+
     @FXML ComboBox<AccessoryEntity> accessoireProduct;
 
     @FXML ComboBox<GlassEntity> glassProduct;
 
 
-    @FXML ComboBox<PriceEntity> priceAluminumCombo ;
+    // --------------------
+    @FXML TableView<ArticleCommandEntity> tableProductsOfCommand;
+    @FXML TableColumn<ArticleCommandEntity , String> lableOfCommand ;
+    @FXML TableColumn<ArticleCommandEntity , String> nameProductOfCommand;
+    @FXML TableColumn<ArticleCommandEntity , String> priceProductOfCommand ;
+    @FXML TableColumn<ArticleCommandEntity , String> quentityProductOfCommand ;
+    @FXML TableColumn<ArticleCommandEntity , String> priceCommand ;
+    @FXML TableColumn<ArticleCommandEntity , String> editProductOfCommand ;
+    @FXML TableColumn<ArticleCommandEntity , String> deleteProductOfCommand ;
+    ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
+
+
+
+
+
+    List<ArticleCommandEntity> list = new ArrayList<>();
 
 
     @Override
@@ -46,6 +80,7 @@ public class CommandGeneratorController implements Initializable {
 
 
         loadData();
+
     }
 
     void loadData(){
@@ -61,12 +96,34 @@ public class CommandGeneratorController implements Initializable {
 
 
         aluminuimProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-            //System.out.println(newValue);
-
-            //System.out.println( aluminuimProduct.getSelectionModel().getSelectedItem() );
             priceAluminumCombo.setItems( FXCollections.observableArrayList( aluminuimProduct.getSelectionModel().getSelectedItem().getPrices()  ) );
+            priceAluminumCombo.getSelectionModel().selectFirst();
+        });
+
+        priceAluminumCombo.getSelectionModel().selectedIndexProperty().addListener(  (options, oldValue, newValue) -> {
+
+            float number = 0f;
+            try{
+                number = Float.valueOf( aluminuimContity.getText().equals("") ? "0" : aluminuimContity.getText() );
+            }catch (Exception e) {
+                number = 1f;
+            }
+            priceAlumnuimShow.setText( number * priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() + " DH");
 
         });
+
+        aluminuimContity.textProperty().addListener( (observable, oldValue, newValue) -> {
+
+            float number = 0f;
+            try{
+                number = Float.valueOf( newValue.equals("") ? "0" : newValue );
+            }catch (Exception e) {
+                number = 1f;
+            }
+            priceAlumnuimShow.setText( number * priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() + " DH");
+
+        } );
+
 
     }
 
@@ -98,6 +155,48 @@ public class CommandGeneratorController implements Initializable {
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Clients -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
+
+    }
+
+    public void ajouterAlumnuimToFucture(MouseEvent mouseEvent) {
+
+        ArticleCommandEntity aa = new ArticleCommandEntity();
+
+        aa.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
+        aa.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
+        aa.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
+        aa.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
+
+
+
+
+        list.add( aa );
+        this.loadDataTable();
+
+/*        aluminuimProduct.getSelectionModel().select(-1);
+        aluminuimProduct.getSelectionModel().select(-1);
+        aluminuimLabel.setText("");
+        priceAluminumCombo.getSelectionModel().selectFirst();
+        aluminuimContity.setText("");*/
+    }
+
+    void loadDataTable(){
+        observableArticleCommand.clear();
+        observableArticleCommand.addAll( list );
+
+
+
+        lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
+        nameProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
+        quentityProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("id"));
+        priceCommand.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
+        editProductOfCommand.setCellValueFactory( cellDate   -> new ReadOnlyObjectWrapper(cellDate.getValue().getArticle()) );
+        deleteProductOfCommand.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper(cellDate.getValue().getArticle()) );
+
+        tableProductsOfCommand.setItems( FXCollections.observableArrayList(list) );
+        tableProductsOfCommand.setItems( this.observableArticleCommand );
+
 
     }
 }

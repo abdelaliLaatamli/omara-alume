@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -34,11 +35,11 @@ public class CommandEntity {
 
     @OneToMany
     @JoinColumn(name = "payment_made_id")
-    protected Set<PaymentsMadeEntity> paymentsMades ;
+    protected Set<PaymentsMadeEntity> paymentsMades = new HashSet<>();
 
     @OneToMany
     @JoinColumn(name = "command_id")
-    protected Set<ArticleCommandEntity> articleCommands ;
+    protected Set<ArticleCommandEntity> articleCommands = new HashSet<>() ;
 
 
 }
