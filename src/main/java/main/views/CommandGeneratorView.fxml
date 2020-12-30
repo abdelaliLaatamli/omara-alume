@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.CommandGeneratorController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.CommandGeneratorController">
 
     <children>
 
@@ -43,10 +43,10 @@
                                     <Label layoutX="10.0" layoutY="83.0" prefHeight="17.0" prefWidth="120.0" text="Price :" />
                                     <ComboBox fx:id="priceAluminumCombo" layoutX="10.0" layoutY="102.0" prefHeight="25.0" prefWidth="120.0" />
                                     <Label layoutX="148.0" layoutY="83.0" prefHeight="17.0" prefWidth="100.0" text="Quantité :" />
-                                    <TextField fx:id="aluminuimContity" layoutX="148.0" layoutY="102.0" text="1" />
+                                    <TextField fx:id="aluminuimContity" layoutX="174.0" layoutY="102.0" text="1" />
                                     <Button layoutX="436.0" layoutY="102.0" mnemonicParsing="false" onMouseClicked="#ajouterAlumnuimToFucture" prefHeight="25.0" prefWidth="120.0" text="Ajouter Aluminum" />
-                                    <Label layoutX="306.0" layoutY="83.0" prefHeight="17.0" prefWidth="120.0" text="Total" />
-                                    <Label fx:id="priceAlumnuimShow" layoutX="306.0" layoutY="106.0" prefHeight="17.0" prefWidth="93.0" text="00 DH" />
+                                    <Label layoutX="333.0" layoutY="83.0" prefHeight="17.0" prefWidth="120.0" text="Total" />
+                                    <Label fx:id="priceAlumnuimShow" layoutX="333.0" layoutY="106.0" prefHeight="17.0" prefWidth="93.0" text="00 DH" />
                                  </children></AnchorPane>
                         </content>
                       </Tab>
@@ -83,12 +83,11 @@
              <TableView fx:id="tableProductsOfCommand" layoutX="621.0" layoutY="14.0" prefHeight="610.0" prefWidth="552.0">
                  <columns>
                      <TableColumn fx:id="lableOfCommand" prefWidth="139.0" text="Name" />
-                     <TableColumn fx:id="nameProductOfCommand" prefWidth="111.0" text="Produit Name" />
-                     <TableColumn fx:id="priceProductOfCommand" prefWidth="58.0" text="Price" />
-                     <TableColumn fx:id="quentityProductOfCommand" prefWidth="58.0" text="Quentity" />
-                     <TableColumn fx:id="priceCommand" prefWidth="94.0" text="Price Command" />
-                     <TableColumn fx:id="editProductOfCommand" prefWidth="38.0" text="Edit" />
-                     <TableColumn fx:id="deleteProductOfCommand" prefWidth="53.0" text="Delete" />
+                     <TableColumn fx:id="priceProductOfCommand" prefWidth="85.0" text="Price" />
+                     <TableColumn fx:id="quentityProductOfCommand" prefWidth="94.0" text="Quentity" />
+                     <TableColumn fx:id="priceCommand" prefWidth="100.0" text="Price Command" />
+                     <TableColumn fx:id="editProductOfCommand" prefWidth="63.0" text="Edit" />
+                     <TableColumn fx:id="deleteProductOfCommand" prefWidth="70.0" text="Delete" />
                  </columns>
              </TableView>
 
