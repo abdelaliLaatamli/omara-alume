@@ -28,7 +28,7 @@ public class CommandEntity {
     protected PaymentStatus paymentStatus;
 
     @Column
-    protected Instant commandDate;
+    protected Instant commandDate = Instant.now();
 
     @ManyToOne
     protected ClientEntity client ;

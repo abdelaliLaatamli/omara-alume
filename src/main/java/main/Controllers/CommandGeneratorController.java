@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
+import main.Models.enums.PaymentStatus;
 import main.Services.AccessoryService;
 import main.Services.AluminumService;
 import main.Services.ClientServices;
@@ -36,6 +37,10 @@ public class CommandGeneratorController implements Initializable {
 
 
     @FXML ComboBox<String> clientNameForm ;
+
+
+    @FXML Label totalePriceCommand ;
+    @FXML ComboBox<PaymentStatus> comboPaymentStatus;
 
 
     // ---------- Aluminum Tab -------------
@@ -89,6 +94,10 @@ public class CommandGeneratorController implements Initializable {
         List<ClientEntity> clients = clientServices.getAll();
         clientNameForm.setItems(FXCollections.observableArrayList( clients.stream().map( c -> c.getName()  ).collect(Collectors.toList()) ));
         new AutoCompleteBox(clientNameForm);
+
+        comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
+        comboPaymentStatus.getSelectionModel().selectFirst();
+
 
         initialiseAluminumTab();
         initialiseAccessoireTab();
@@ -329,6 +338,12 @@ public class CommandGeneratorController implements Initializable {
 
 
     void loadDataTable(){
+
+        totalePriceCommand.setText( "00,00 DH" );
+        float total = list.stream().map( n -> n.getPrice()* n.getQuantity() ).collect( Collectors.toList() ).stream().reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+        totalePriceCommand.setText( total + " DH" );
+
+
         observableArticleCommand.clear();
         observableArticleCommand.addAll( list );
 
