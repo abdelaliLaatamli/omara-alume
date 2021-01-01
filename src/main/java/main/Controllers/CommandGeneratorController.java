@@ -15,27 +15,24 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.enums.PaymentStatus;
-import main.Services.AccessoryService;
-import main.Services.AluminumService;
-import main.Services.ClientServices;
-import main.Services.GlassService;
+import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class CommandGeneratorController implements Initializable {
 
-
+    private final CommandService commandService = new CommandService();
     private final ClientServices clientServices = new ClientServices();
     private final AccessoryService accessoryService = new AccessoryService();
     private final AluminumService aluminumService = new AluminumService();
     private final GlassService glassService = new GlassService();
 
 
-    //@FXML ComboBox<String> clientNameForm ;
     @FXML ComboBox<ClientEntity> clientNameForm ;
     @FXML Label totalePriceCommand ;
     @FXML ComboBox<PaymentStatus> comboPaymentStatus;
@@ -76,7 +73,6 @@ public class CommandGeneratorController implements Initializable {
     @FXML TableColumn<ArticleCommandEntity , Void> deleteProductOfCommand ;
     ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
 
-    //List<ArticleCommandEntity> list = new ArrayList<>();
 
     CommandEntity commandDetails ;
 
@@ -437,12 +433,20 @@ public class CommandGeneratorController implements Initializable {
 
     public void saveCommandEvent(MouseEvent mouseEvent) {
 
-//        comboPaymentStatus;
-//        amountToPayText ;
-//        clientNameForm ;
+        int clientId = clientNameForm.getSelectionModel().getSelectedIndex() ;
+        ClientEntity clientEntity = clientNameForm.getItems().get( clientId );
 
-        // commandDetails.setClient( clientNameForm.getSelectionModel().getSelectedItem() );
-        System.out.println(  );
+        commandDetails.setClient( clientEntity );
+        commandDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
+
+        PaymentsMadeEntity paymentsMadeEntity = new PaymentsMadeEntity();
+
+        paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
+
+        commandDetails.getPaymentsMades().add( paymentsMadeEntity );
+
+        commandService.addCommand(commandDetails);
+
 
     }
 }

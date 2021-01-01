@@ -19,17 +19,17 @@ public class AutoCompleteBox implements EventHandler{
     public AutoCompleteBox(final ComboBox comboBox) {
         this.comboBox = comboBox;
         this.data = comboBox.getItems();
-
         this.doAutoCompleteBox();
     }
 
-    public AutoCompleteBox(final ComboBox comboBox, Integer sid) {
-        this.comboBox = comboBox;
-        this.data = comboBox.getItems();
-        this.sid = sid;
-
-        this.doAutoCompleteBox();
-    }
+//
+//    public AutoCompleteBox(final ComboBox comboBox, Integer sid) {
+//        this.comboBox = comboBox;
+//        this.data = comboBox.getItems();
+//        this.sid = sid;
+//
+//        this.doAutoCompleteBox();
+//    }
 
     private void doAutoCompleteBox() {
         this.comboBox.setEditable(true);
@@ -95,11 +95,12 @@ public class AutoCompleteBox implements EventHandler{
 
     private void setItems() {
         ObservableList list = FXCollections.observableArrayList();
-
+        System.out.println( this.data );
         for (Object datum : this.data) {
             String s = this.comboBox.getEditor().getText().toLowerCase();
             if (datum.toString().toLowerCase().contains(s.toLowerCase())) {
-                list.add(datum.toString());
+                list.add(datum);
+                //list.add(datum.toString());
             }
         }
 
