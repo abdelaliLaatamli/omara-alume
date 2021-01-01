@@ -22,7 +22,6 @@ import main.Services.GlassService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -36,8 +35,8 @@ public class CommandGeneratorController implements Initializable {
     private final GlassService glassService = new GlassService();
 
 
-    @FXML ComboBox<String> clientNameForm ;
-
+    //@FXML ComboBox<String> clientNameForm ;
+    @FXML ComboBox<ClientEntity> clientNameForm ;
     @FXML Label totalePriceCommand ;
     @FXML ComboBox<PaymentStatus> comboPaymentStatus;
     @FXML TextField amountToPayText ;
@@ -70,7 +69,6 @@ public class CommandGeneratorController implements Initializable {
     // --------------------
     @FXML TableView<ArticleCommandEntity> tableProductsOfCommand;
     @FXML TableColumn<ArticleCommandEntity , String> lableOfCommand ;
-    //@FXML TableColumn<ArticleCommandEntity , String> nameProductOfCommand;
     @FXML TableColumn<ArticleCommandEntity , String> priceProductOfCommand ;
     @FXML TableColumn<ArticleCommandEntity , String> quentityProductOfCommand ;
     @FXML TableColumn<ArticleCommandEntity , String> priceCommand ;
@@ -78,12 +76,15 @@ public class CommandGeneratorController implements Initializable {
     @FXML TableColumn<ArticleCommandEntity , Void> deleteProductOfCommand ;
     ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
 
-    List<ArticleCommandEntity> list = new ArrayList<>();
+    //List<ArticleCommandEntity> list = new ArrayList<>();
+
+    CommandEntity commandDetails ;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        commandDetails = new CommandEntity();
         loadData();
 
     }
@@ -91,14 +92,12 @@ public class CommandGeneratorController implements Initializable {
     void loadData(){
 
         List<ClientEntity> clients = clientServices.getAll();
-        clientNameForm.setItems(FXCollections.observableArrayList( clients.stream().map( c -> c.getName()  ).collect(Collectors.toList()) ));
+        clientNameForm.setItems(FXCollections.observableArrayList( clients ));
         new AutoCompleteBox(clientNameForm);
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().selectFirst();
         comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-
-            // System.out.println( newValue );
 
             amountToPayText.setEditable( (int) newValue == 1 );
             amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
@@ -291,7 +290,7 @@ public class CommandGeneratorController implements Initializable {
         alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
 
 
-        list.add( alumenuimProduct );
+        commandDetails.getArticleCommands().add( alumenuimProduct );
         this.loadDataTable();
 
         aluminuimProduct.getSelectionModel().select(-1);
@@ -313,7 +312,7 @@ public class CommandGeneratorController implements Initializable {
         accessoireArticle.setQuantity( Float.valueOf( accessoireQuentity.getText() ) );
 
 
-        list.add( accessoireArticle );
+        commandDetails.getArticleCommands().add( accessoireArticle );
         this.loadDataTable();
         accessoireProduct.getSelectionModel().select(-1); ;
         accessoireLabel.setText(""); ;
@@ -333,25 +332,25 @@ public class CommandGeneratorController implements Initializable {
         glassArticle.setQuantity( Float.valueOf( glassQuentity.getText() ) );
 
 
-        list.add( glassArticle );
+        commandDetails.getArticleCommands().add( glassArticle );
         this.loadDataTable();
-        glassProduct.getSelectionModel().select(-1); ;
-        glassLabel.setText(""); ;
-        glassPrice.getItems().clear(); ;
-        glassQuentity.setText(""); ;
-        glassTotal.setText(" 00 DH"); ;
+        glassProduct.getSelectionModel().select(-1);
+        glassLabel.setText("");
+        glassPrice.getItems().clear();
+        glassQuentity.setText("");
+        glassTotal.setText(" 00 DH");
     }
 
 
     void loadDataTable(){
 
         totalePriceCommand.setText( "00,00 DH" );
-        float total = getTotal(); // list.stream().map( n -> n.getPrice()* n.getQuantity() ).collect( Collectors.toList() ).stream().reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+        float total = getTotal();
         totalePriceCommand.setText( total + " DH" );
 
 
         observableArticleCommand.clear();
-        observableArticleCommand.addAll( list );
+        observableArticleCommand.addAll( commandDetails.getArticleCommands() );
 
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -421,18 +420,29 @@ public class CommandGeneratorController implements Initializable {
         editProductOfCommand.setCellFactory( editCellFactory );
         deleteProductOfCommand.setCellFactory(deleteCellFactory );
 
-        tableProductsOfCommand.setItems( FXCollections.observableArrayList(list) );
+        tableProductsOfCommand.setItems( FXCollections.observableArrayList(commandDetails.getArticleCommands()) );
         tableProductsOfCommand.setItems( this.observableArticleCommand );
 
     }
 
     private Float getTotal(){
-        float total = list.stream()
+
+        float total = commandDetails.getArticleCommands().stream()
                           .map( n -> n.getPrice()* n.getQuantity() )
                           .collect( Collectors.toList() )
                           .stream()
                           .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
-        System.out.println( total );
         return total;
+    }
+
+    public void saveCommandEvent(MouseEvent mouseEvent) {
+
+//        comboPaymentStatus;
+//        amountToPayText ;
+//        clientNameForm ;
+
+        // commandDetails.setClient( clientNameForm.getSelectionModel().getSelectedItem() );
+        System.out.println(  );
+
     }
 }

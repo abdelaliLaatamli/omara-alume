@@ -49,5 +49,10 @@ public class ClientEntity implements Serializable {
     @JoinColumn( name = "client_id")
     protected Set<CommandEntity> commands;
 
+    @Override
+    public String toString(){
+        return this.getName();
+    }
+
 
 }
