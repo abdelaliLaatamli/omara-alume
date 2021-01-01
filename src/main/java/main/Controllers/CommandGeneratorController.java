@@ -38,9 +38,9 @@ public class CommandGeneratorController implements Initializable {
 
     @FXML ComboBox<String> clientNameForm ;
 
-
     @FXML Label totalePriceCommand ;
     @FXML ComboBox<PaymentStatus> comboPaymentStatus;
+    @FXML TextField amountToPayText ;
 
 
     // ---------- Aluminum Tab -------------
@@ -84,7 +84,6 @@ public class CommandGeneratorController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-
         loadData();
 
     }
@@ -97,12 +96,19 @@ public class CommandGeneratorController implements Initializable {
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().selectFirst();
+        comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
+
+            // System.out.println( newValue );
+
+            amountToPayText.setEditable( (int) newValue == 1 );
+            amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
+
+        } );
 
 
         initialiseAluminumTab();
         initialiseAccessoireTab();
         initialiseGlassTab();
-
 
     }
 
@@ -340,7 +346,7 @@ public class CommandGeneratorController implements Initializable {
     void loadDataTable(){
 
         totalePriceCommand.setText( "00,00 DH" );
-        float total = list.stream().map( n -> n.getPrice()* n.getQuantity() ).collect( Collectors.toList() ).stream().reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+        float total = getTotal(); // list.stream().map( n -> n.getPrice()* n.getQuantity() ).collect( Collectors.toList() ).stream().reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
         totalePriceCommand.setText( total + " DH" );
 
 
@@ -418,5 +424,15 @@ public class CommandGeneratorController implements Initializable {
         tableProductsOfCommand.setItems( FXCollections.observableArrayList(list) );
         tableProductsOfCommand.setItems( this.observableArticleCommand );
 
+    }
+
+    private Float getTotal(){
+        float total = list.stream()
+                          .map( n -> n.getPrice()* n.getQuantity() )
+                          .collect( Collectors.toList() )
+                          .stream()
+                          .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+        System.out.println( total );
+        return total;
     }
 }
