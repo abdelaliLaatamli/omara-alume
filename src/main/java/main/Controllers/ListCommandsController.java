@@ -87,6 +87,21 @@ public class ListCommandsController implements Initializable {
                             System.out.println("selectedData Edit: " + data.getId());
 
 
+                            try {
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/views/CommandGeneratorView.fxml"));
+                                Parent root = loader.load();
+                                CommandGeneratorController controller = loader.<CommandGeneratorController>getController();
+                                controller.setData(data);
+                                main.JavaFxApplication.mainStage.setScene(new Scene(root));
+                                main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
+                                main.JavaFxApplication.mainStage.show();
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
 
 
                         });

@@ -20,6 +20,7 @@ import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class CommandGeneratorController implements Initializable {
     private final GlassService glassService = new GlassService();
 
     private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
+    private CurrentCrudOperation operationCommand = CurrentCrudOperation.ADD ;
 
 
     @FXML ComboBox<ClientEntity> clientNameForm ;
@@ -81,20 +83,25 @@ public class CommandGeneratorController implements Initializable {
     ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
 
 
-    CommandEntity commandDetails ;
+    public CommandEntity commandDetails ;
 
     private ArticleCommandEntity editableCommandArticle = null;
 
+    public void setData( CommandEntity entity ){
+        operationCommand = CurrentCrudOperation.EDIT;
+        this.commandDetails = entity;
+        loadDataEdit();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         commandDetails = new CommandEntity();
-        loadData();
+        loadDataAdd();
 
     }
 
-    void loadData(){
+    void loadDataAdd(){
 
         List<ClientEntity> clients = clientServices.getAll();
         clientNameForm.setItems(FXCollections.observableArrayList( clients ));
@@ -113,6 +120,19 @@ public class CommandGeneratorController implements Initializable {
         initialiseAluminumTab();
         initialiseAccessoireTab();
         initialiseGlassTab();
+
+    }
+
+    void loadDataEdit(){
+
+
+        clientNameForm.getSelectionModel().select( commandDetails.getClient() );
+        clientNameForm.setDisable(true);
+
+        comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
+        comboPaymentStatus.getSelectionModel().select( commandDetails.getPaymentStatus() );
+
+        this.loadDataTable();
 
     }
 
