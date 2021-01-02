@@ -31,7 +31,7 @@
             <TableColumn fx:id="totalPriceOfCommand" prefWidth="116.0" text="Total " />
             <TableColumn fx:id="dateCommand" minWidth="4.0" prefWidth="99.0" text="Date Command" />
             <TableColumn fx:id="editCommand" prefWidth="96.0" text="Edit Command" />
-            <TableColumn fx:id="peuseCommand" prefWidth="102.0" text="Pause Command" />
+            <TableColumn fx:id="lockCommand" prefWidth="102.0" text="verrouiller la command " />
         </columns>
       </TableView>
 

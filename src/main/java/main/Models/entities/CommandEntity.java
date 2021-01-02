@@ -33,7 +33,7 @@ public class CommandEntity {
     @ManyToOne
     protected ClientEntity client ;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "payment_made_id")
     protected Set<PaymentsMadeEntity> paymentsMades = new HashSet<>();
 

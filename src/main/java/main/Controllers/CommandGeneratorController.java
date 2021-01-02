@@ -543,7 +543,7 @@ public class CommandGeneratorController implements Initializable {
         return total;
     }
 
-    public void saveCommandEvent(MouseEvent mouseEvent) {
+    public void saveCommandEvent(MouseEvent mouseEvent) throws IOException {
 
         int clientId = clientNameForm.getSelectionModel().getSelectedIndex() ;
         ClientEntity clientEntity = clientNameForm.getItems().get( clientId );
@@ -557,8 +557,16 @@ public class CommandGeneratorController implements Initializable {
 
         commandDetails.getPaymentsMades().add( paymentsMadeEntity );
 
-        commandService.addCommand(commandDetails);
+        boolean saved = commandService.addCommand(commandDetails);
 
+        if( saved ){
+
+            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
+            main.JavaFxApplication.mainStage.setScene(new Scene(root));
+            main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
+            main.JavaFxApplication.mainStage.show();
+
+        }
 
     }
 }

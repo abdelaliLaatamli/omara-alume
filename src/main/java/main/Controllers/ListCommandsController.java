@@ -16,15 +16,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import main.Models.entities.ArticleCommandEntity;
-import main.Models.entities.ClientEntity;
 import main.Models.entities.CommandEntity;
 import main.Services.CommandService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -42,7 +40,7 @@ public class ListCommandsController implements Initializable {
     @FXML TableColumn<CommandEntity , String > paymentsMadesOfCommand;
     @FXML TableColumn<CommandEntity , String > totalPriceOfCommand;
     @FXML TableColumn<CommandEntity , Void > editCommand ;
-    @FXML TableColumn<CommandEntity , Void > peuseCommand;
+    @FXML TableColumn<CommandEntity , Void > lockCommand;
 
     ObservableList<CommandEntity> observableCommand = FXCollections.observableArrayList();
 
@@ -57,16 +55,22 @@ public class ListCommandsController implements Initializable {
         List<CommandEntity> commands = commandService.getAllCommands();
         observableCommand.clear();
         observableCommand.addAll( commands );
-       // new ReadOnlyObjectWrapper(
-        referenceCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
-        dateCommand.setCellValueFactory( new PropertyValueFactory<>("commandDate") );
+
+        referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%010d", cellData.getValue().getId())  ));
+        dateCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCommandDate())
+        ));
+
+
         clientCommand.setCellValueFactory( new PropertyValueFactory<>("client") );
         paymentStatusCommand.setCellValueFactory( new PropertyValueFactory<>("paymentStatus") );
-        paymentsMadesOfCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
+        paymentsMadesOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( cellData.getValue()
+                                                                            .getPaymentsMades()
+                                                                            .stream()
+                                                                            .map( c -> c.getAmountPaid() )
+                                                                            .collect(Collectors.toList())
+                                                                            .stream().reduce( 0f , ( subSum , currentElemnt ) -> subSum + currentElemnt )) );
         totalPriceOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( this.sumTotal( cellData.getValue() )));
-
-
-
 
 
 
@@ -80,7 +84,10 @@ public class ListCommandsController implements Initializable {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             CommandEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data.getId());
+                            System.out.println("selectedData Edit: " + data.getId());
+
+
+
 
                         });
                     }
@@ -105,12 +112,12 @@ public class ListCommandsController implements Initializable {
             public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
                 final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
 
-                    private final Button btn = new Button("Delete");
+                    private final Button btn = new Button("Verrouiller");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             CommandEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData peause: " + data.getId());
+                            System.out.println("selectedData verrouiller: " + data.getId());
 
                         });
                     }
@@ -130,7 +137,7 @@ public class ListCommandsController implements Initializable {
         };
 
         editCommand.setCellFactory( editCellFactory );
-        peuseCommand.setCellFactory(deleteCellFactory );
+        lockCommand.setCellFactory(deleteCellFactory );
 
 
         listCommandTable.setItems( observableCommand );
