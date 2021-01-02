@@ -26,4 +26,8 @@ public class GlassEntity extends ArticleEntity {
     @Column
     protected GlassColor color;
 
+    @Override
+    public String getType() {
+        return "GlassEntity";
+    }
 }

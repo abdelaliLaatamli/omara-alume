@@ -45,5 +45,7 @@ public abstract class ArticleEntity {
         return this.name;
     }
 
+    public abstract String getType();
+
 
 }

@@ -29,4 +29,8 @@ public class AluminumEntity extends ArticleEntity {
     protected MadeBy madeBy ;
 
 
+    @Override
+    public String getType() {
+        return "AluminumEntity";
+    }
 }

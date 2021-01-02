@@ -15,11 +15,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.enums.PaymentStatus;
+import main.Models.utils.CurrentCrudOperation;
 import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -31,6 +31,8 @@ public class CommandGeneratorController implements Initializable {
     private final AccessoryService accessoryService = new AccessoryService();
     private final AluminumService aluminumService = new AluminumService();
     private final GlassService glassService = new GlassService();
+
+    private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
 
 
     @FXML ComboBox<ClientEntity> clientNameForm ;
@@ -63,7 +65,12 @@ public class CommandGeneratorController implements Initializable {
     @FXML TextField glassQuentity ;
     @FXML Label glassTotal ;
 
-    // --------------------
+    // --------- TABPANE Switch Produts-----------
+
+    @FXML TabPane tabPaneAddProducts;
+
+    // -----------Table Products------------
+
     @FXML TableView<ArticleCommandEntity> tableProductsOfCommand;
     @FXML TableColumn<ArticleCommandEntity , String> lableOfCommand ;
     @FXML TableColumn<ArticleCommandEntity , String> priceProductOfCommand ;
@@ -75,6 +82,8 @@ public class CommandGeneratorController implements Initializable {
 
 
     CommandEntity commandDetails ;
+
+    private ArticleCommandEntity editableCommandArticle = null;
 
 
     @Override
@@ -276,65 +285,100 @@ public class CommandGeneratorController implements Initializable {
 
     }
 
-    public void ajouterAlumnuimToFucture(MouseEvent mouseEvent) {
+    public void saveAlumnuimInCommand(MouseEvent mouseEvent) {
 
-        ArticleCommandEntity alumenuimProduct = new ArticleCommandEntity();
+        if( operation == CurrentCrudOperation.ADD ){
+            ArticleCommandEntity alumenuimProduct = new ArticleCommandEntity();
 
-        alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
-        alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
-        alumenuimProduct.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
-        alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
+            alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
+            alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
+            alumenuimProduct.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
+            alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
+            alumenuimProduct.setPriceOfArticle( priceAluminumCombo.getSelectionModel().getSelectedItem() );
 
+            commandDetails.getArticleCommands().add( alumenuimProduct );
+        }else{
 
-        commandDetails.getArticleCommands().add( alumenuimProduct );
+            ArticleCommandEntity alumenuimProduct = editableCommandArticle;
+            alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
+            alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
+            alumenuimProduct.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
+            alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
+            alumenuimProduct.setPriceOfArticle( priceAluminumCombo.getSelectionModel().getSelectedItem() );
+            editableCommandArticle = null;
+        }
+
         this.loadDataTable();
 
         aluminuimProduct.getSelectionModel().select(-1);
         aluminuimLabel.setText("");
         priceAluminumCombo.getItems().clear();
-        aluminuimContity.setText("");
+        aluminuimContity.setText("1");
         priceAlumnuimShow.setText(" 00 DH");
+        operation = CurrentCrudOperation.ADD;
     }
 
 
 
-    public void ajouterAccessoireToCommand(MouseEvent mouseEvent) {
+    public void saveAccessoireInCommand(MouseEvent mouseEvent) {
+        if( operation == CurrentCrudOperation.ADD ) {
+            ArticleCommandEntity accessoireArticle = new ArticleCommandEntity();
 
-        ArticleCommandEntity accessoireArticle = new ArticleCommandEntity();
+            accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
+            accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
+            accessoireArticle.setPrice(accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
+            accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
+            accessoireArticle.setPriceOfArticle(accessoirePrice.getSelectionModel().getSelectedItem());
+            commandDetails.getArticleCommands().add(accessoireArticle);
 
-        accessoireArticle.setArticle( accessoireProduct.getSelectionModel().getSelectedItem() );
-        accessoireArticle.setName( accessoireProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
-        accessoireArticle.setPrice( accessoirePrice.getSelectionModel().getSelectedItem().getPrice() );
-        accessoireArticle.setQuantity( Float.valueOf( accessoireQuentity.getText() ) );
-
-
-        commandDetails.getArticleCommands().add( accessoireArticle );
+        }else{
+            ArticleCommandEntity accessoireArticle = editableCommandArticle;
+            accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
+            accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
+            accessoireArticle.setPrice(accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
+            accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
+            accessoireArticle.setPriceOfArticle(accessoirePrice.getSelectionModel().getSelectedItem());
+            editableCommandArticle = null;
+        }
         this.loadDataTable();
         accessoireProduct.getSelectionModel().select(-1); ;
         accessoireLabel.setText(""); ;
         accessoirePrice.getItems().clear(); ;
-        accessoireQuentity.setText(""); ;
+        accessoireQuentity.setText("1"); ;
         accessoireTotal.setText(" 00 DH"); ;
+        operation = CurrentCrudOperation.ADD;
 
     }
 
-    public void ajouterGlassToCommand(MouseEvent mouseEvent) {
+    public void saveGlassInCommand(MouseEvent mouseEvent) {
 
-        ArticleCommandEntity glassArticle = new ArticleCommandEntity();
+        if( operation == CurrentCrudOperation.ADD ) {
+            ArticleCommandEntity glassArticle = new ArticleCommandEntity();
 
-        glassArticle.setArticle( glassProduct.getSelectionModel().getSelectedItem() );
-        glassArticle.setName( glassProduct.getSelectionModel().getSelectedItem().getName() +" " + glassLabel.getText()  );
-        glassArticle.setPrice( glassPrice.getSelectionModel().getSelectedItem().getPrice() );
-        glassArticle.setQuantity( Float.valueOf( glassQuentity.getText() ) );
+            glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
+            glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
+            glassArticle.setPrice(glassPrice.getSelectionModel().getSelectedItem().getPrice());
+            glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
+            glassArticle.setPriceOfArticle(glassPrice.getSelectionModel().getSelectedItem());
 
+            commandDetails.getArticleCommands().add(glassArticle);
+        }else{
+            ArticleCommandEntity glassArticle = editableCommandArticle ;
+            glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
+            glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
+            glassArticle.setPrice(glassPrice.getSelectionModel().getSelectedItem().getPrice());
+            glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
+            glassArticle.setPriceOfArticle(glassPrice.getSelectionModel().getSelectedItem());
+            editableCommandArticle = null;
+        }
 
-        commandDetails.getArticleCommands().add( glassArticle );
         this.loadDataTable();
         glassProduct.getSelectionModel().select(-1);
         glassLabel.setText("");
         glassPrice.getItems().clear();
-        glassQuentity.setText("");
+        glassQuentity.setText("1");
         glassTotal.setText(" 00 DH");
+        this.operation = CurrentCrudOperation.ADD;
     }
 
 
@@ -366,6 +410,73 @@ public class CommandGeneratorController implements Initializable {
                             ArticleCommandEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data.getId());
 
+
+                            switch ( data.getArticle().getType() ){
+                                case "AluminumEntity"  :
+
+                                    System.out.println( "AluminumEntity" );
+
+                                    aluminuimProduct.getSelectionModel().select((AluminumEntity) data.getArticle());
+                                    aluminuimLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
+                                    priceAluminumCombo.getSelectionModel().select( data.getPriceOfArticle() );
+                                    aluminuimContity.setText( data.getQuantity() + "");
+
+                                    priceAlumnuimShow.setText( Float.valueOf( data.getQuantity() ) * (
+                                            ( priceAluminumCombo.getSelectionModel().getSelectedIndex() == -1 ) ?
+                                                    0 : priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice()
+                                    ) + " DH");
+
+
+                                    tabPaneAddProducts.getSelectionModel().selectFirst();
+                                    editableCommandArticle = data;
+                                    operation = CurrentCrudOperation.EDIT;
+
+                                    break;
+
+                                case "AccessoryEntity" :
+                                    System.out.println( "AccessoryEntity" );
+
+                                    accessoireProduct.getSelectionModel().select((AccessoryEntity) data.getArticle());
+                                    accessoireLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
+                                    accessoirePrice.getSelectionModel().select( data.getPriceOfArticle() );
+                                    accessoireQuentity.setText( data.getQuantity() + "" );
+
+                                    accessoireTotal.setText( Float.valueOf( data.getQuantity() ) * (
+                                            ( accessoirePrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                                                    0 : accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
+                                    ) + " DH");
+
+                                    tabPaneAddProducts.getSelectionModel().select(1);
+                                    editableCommandArticle = data;
+                                    operation = CurrentCrudOperation.EDIT;
+
+                                    break;
+
+                                case "GlassEntity"     :
+                                    System.out.println( "GlassEntity" );
+
+                                    glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
+                                    glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
+                                    priceAluminumCombo.getSelectionModel().select( data.getPriceOfArticle() );
+                                    glassQuentity.setText( data.getQuantity() + "" );
+
+
+                                    glassTotal.setText( Float.valueOf( data.getQuantity() ) * (
+                                            ( glassPrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                                                    0 : glassPrice.getSelectionModel().getSelectedItem().getPrice()
+                                    ) + " DH");
+
+
+                                    tabPaneAddProducts.getSelectionModel().select(2);
+                                    editableCommandArticle = data;
+                                    operation = CurrentCrudOperation.EDIT;
+                                    break;
+
+                                default:
+                                    System.out.println(" there no type of avalaibele types ");
+                            }
+
+
                         });
                     }
 
@@ -395,7 +506,8 @@ public class CommandGeneratorController implements Initializable {
                         btn.setOnAction((ActionEvent event) -> {
                             ArticleCommandEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData delete: " + data.getId());
-
+                            commandDetails.getArticleCommands().remove( data );
+                            loadDataTable();
                         });
                     }
 

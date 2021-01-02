@@ -19,4 +19,8 @@ public class AccessoryEntity extends ArticleEntity {
     @Column
     protected AccessoryColor color ;
 
+    @Override
+    public String getType() {
+        return "AccessoryEntity";
+    }
 }
