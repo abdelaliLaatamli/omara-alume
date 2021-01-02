@@ -25,11 +25,11 @@
       <TableView fx:id="listCommandTable" layoutX="186.0" layoutY="63.0" prefHeight="630.0" prefWidth="1000.0">
         <columns>
             <TableColumn fx:id="referenceCommand" prefWidth="249.0" text="Reference Command" />
-            <TableColumn fx:id="dateCommand" minWidth="4.0" prefWidth="99.0" text="Date Command" />
             <TableColumn fx:id="clientCommand" prefWidth="113.0" text="Client" />
             <TableColumn fx:id="paymentStatusCommand" minWidth="4.0" prefWidth="126.0" text="Payment Status" />
             <TableColumn fx:id="paymentsMadesOfCommand" prefWidth="98.0" text="payments Faits" />
-            <TableColumn fx:id="articleCommands" prefWidth="116.0" text="Article Commands" />
+            <TableColumn fx:id="totalPriceOfCommand" prefWidth="116.0" text="Total " />
+            <TableColumn fx:id="dateCommand" minWidth="4.0" prefWidth="99.0" text="Date Command" />
             <TableColumn fx:id="editCommand" prefWidth="96.0" text="Edit Command" />
             <TableColumn fx:id="peuseCommand" prefWidth="102.0" text="Pause Command" />
         </columns>

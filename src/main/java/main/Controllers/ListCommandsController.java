@@ -1,5 +1,6 @@
 package main.Controllers;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,13 +12,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import main.Models.entities.ClientEntity;
 import main.Models.entities.CommandEntity;
 import main.Services.CommandService;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class ListCommandsController implements Initializable {
@@ -30,7 +35,7 @@ public class ListCommandsController implements Initializable {
     @FXML TableColumn<CommandEntity , String > clientCommand;
     @FXML TableColumn<CommandEntity , String > paymentStatusCommand ;
     @FXML TableColumn<CommandEntity , String > paymentsMadesOfCommand;
-    @FXML TableColumn<CommandEntity , String > articleCommands;
+    @FXML TableColumn<CommandEntity , String > totalPriceOfCommand;
     @FXML TableColumn<CommandEntity , String > editCommand ;
     @FXML TableColumn<CommandEntity , String > peuseCommand;
 
@@ -46,14 +51,14 @@ public class ListCommandsController implements Initializable {
 
         List<CommandEntity> commands = commandService.getAllCommands();
         observableCommand.clear();
-        observableCommand.addAll( commandService.getAllCommands() );
-
+        observableCommand.addAll( commands );
+       // new ReadOnlyObjectWrapper(
         referenceCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
         dateCommand.setCellValueFactory( new PropertyValueFactory<>("commandDate") );
         clientCommand.setCellValueFactory( new PropertyValueFactory<>("client") );
         paymentStatusCommand.setCellValueFactory( new PropertyValueFactory<>("paymentStatus") );
         paymentsMadesOfCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
-        articleCommands.setCellValueFactory( new PropertyValueFactory<>("id") );
+        totalPriceOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( this.sumTotal( cellData.getValue() )));
         editCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
         peuseCommand.setCellValueFactory( new PropertyValueFactory<>("id") );
 
@@ -61,6 +66,17 @@ public class ListCommandsController implements Initializable {
 
 
 
+    }
+
+    private Float sumTotal(CommandEntity client){
+        float total = client.getArticleCommands()
+                .stream()
+                .map( n -> n.getPrice() * n.getQuantity() )
+                .collect(Collectors.toList())
+                .stream()
+                .reduce( 0f , ( subTotal , currentPrice ) -> subTotal + currentPrice );
+
+        return total;
     }
 
     public void goBack(MouseEvent mouseEvent) throws IOException {

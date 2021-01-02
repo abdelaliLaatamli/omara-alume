@@ -25,15 +25,16 @@ public class CommandDao {
             Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
 
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
-                PaymentsMadeEntity paymentsActEntity = (PaymentsMadeEntity) session.save( paymentsMadeEntity );
-                savedPayement.add( paymentsActEntity );
+                session.save( paymentsMadeEntity );
+                savedPayement.add( paymentsMadeEntity );
             }
 
             Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
 
             for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
-                ArticleCommandEntity articleCommands = (ArticleCommandEntity) session.save( articleCommandEntity );
-                savedArticleCommands.add( articleCommands );
+                //ArticleCommandEntity articleCommands = (ArticleCommandEntity)
+                session.save( articleCommandEntity );
+                savedArticleCommands.add( articleCommandEntity );
             }
 
             entity.setPaymentsMades( savedPayement );

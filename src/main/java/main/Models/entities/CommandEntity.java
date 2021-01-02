@@ -37,7 +37,7 @@ public class CommandEntity {
     @JoinColumn(name = "payment_made_id")
     protected Set<PaymentsMadeEntity> paymentsMades = new HashSet<>();
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "command_id")
     protected Set<ArticleCommandEntity> articleCommands = new HashSet<>() ;
 
