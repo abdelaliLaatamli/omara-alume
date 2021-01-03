@@ -9,10 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
@@ -132,8 +129,9 @@ public class ListCommandsController implements Initializable {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData verrouiller: " + data.getId());
+                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData verrouiller: " + order.getId());
+                            lockOrder( order );
 
                         });
                     }
@@ -161,8 +159,9 @@ public class ListCommandsController implements Initializable {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData Annuler : " + data.getId());
+                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            //System.out.println("selectedData Annuler : " + order.getId());
+                            cancleOrder( order );
 
                         });
                     }
@@ -182,12 +181,56 @@ public class ListCommandsController implements Initializable {
             }
         };
 
-        //editCommand.setCellFactory( editCellFactory );
         editCommand.setCellFactory( editCellFactory );
         lockCommand.setCellFactory(lockCellFactory );
         cancelOrder.setCellFactory(cancelCellFactory );
         listCommandTable.setItems( observableCommand );
 
+
+    }
+
+    private void cancleOrder( CommandEntity order ){
+
+        order.setIsCanceled( true );
+
+        boolean canceled = commandService.updateOrder( order );
+
+        if (canceled) {
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Verrouillage du Command réussi");
+            alert.setHeaderText("le Command est annulé");
+            alert.showAndWait();
+            this.loadData();
+
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error De verrouillage");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
+
+    }
+
+    private void lockOrder( CommandEntity order ){
+        order.setIsLocked( true );
+
+        boolean canceled = commandService.updateOrder( order );
+
+        if (canceled) {
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("annulation du Command réussi");
+            alert.setHeaderText("le Command est annulé");
+            alert.showAndWait();
+            this.loadData();
+
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'annulation");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
 
     }
 

@@ -34,7 +34,7 @@ public class CommandEntity {
     protected Boolean isLocked = false ;
 
     @Column
-    protected Boolean isDeleted = false ;
+    protected Boolean isCanceled = false ;
 
     @ManyToOne
     protected ClientEntity client ;

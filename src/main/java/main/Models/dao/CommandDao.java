@@ -237,7 +237,7 @@ public class CommandDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfEntities = session.createQuery("from main.Models.entities.CommandEntity").getResultList();
+            listOfEntities = session.createQuery("from main.Models.entities.CommandEntity C WHERE C.isCanceled = 0").getResultList();
 
             // commit transaction
             transaction.commit();

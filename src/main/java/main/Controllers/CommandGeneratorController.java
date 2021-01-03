@@ -737,7 +737,6 @@ public class CommandGeneratorController implements Initializable {
         }else{
             System.out.println(" Operation Edit ");
 
-            //CommandEntity oo = commandDetails;
 
             boolean saved = commandService.updateOrder(commandDetails);
 
