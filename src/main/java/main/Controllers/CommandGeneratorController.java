@@ -204,10 +204,23 @@ public class CommandGeneratorController implements Initializable {
 
                 }else if( OldPayementStatusBkp == PaymentStatus.PAYINPARTS ) {
 
-                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
-                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
-                        amountToPayText.setText( getTotal() - payedMount + "" );
+                    try {
+
+                       if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+                            comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                            amountToPayText.setText( getTotal() - payedMount + "" );
+                        }
+
+                    }catch (Exception e ){
+                        //System.out.println("aaa" );
                     }
+
+                    //System.out.println( newValue );
+
+//                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+//                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+//                        amountToPayText.setText( getTotal() - payedMount + "" );
+//                    }
 
 
 
