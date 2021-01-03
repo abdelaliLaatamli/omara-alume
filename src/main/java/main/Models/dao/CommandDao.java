@@ -1,6 +1,7 @@
 package main.Models.dao;
 
 import main.Models.entities.*;
+import main.Models.enums.PaymentStatus;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -25,14 +26,18 @@ public class CommandDao {
             Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
 
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
-                session.save( paymentsMadeEntity );
-                savedPayement.add( paymentsMadeEntity );
+                if( paymentsMadeEntity.getAmountPaid() != 0 ){
+                    session.save( paymentsMadeEntity );
+                    savedPayement.add( paymentsMadeEntity );
+                }
             }
+
+            float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
+            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
 
             Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
 
             for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
-                //ArticleCommandEntity articleCommands = (ArticleCommandEntity)
                 session.save( articleCommandEntity );
                 savedArticleCommands.add( articleCommandEntity );
             }
@@ -52,6 +57,45 @@ public class CommandDao {
         }
         return entity;
     }
+
+//    public CommandEntity save(CommandEntity entity) {
+//        Transaction transaction = null;
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            // start a transaction
+//            transaction = session.beginTransaction();
+//
+//            Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
+//
+//            for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
+//                if( paymentsMadeEntity.getAmountPaid() != 0 ){
+//                    session.save( paymentsMadeEntity );
+//                    savedPayement.add( paymentsMadeEntity );
+//                }
+//            }
+//
+//            Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
+//
+//            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
+//                session.save( articleCommandEntity );
+//                savedArticleCommands.add( articleCommandEntity );
+//            }
+//
+//            entity.setPaymentsMades( savedPayement );
+//            entity.setArticleCommands( savedArticleCommands );
+//
+//            // save the student object
+//            session.save(entity);
+//            // commit transaction
+//            transaction.commit();
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            e.printStackTrace();
+//        }
+//        return entity;
+//    }
+
 
     /**
      * Update User
@@ -86,14 +130,30 @@ public class CommandDao {
             transaction = session.beginTransaction();
             // save the student object
 
-/*            session.update(
-                    entity
-                            .getPrices()
-                            .stream()
-                            .filter( price -> price.getName().equals("default") )
-                            .findFirst()
-                            .get()
-            );*/
+            Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
+            for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
+
+                //if( paymentsMadeEntity.getId() == 0 || paymentsMadeEntity.getAmountPaid() == 0 ){
+                if (paymentsMadeEntity.getAmountPaid() != 0) {
+                    if (paymentsMadeEntity.getId() == 0)
+                        session.save(paymentsMadeEntity);
+
+                    savedPayement.add(paymentsMadeEntity);
+                }
+            }
+            float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
+            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
+
+            Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
+
+            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
+                session.save( articleCommandEntity );
+                savedArticleCommands.add( articleCommandEntity );
+            }
+
+            entity.setPaymentsMades( savedPayement );
+            entity.setArticleCommands( savedArticleCommands );
+
 
             session.update(entity);
             // commit transaction

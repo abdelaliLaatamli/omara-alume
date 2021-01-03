@@ -33,7 +33,7 @@ public class CommandService {
         return updatedCommand ;
     }
 
-    public boolean updateCommand( CommandEntity command ){
+    public boolean updateOrder(CommandEntity command ){
 
         boolean isSaved = commandDao.update( command );
 

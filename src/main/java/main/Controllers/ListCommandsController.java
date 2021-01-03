@@ -41,6 +41,7 @@ public class ListCommandsController implements Initializable {
     @FXML TableColumn<CommandEntity , String > totalPriceOfCommand;
     @FXML TableColumn<CommandEntity , Void > editCommand ;
     @FXML TableColumn<CommandEntity , Void > lockCommand;
+    @FXML TableColumn<CommandEntity , Void > cancelOrder;
 
     ObservableList<CommandEntity> observableCommand = FXCollections.observableArrayList();
 
@@ -122,7 +123,7 @@ public class ListCommandsController implements Initializable {
         };
 
 
-        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> deleteCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> lockCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
             @Override
             public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
                 final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
@@ -151,12 +152,41 @@ public class ListCommandsController implements Initializable {
             }
         };
 
+        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> cancelCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+            @Override
+            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
+                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+
+                    private final Button btn = new Button("Annuler");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            CommandEntity data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData Annuler : " + data.getId());
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        //editCommand.setCellFactory( editCellFactory );
         editCommand.setCellFactory( editCellFactory );
-        lockCommand.setCellFactory(deleteCellFactory );
-
-
+        lockCommand.setCellFactory(lockCellFactory );
+        cancelOrder.setCellFactory(cancelCellFactory );
         listCommandTable.setItems( observableCommand );
-
 
 
     }

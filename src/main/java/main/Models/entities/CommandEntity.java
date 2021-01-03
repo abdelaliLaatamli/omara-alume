@@ -30,6 +30,12 @@ public class CommandEntity {
     @Column
     protected Instant commandDate = Instant.now();
 
+    @Column
+    protected Boolean isLocked = false ;
+
+    @Column
+    protected Boolean isDeleted = false ;
+
     @ManyToOne
     protected ClientEntity client ;
 

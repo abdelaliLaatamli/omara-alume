@@ -20,7 +20,6 @@ import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -42,6 +41,7 @@ public class CommandGeneratorController implements Initializable {
     @FXML ComboBox<PaymentStatus> comboPaymentStatus;
     @FXML TextField amountToPayText ;
 
+    @FXML Label orderReference;
 
     // ---------- Aluminum Tab -------------
     @FXML ComboBox<AluminumEntity> aluminuimProduct;
@@ -84,12 +84,33 @@ public class CommandGeneratorController implements Initializable {
 
 
     public CommandEntity commandDetails ;
+    private PaymentStatus OldPayementStatusBkp ;
+    private float OldTotal ;
+    private float payedMount ;
+
+
+    private boolean isWorkingPayementCombo = false;
+    private boolean isWorkingPriceTextFiltred = false ;
 
     private ArticleCommandEntity editableCommandArticle = null;
 
     public void setData( CommandEntity entity ){
         operationCommand = CurrentCrudOperation.EDIT;
-        this.commandDetails = entity;
+
+        OldTotal = entity.getArticleCommands().stream()
+                .map( n -> n.getPrice()* n.getQuantity() )
+                .collect( Collectors.toList() )
+                .stream()
+                .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+
+        payedMount = entity.getPaymentsMades().stream().map( n -> n.getAmountPaid() ).reduce( 0f , (sub , elem) -> sub+elem );
+
+        orderReference.setText(  String.format("REF%010d", 15 )   );
+
+        OldPayementStatusBkp = entity.getPaymentStatus();
+
+        commandDetails = entity;
+
         loadDataEdit();
     }
 
@@ -112,7 +133,91 @@ public class CommandGeneratorController implements Initializable {
         comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
 
             amountToPayText.setEditable( (int) newValue == 1 );
-            amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
+/*
+            private boolean isWorkingPayementCombo = false;
+            private boolean isWorkingPriceTextFiltred = false ;*/
+
+            if( operationCommand == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
+
+                isWorkingPayementCombo = true ;
+
+                if( OldPayementStatusBkp == PaymentStatus.CREDIT ){
+                    amountToPayText.setText("0");
+                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+                    }
+
+                }else if( OldPayementStatusBkp == PaymentStatus.COMPLETED ){
+                    amountToPayText.setText("0");
+                    if(  comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+                    }else{
+                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - OldTotal + "" : "0.0" );
+                    }
+
+                }else if ( OldPayementStatusBkp == PaymentStatus.PAYINPARTS) {
+
+                    amountToPayText.setText("0");
+                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+                    }
+
+                }
+
+
+            }else if ( operationCommand == CurrentCrudOperation.ADD && !isWorkingPriceTextFiltred ) {
+                isWorkingPayementCombo = true ;
+                amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
+
+            }
+            isWorkingPayementCombo = false ;
+
+        } );
+
+        amountToPayText.textProperty().addListener( (observable, oldValue, newValue) -> {
+
+            if( operationCommand == CurrentCrudOperation.EDIT && !isWorkingPayementCombo ){
+
+                isWorkingPriceTextFiltred = true ;
+/*                if( OldPayementStatusBkp == PaymentStatus.CREDIT ){
+                    System.out.println("bbb");
+                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYINPARTS ){
+                        System.out.println("ccc");
+                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                    }
+
+                }else{
+                    System.out.println("ddd");
+                    if( Float.valueOf( newValue ) >= (getTotal() - OldTotal) && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYINPARTS ){
+                        System.out.println("eee");
+                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                    }
+                }*/
+
+
+                if( OldPayementStatusBkp == PaymentStatus.CREDIT ){
+                    // System.out.println("aaaaaa");
+                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                        amountToPayText.setText( getTotal() - payedMount + "" );
+                    }
+
+                }else if( OldPayementStatusBkp == PaymentStatus.PAYINPARTS ) {
+
+                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                        amountToPayText.setText( getTotal() - payedMount + "" );
+                    }
+
+
+
+                }else if ( OldPayementStatusBkp == PaymentStatus.COMPLETED ){
+                    // System.out.println("dddddd");
+                }
+
+
+            }
+            isWorkingPriceTextFiltred = false ;
 
         } );
 
@@ -160,7 +265,7 @@ public class CommandGeneratorController implements Initializable {
             }
 
             glassTotal.setText( number * (
-                    ( glassPrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                    ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
                             0 : glassPrice.getSelectionModel().getSelectedItem().getPrice()
             ) + " DH");
 
@@ -176,7 +281,7 @@ public class CommandGeneratorController implements Initializable {
             }
 
             glassTotal.setText( number * (
-                    ( glassPrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                    ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
                             0 : glassPrice.getSelectionModel().getSelectedItem().getPrice()
             ) + " DH");
 
@@ -206,7 +311,7 @@ public class CommandGeneratorController implements Initializable {
             }
 
             accessoireTotal.setText( number * (
-                    ( accessoirePrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                    ( accessoirePrice.getSelectionModel().getSelectedItem() == null) ?
                             0 : accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
             ) + " DH");
 
@@ -222,7 +327,7 @@ public class CommandGeneratorController implements Initializable {
             }
 
             accessoireTotal.setText( number * (
-                    ( accessoirePrice.getSelectionModel().getSelectedIndex() == -1 ) ?
+                    ( accessoirePrice.getSelectionModel().getSelectedItem() == null ) ?
                             0 : accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
             ) + " DH");
 
@@ -251,26 +356,27 @@ public class CommandGeneratorController implements Initializable {
                 number = 1f;
             }
 
-            priceAlumnuimShow.setText( number * (
-                                                    ( priceAluminumCombo.getSelectionModel().getSelectedIndex() == -1 ) ?
-                                                            0 : priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice()
-                                                ) + " DH");
+            float total = number * (
+                    ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
+                            0 : priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice()
+            );
+
+            priceAlumnuimShow.setText( total + " DH");
 
         });
 
         aluminuimContity.textProperty().addListener( (observable, oldValue, newValue) -> {
-
             float number = 0f;
             try{
                 number = Float.valueOf( newValue.equals("") ? "0" : newValue );
             }catch (Exception e) {
                 number = 1f;
             }
-
-            priceAlumnuimShow.setText( number * (
-                                                    ( priceAluminumCombo.getSelectionModel().getSelectedIndex() == -1 ) ?
-                                                        0 : priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice()
-                                                ) + " DH");
+            float total = number * (
+                    ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
+                            0 : priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice()
+            );
+            priceAlumnuimShow.setText( total + " DH");
 
         } );
     }
@@ -330,6 +436,9 @@ public class CommandGeneratorController implements Initializable {
 
         this.loadDataTable();
 
+        if( this.operationCommand == CurrentCrudOperation.EDIT )
+            restorePaimentStatus();
+
         aluminuimProduct.getSelectionModel().select(-1);
         aluminuimLabel.setText("");
         priceAluminumCombo.getItems().clear();
@@ -361,6 +470,10 @@ public class CommandGeneratorController implements Initializable {
             editableCommandArticle = null;
         }
         this.loadDataTable();
+
+        if( this.operationCommand == CurrentCrudOperation.EDIT )
+            restorePaimentStatus();
+
         accessoireProduct.getSelectionModel().select(-1); ;
         accessoireLabel.setText(""); ;
         accessoirePrice.getItems().clear(); ;
@@ -393,6 +506,10 @@ public class CommandGeneratorController implements Initializable {
         }
 
         this.loadDataTable();
+
+        if( this.operationCommand == CurrentCrudOperation.EDIT )
+            restorePaimentStatus();
+
         glassProduct.getSelectionModel().select(-1);
         glassLabel.setText("");
         glassPrice.getItems().clear();
@@ -401,6 +518,22 @@ public class CommandGeneratorController implements Initializable {
         this.operation = CurrentCrudOperation.ADD;
     }
 
+    void restorePaimentStatus(){
+
+        if( OldPayementStatusBkp == PaymentStatus.COMPLETED && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED){
+
+            float newF = this.getTotal();
+
+            //System.out.println( "----------- nn ------------"  +  newF +" ++ " + OldTotal  + " -- "  +  (newF > OldTotal)  );
+
+            //if( newF > OldTotal ){
+                comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYINPARTS );
+                amountToPayText.setText( newF - OldTotal + " " );
+            //}
+
+        }
+
+    }
 
     void loadDataTable(){
 
@@ -477,7 +610,7 @@ public class CommandGeneratorController implements Initializable {
 
                                     glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
                                     glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
-                                    priceAluminumCombo.getSelectionModel().select( data.getPriceOfArticle() );
+                                    glassPrice.getSelectionModel().select( data.getPriceOfArticle() );
                                     glassQuentity.setText( data.getQuantity() + "" );
 
 
@@ -565,8 +698,10 @@ public class CommandGeneratorController implements Initializable {
 
     public void saveCommandEvent(MouseEvent mouseEvent) throws IOException {
 
-        int clientId = clientNameForm.getSelectionModel().getSelectedIndex() ;
-        ClientEntity clientEntity = clientNameForm.getItems().get( clientId );
+
+        ClientEntity clientEntity = ( operationCommand == CurrentCrudOperation.ADD ) ?
+                    clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) :
+                    clientNameForm.getSelectionModel().getSelectedItem() ;
 
         commandDetails.setClient( clientEntity );
         commandDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
@@ -577,14 +712,36 @@ public class CommandGeneratorController implements Initializable {
 
         commandDetails.getPaymentsMades().add( paymentsMadeEntity );
 
-        boolean saved = commandService.addCommand(commandDetails);
+        if( operationCommand == CurrentCrudOperation.ADD ) {
 
-        if( saved ){
+            boolean saved = commandService.addCommand(commandDetails);
 
-            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
-            main.JavaFxApplication.mainStage.setScene(new Scene(root));
-            main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
-            main.JavaFxApplication.mainStage.show();
+            if (saved) {
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("l'ajout de Command réussi");
+                alert.setHeaderText("le Command est bien ajouté");
+                alert.showAndWait();
+
+                Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
+                main.JavaFxApplication.mainStage.setScene(new Scene(root));
+                main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
+                main.JavaFxApplication.mainStage.show();
+
+            }else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error D'ajouter");
+                alert.setHeaderText("Oups, il y a eu une erreur!");
+                alert.showAndWait();
+            }
+        }else{
+            System.out.println(" Operation Edit ");
+
+            //CommandEntity oo = commandDetails;
+
+            boolean saved = commandService.updateOrder(commandDetails);
+
+            System.out.println( saved );
 
         }
 
