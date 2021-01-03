@@ -39,6 +39,7 @@ public class ListCommandsController implements Initializable {
     @FXML TableColumn<CommandEntity , Void > editCommand ;
     @FXML TableColumn<CommandEntity , Void > lockCommand;
     @FXML TableColumn<CommandEntity , Void > cancelOrder;
+    @FXML TableColumn<CommandEntity , Void > printOrder;
 
     ObservableList<CommandEntity> observableCommand = FXCollections.observableArrayList();
 
@@ -181,9 +182,41 @@ public class ListCommandsController implements Initializable {
             }
         };
 
+        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> printCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+            @Override
+            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
+                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+
+                    private final Button btn = new Button("Imprimer");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData print : " + order.getId());
+                            //cancleOrder( order );
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
         editCommand.setCellFactory( editCellFactory );
         lockCommand.setCellFactory(lockCellFactory );
         cancelOrder.setCellFactory(cancelCellFactory );
+        printOrder.setCellFactory( printCellFactory );
         listCommandTable.setItems( observableCommand );
 
 
