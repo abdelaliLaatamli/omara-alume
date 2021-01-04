@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -30,6 +29,6 @@ public class PaymentsMadeEntity {
     protected Instant paymentDate = Instant.now();
 
     @ManyToOne
-    protected CommandEntity command;
+    protected OrderEntity command;
 
 }

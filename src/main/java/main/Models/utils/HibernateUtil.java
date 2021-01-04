@@ -46,7 +46,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(AluminumEntity.class);
                 configuration.addAnnotatedClass(AccessoryEntity.class);
                 configuration.addAnnotatedClass(ArticleCommandEntity.class);
-                configuration.addAnnotatedClass(CommandEntity.class);
+                configuration.addAnnotatedClass(OrderEntity.class);
                 configuration.addAnnotatedClass(PaymentsMadeEntity.class);
                 configuration.addAnnotatedClass(PriceEntity.class);
 

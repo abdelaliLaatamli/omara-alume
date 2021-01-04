@@ -1,48 +1,48 @@
 package main.Services;
 
-import main.Models.dao.CommandDao;
-import main.Models.entities.CommandEntity;
+import main.Models.dao.OrderDao;
+import main.Models.entities.OrderEntity;
 
 import java.util.List;
 
 public class CommandService {
 
-    private CommandDao commandDao = new CommandDao();
+    private OrderDao commandDao = new OrderDao();
 
-    public List<CommandEntity> getAllCommands(){
+    public List<OrderEntity> getAllCommands(){
 
-        List<CommandEntity> listCommands = commandDao.getAll();
+        List<OrderEntity> listCommands = commandDao.getAll();
 
         return listCommands;
 
     }
 
     //public boolean addProduct( CommandEntity command, PriceEntity defaultPrice){
-    public boolean addCommand( CommandEntity command ){
+    public boolean addCommand( OrderEntity command ){
 
-        CommandEntity newAlum = commandDao.save( command );
+        OrderEntity newAlum = commandDao.save( command );
 
         return newAlum != null ;
     }
 
 
-    public CommandEntity saveCommand( CommandEntity command ){
+    public OrderEntity saveCommand(OrderEntity command ){
 
-        CommandEntity updatedCommand = commandDao.updateEntity( command );
+        OrderEntity updatedCommand = commandDao.updateEntity( command );
 
         return updatedCommand ;
     }
 
-    public boolean updateOrder(CommandEntity command ){
+    public boolean updateOrder(OrderEntity command ){
 
         boolean isSaved = commandDao.update( command );
 
         return isSaved ;
     }
 
-    public CommandEntity getCommand( int id ){
+    public OrderEntity getCommand(int id ){
 
-        CommandEntity newAlum = commandDao.get( id );
+        OrderEntity newAlum = commandDao.get( id );
 
         return newAlum;
     }

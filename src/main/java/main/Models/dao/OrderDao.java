@@ -10,14 +10,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CommandDao {
+public class OrderDao {
 
     /**
      * Save User
      * @param entity
      * @return
      */
-    public CommandEntity save(CommandEntity entity) {
+    public OrderEntity save(OrderEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
@@ -37,13 +37,13 @@ public class CommandDao {
 
             Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
 
-            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
+            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleOrders() ){
                 session.save( articleCommandEntity );
                 savedArticleCommands.add( articleCommandEntity );
             }
 
             entity.setPaymentsMades( savedPayement );
-            entity.setArticleCommands( savedArticleCommands );
+            entity.setArticleOrders( savedArticleCommands );
 
             // save the student object
             session.save(entity);
@@ -102,7 +102,7 @@ public class CommandDao {
      * @param entity
      * @return
      */
-    public CommandEntity updateEntity(CommandEntity entity) {
+    public OrderEntity updateEntity(OrderEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
@@ -123,7 +123,7 @@ public class CommandDao {
         return entity;
     }
 
-    public boolean update(CommandEntity entity) {
+    public boolean update(OrderEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
@@ -146,13 +146,13 @@ public class CommandDao {
 
             Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
 
-            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
+            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleOrders() ){
                 session.save( articleCommandEntity );
                 savedArticleCommands.add( articleCommandEntity );
             }
 
             entity.setPaymentsMades( savedPayement );
-            entity.setArticleCommands( savedArticleCommands );
+            entity.setArticleOrders( savedArticleCommands );
 
 
             session.update(entity);
@@ -182,7 +182,7 @@ public class CommandDao {
             transaction = session.beginTransaction();
 
             // Delete a user object
-            CommandEntity entity = session.get(CommandEntity.class, id);
+            OrderEntity entity = session.get(OrderEntity.class, id);
             if (entity != null) {
                 session.delete(entity);
                 System.out.println("user is deleted");
@@ -203,15 +203,15 @@ public class CommandDao {
      * @param id
      * @return
      */
-    public CommandEntity get(int id) {
+    public OrderEntity get(int id) {
 
         Transaction transaction = null;
-        CommandEntity entity = null;
+        OrderEntity entity = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
-            entity = session.get(CommandEntity.class, id);
+            entity = session.get(OrderEntity.class, id);
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
@@ -228,10 +228,10 @@ public class CommandDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public List< CommandEntity > getAll() {
+    public List<OrderEntity> getAll() {
 
         Transaction transaction = null;
-        List < CommandEntity > listOfEntities = null;
+        List <OrderEntity> listOfEntities = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();

@@ -29,7 +29,7 @@ public class ArticleCommandEntity {
     protected float price ;
 
     @ManyToOne
-    protected CommandEntity command ;
+    protected OrderEntity command ;
 
     @ManyToOne
     protected ArticleEntity article ;

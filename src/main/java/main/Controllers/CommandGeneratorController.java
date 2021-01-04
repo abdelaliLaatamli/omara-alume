@@ -83,7 +83,7 @@ public class CommandGeneratorController implements Initializable {
     ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
 
 
-    public CommandEntity commandDetails ;
+    public OrderEntity commandDetails ;
     private PaymentStatus OldPayementStatusBkp ;
     private float OldTotal ;
     private float payedMount ;
@@ -94,10 +94,10 @@ public class CommandGeneratorController implements Initializable {
 
     private ArticleCommandEntity editableCommandArticle = null;
 
-    public void setData( CommandEntity entity ){
+    public void setData( OrderEntity entity ){
         operationCommand = CurrentCrudOperation.EDIT;
 
-        OldTotal = entity.getArticleCommands().stream()
+        OldTotal = entity.getArticleOrders().stream()
                 .map( n -> n.getPrice()* n.getQuantity() )
                 .collect( Collectors.toList() )
                 .stream()
@@ -117,7 +117,7 @@ public class CommandGeneratorController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        commandDetails = new CommandEntity();
+        commandDetails = new OrderEntity();
         loadDataAdd();
 
     }
@@ -435,7 +435,9 @@ public class CommandGeneratorController implements Initializable {
             alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
             alumenuimProduct.setPriceOfArticle( priceAluminumCombo.getSelectionModel().getSelectedItem() );
 
-            commandDetails.getArticleCommands().add( alumenuimProduct );
+            commandDetails.getArticleOrders().add( alumenuimProduct );
+
+
         }else{
 
             ArticleCommandEntity alumenuimProduct = editableCommandArticle;
@@ -444,7 +446,9 @@ public class CommandGeneratorController implements Initializable {
             alumenuimProduct.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
             alumenuimProduct.setQuantity( Float.valueOf( aluminuimContity.getText() ) );
             alumenuimProduct.setPriceOfArticle( priceAluminumCombo.getSelectionModel().getSelectedItem() );
+
             editableCommandArticle = null;
+
         }
 
         this.loadDataTable();
@@ -471,7 +475,7 @@ public class CommandGeneratorController implements Initializable {
             accessoireArticle.setPrice(accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
             accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
             accessoireArticle.setPriceOfArticle(accessoirePrice.getSelectionModel().getSelectedItem());
-            commandDetails.getArticleCommands().add(accessoireArticle);
+            commandDetails.getArticleOrders().add(accessoireArticle);
 
         }else{
             ArticleCommandEntity accessoireArticle = editableCommandArticle;
@@ -507,7 +511,7 @@ public class CommandGeneratorController implements Initializable {
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
             glassArticle.setPriceOfArticle(glassPrice.getSelectionModel().getSelectedItem());
 
-            commandDetails.getArticleCommands().add(glassArticle);
+            commandDetails.getArticleOrders().add(glassArticle);
         }else{
             ArticleCommandEntity glassArticle = editableCommandArticle ;
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
@@ -556,7 +560,7 @@ public class CommandGeneratorController implements Initializable {
 
 
         observableArticleCommand.clear();
-        observableArticleCommand.addAll( commandDetails.getArticleCommands() );
+        observableArticleCommand.addAll( commandDetails.getArticleOrders() );
 
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -672,7 +676,7 @@ public class CommandGeneratorController implements Initializable {
                         btn.setOnAction((ActionEvent event) -> {
                             ArticleCommandEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData delete: " + data.getId());
-                            commandDetails.getArticleCommands().remove( data );
+                            commandDetails.getArticleOrders().remove( data );
                             loadDataTable();
                         });
                     }
@@ -694,14 +698,14 @@ public class CommandGeneratorController implements Initializable {
         editProductOfCommand.setCellFactory( editCellFactory );
         deleteProductOfCommand.setCellFactory(deleteCellFactory );
 
-        tableProductsOfCommand.setItems( FXCollections.observableArrayList(commandDetails.getArticleCommands()) );
+        tableProductsOfCommand.setItems( FXCollections.observableArrayList(commandDetails.getArticleOrders()) );
         tableProductsOfCommand.setItems( this.observableArticleCommand );
 
     }
 
     private Float getTotal(){
 
-        float total = commandDetails.getArticleCommands().stream()
+        float total = commandDetails.getArticleOrders().stream()
                           .map( n -> n.getPrice()* n.getQuantity() )
                           .collect( Collectors.toList() )
                           .stream()

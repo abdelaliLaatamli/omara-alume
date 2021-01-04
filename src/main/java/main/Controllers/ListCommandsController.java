@@ -13,7 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import main.Models.entities.CommandEntity;
+import main.Models.entities.OrderEntity;
 import main.Services.CommandService;
 
 import java.io.IOException;
@@ -29,19 +29,19 @@ public class ListCommandsController implements Initializable {
 
     CommandService commandService = new CommandService();
 
-    @FXML TableView<CommandEntity> listCommandTable;
-    @FXML TableColumn<CommandEntity , String > referenceCommand;
-    @FXML TableColumn<CommandEntity , String > dateCommand;
-    @FXML TableColumn<CommandEntity , String > clientCommand;
-    @FXML TableColumn<CommandEntity , String > paymentStatusCommand ;
-    @FXML TableColumn<CommandEntity , String > paymentsMadesOfCommand;
-    @FXML TableColumn<CommandEntity , String > totalPriceOfCommand;
-    @FXML TableColumn<CommandEntity , Void > editCommand ;
-    @FXML TableColumn<CommandEntity , Void > lockCommand;
-    @FXML TableColumn<CommandEntity , Void > cancelOrder;
-    @FXML TableColumn<CommandEntity , Void > printOrder;
+    @FXML TableView<OrderEntity> listCommandTable;
+    @FXML TableColumn<OrderEntity, String > referenceCommand;
+    @FXML TableColumn<OrderEntity, String > dateCommand;
+    @FXML TableColumn<OrderEntity, String > clientCommand;
+    @FXML TableColumn<OrderEntity, String > paymentStatusCommand ;
+    @FXML TableColumn<OrderEntity, String > paymentsMadesOfCommand;
+    @FXML TableColumn<OrderEntity, String > totalPriceOfCommand;
+    @FXML TableColumn<OrderEntity, Void > editCommand ;
+    @FXML TableColumn<OrderEntity, Void > lockCommand;
+    @FXML TableColumn<OrderEntity, Void > cancelOrder;
+    @FXML TableColumn<OrderEntity, Void > printOrder;
 
-    ObservableList<CommandEntity> observableCommand = FXCollections.observableArrayList();
+    ObservableList<OrderEntity> observableCommand = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,13 +51,13 @@ public class ListCommandsController implements Initializable {
 
     public void loadData(){
 
-        List<CommandEntity> commands = commandService.getAllCommands();
+        List<OrderEntity> commands = commandService.getAllCommands();
         observableCommand.clear();
         observableCommand.addAll( commands );
 
         referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%010d", cellData.getValue().getId())  ));
         dateCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
-                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCommandDate())
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getOrderDate())
         ));
 
 
@@ -73,16 +73,16 @@ public class ListCommandsController implements Initializable {
 
 
 
-        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> editCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+        Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> editCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
-            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
-                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+            public TableCell<OrderEntity, Void> call(final TableColumn<OrderEntity, Void> param) {
+                final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
                     private final Button btn = new Button("Edit");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity data = getTableView().getItems().get(getIndex());
+                            OrderEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData Edit: " + data.getId());
 
 
@@ -121,16 +121,16 @@ public class ListCommandsController implements Initializable {
         };
 
 
-        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> lockCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+        Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> lockCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
-            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
-                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+            public TableCell<OrderEntity, Void> call(final TableColumn<OrderEntity, Void> param) {
+                final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
                     private final Button btn = new Button("Verrouiller");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData verrouiller: " + order.getId());
                             lockOrder( order );
 
@@ -151,16 +151,16 @@ public class ListCommandsController implements Initializable {
             }
         };
 
-        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> cancelCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+        Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> cancelCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
-            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
-                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+            public TableCell<OrderEntity, Void> call(final TableColumn<OrderEntity, Void> param) {
+                final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
                     private final Button btn = new Button("Annuler");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            OrderEntity order = getTableView().getItems().get(getIndex());
                             //System.out.println("selectedData Annuler : " + order.getId());
                             cancleOrder( order );
 
@@ -182,16 +182,16 @@ public class ListCommandsController implements Initializable {
             }
         };
 
-        Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>> printCellFactory = new Callback<TableColumn<CommandEntity, Void>, TableCell<CommandEntity, Void>>() {
+        Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> printCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
-            public TableCell<CommandEntity, Void> call(final TableColumn<CommandEntity, Void> param) {
-                final TableCell<CommandEntity, Void> cell = new TableCell<CommandEntity, Void>() {
+            public TableCell<OrderEntity, Void> call(final TableColumn<OrderEntity, Void> param) {
+                final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
                     private final Button btn = new Button("Imprimer");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            CommandEntity order = getTableView().getItems().get(getIndex());
+                            OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
                             //cancleOrder( order );
 
@@ -222,7 +222,7 @@ public class ListCommandsController implements Initializable {
 
     }
 
-    private void cancleOrder( CommandEntity order ){
+    private void cancleOrder( OrderEntity order ){
 
         order.setIsCanceled( true );
 
@@ -245,7 +245,7 @@ public class ListCommandsController implements Initializable {
 
     }
 
-    private void lockOrder( CommandEntity order ){
+    private void lockOrder( OrderEntity order ){
         order.setIsLocked( true );
 
         boolean canceled = commandService.updateOrder( order );
@@ -267,8 +267,8 @@ public class ListCommandsController implements Initializable {
 
     }
 
-    private Float sumTotal(CommandEntity client){
-        float total = client.getArticleCommands()
+    private Float sumTotal(OrderEntity client){
+        float total = client.getArticleOrders()
                 .stream()
                 .map( n -> n.getPrice() * n.getQuantity() )
                 .collect(Collectors.toList())

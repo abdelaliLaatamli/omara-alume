@@ -17,8 +17,8 @@ import java.util.Set;
 @Getter
 
 @Entity
-@Table(name = "commands")
-public class CommandEntity {
+@Table(name = "orders")
+public class OrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class CommandEntity {
     protected PaymentStatus paymentStatus;
 
     @Column
-    protected Instant commandDate = Instant.now();
+    protected Instant orderDate = Instant.now();
 
     @Column
     protected Boolean isLocked = false ;
@@ -40,12 +40,12 @@ public class CommandEntity {
     protected ClientEntity client ;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payment_made_id")
+    @JoinColumn(name = "payments_made_id")
     protected Set<PaymentsMadeEntity> paymentsMades = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "command_id")
-    protected Set<ArticleCommandEntity> articleCommands = new HashSet<>() ;
+    @JoinColumn(name = "order_id")
+    protected Set<ArticleCommandEntity> articleOrders = new HashSet<>() ;
 
 
 }
