@@ -105,7 +105,7 @@ public class CommandGeneratorController implements Initializable {
 
         payedMount = entity.getPaymentsMades().stream().map( n -> n.getAmountPaid() ).reduce( 0f , (sub , elem) -> sub+elem );
 
-        orderReference.setText(  String.format("REF%010d", 15 )   );
+        orderReference.setText(  String.format("REF%010d", entity.getId() ) );
 
         OldPayementStatusBkp = entity.getPaymentStatus();
 
@@ -133,9 +133,6 @@ public class CommandGeneratorController implements Initializable {
         comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
 
             amountToPayText.setEditable( (int) newValue == 1 );
-/*
-            private boolean isWorkingPayementCombo = false;
-            private boolean isWorkingPriceTextFiltred = false ;*/
 
             if( operationCommand == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
 
