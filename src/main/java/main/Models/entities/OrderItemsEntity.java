@@ -13,8 +13,8 @@ import javax.persistence.*;
 @Setter
 
 @Entity
-@Table(name = "articles_command")
-public class ArticleCommandEntity {
+@Table(name = "order_items")
+public class OrderItemsEntity {
 
     @Id
     @GeneratedValue

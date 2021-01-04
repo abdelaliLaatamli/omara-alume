@@ -33,8 +33,8 @@ public class HibernateUtil {
 
                 settings.put( Environment.CURRENT_SESSION_CONTEXT_CLASS , "thread" );
 
-//                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
-                settings.put( Environment.HBM2DDL_AUTO , "update" );
+                settings.put(Environment.HBM2DDL_AUTO, "create-drop");
+//                settings.put( Environment.HBM2DDL_AUTO , "update" );
 
                 configuration.setProperties(settings);
 
@@ -45,7 +45,7 @@ public class HibernateUtil {
                 configuration.addAnnotatedClass(GlassEntity.class);
                 configuration.addAnnotatedClass(AluminumEntity.class);
                 configuration.addAnnotatedClass(AccessoryEntity.class);
-                configuration.addAnnotatedClass(ArticleCommandEntity.class);
+                configuration.addAnnotatedClass(OrderItemsEntity.class);
                 configuration.addAnnotatedClass(OrderEntity.class);
                 configuration.addAnnotatedClass(PaymentsMadeEntity.class);
                 configuration.addAnnotatedClass(PriceEntity.class);

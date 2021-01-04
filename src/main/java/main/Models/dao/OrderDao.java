@@ -35,11 +35,11 @@ public class OrderDao {
             float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
             if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
 
-            Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
+            Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
-            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleOrders() ){
-                session.save( articleCommandEntity );
-                savedArticleCommands.add( articleCommandEntity );
+            for ( OrderItemsEntity orderItemsEntity : entity.getArticleOrders() ){
+                session.save(orderItemsEntity);
+                savedArticleCommands.add(orderItemsEntity);
             }
 
             entity.setPaymentsMades( savedPayement );
@@ -144,11 +144,11 @@ public class OrderDao {
             float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
             if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
 
-            Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
+            Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
-            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleOrders() ){
-                session.save( articleCommandEntity );
-                savedArticleCommands.add( articleCommandEntity );
+            for ( OrderItemsEntity orderItemsEntity : entity.getArticleOrders() ){
+                session.save(orderItemsEntity);
+                savedArticleCommands.add(orderItemsEntity);
             }
 
             entity.setPaymentsMades( savedPayement );

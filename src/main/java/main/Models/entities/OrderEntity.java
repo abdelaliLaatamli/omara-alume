@@ -36,7 +36,7 @@ public class OrderEntity {
     @Column
     protected Boolean isCanceled = false ;
 
-    @ManyToOne
+    @ManyToOne  
     protected ClientEntity client ;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -45,7 +45,7 @@ public class OrderEntity {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
-    protected Set<ArticleCommandEntity> articleOrders = new HashSet<>() ;
+    protected Set<OrderItemsEntity> articleOrders = new HashSet<>() ;
 
 
 }

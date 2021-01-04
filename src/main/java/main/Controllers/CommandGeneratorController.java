@@ -73,14 +73,14 @@ public class CommandGeneratorController implements Initializable {
 
     // -----------Table Products------------
 
-    @FXML TableView<ArticleCommandEntity> tableProductsOfCommand;
-    @FXML TableColumn<ArticleCommandEntity , String> lableOfCommand ;
-    @FXML TableColumn<ArticleCommandEntity , String> priceProductOfCommand ;
-    @FXML TableColumn<ArticleCommandEntity , String> quentityProductOfCommand ;
-    @FXML TableColumn<ArticleCommandEntity , String> priceCommand ;
-    @FXML TableColumn<ArticleCommandEntity , Void> editProductOfCommand ;
-    @FXML TableColumn<ArticleCommandEntity , Void> deleteProductOfCommand ;
-    ObservableList<ArticleCommandEntity> observableArticleCommand = FXCollections.observableArrayList();
+    @FXML TableView<OrderItemsEntity> tableProductsOfCommand;
+    @FXML TableColumn<OrderItemsEntity, String> lableOfCommand ;
+    @FXML TableColumn<OrderItemsEntity, String> priceProductOfCommand ;
+    @FXML TableColumn<OrderItemsEntity, String> quentityProductOfCommand ;
+    @FXML TableColumn<OrderItemsEntity, String> priceCommand ;
+    @FXML TableColumn<OrderItemsEntity, Void> editProductOfCommand ;
+    @FXML TableColumn<OrderItemsEntity, Void> deleteProductOfCommand ;
+    ObservableList<OrderItemsEntity> observableArticleCommand = FXCollections.observableArrayList();
 
 
     public OrderEntity commandDetails ;
@@ -92,7 +92,7 @@ public class CommandGeneratorController implements Initializable {
     private boolean isWorkingPayementCombo = false;
     private boolean isWorkingPriceTextFiltred = false ;
 
-    private ArticleCommandEntity editableCommandArticle = null;
+    private OrderItemsEntity editableCommandArticle = null;
 
     public void setData( OrderEntity entity ){
         operationCommand = CurrentCrudOperation.EDIT;
@@ -424,7 +424,7 @@ public class CommandGeneratorController implements Initializable {
     public void saveAlumnuimInCommand(MouseEvent mouseEvent) {
 
         if( operation == CurrentCrudOperation.ADD ){
-            ArticleCommandEntity alumenuimProduct = new ArticleCommandEntity();
+            OrderItemsEntity alumenuimProduct = new OrderItemsEntity();
 
             alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
             alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
@@ -437,7 +437,7 @@ public class CommandGeneratorController implements Initializable {
 
         }else{
 
-            ArticleCommandEntity alumenuimProduct = editableCommandArticle;
+            OrderItemsEntity alumenuimProduct = editableCommandArticle;
             alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
             alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
             alumenuimProduct.setPrice( priceAluminumCombo.getSelectionModel().getSelectedItem().getPrice() );
@@ -465,7 +465,7 @@ public class CommandGeneratorController implements Initializable {
 
     public void saveAccessoireInCommand(MouseEvent mouseEvent) {
         if( operation == CurrentCrudOperation.ADD ) {
-            ArticleCommandEntity accessoireArticle = new ArticleCommandEntity();
+            OrderItemsEntity accessoireArticle = new OrderItemsEntity();
 
             accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
             accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
@@ -475,7 +475,7 @@ public class CommandGeneratorController implements Initializable {
             commandDetails.getArticleOrders().add(accessoireArticle);
 
         }else{
-            ArticleCommandEntity accessoireArticle = editableCommandArticle;
+            OrderItemsEntity accessoireArticle = editableCommandArticle;
             accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
             accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
             accessoireArticle.setPrice(accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
@@ -500,7 +500,7 @@ public class CommandGeneratorController implements Initializable {
     public void saveGlassInCommand(MouseEvent mouseEvent) {
 
         if( operation == CurrentCrudOperation.ADD ) {
-            ArticleCommandEntity glassArticle = new ArticleCommandEntity();
+            OrderItemsEntity glassArticle = new OrderItemsEntity();
 
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
@@ -510,7 +510,7 @@ public class CommandGeneratorController implements Initializable {
 
             commandDetails.getArticleOrders().add(glassArticle);
         }else{
-            ArticleCommandEntity glassArticle = editableCommandArticle ;
+            OrderItemsEntity glassArticle = editableCommandArticle ;
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
             glassArticle.setPrice(glassPrice.getSelectionModel().getSelectedItem().getPrice());
@@ -565,16 +565,16 @@ public class CommandGeneratorController implements Initializable {
         priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( cellData.getValue().getQuantity() * cellData.getValue().getPrice() + " DH" ) );
 
 
-        Callback<TableColumn<ArticleCommandEntity, Void>, TableCell<ArticleCommandEntity, Void>> editCellFactory = new Callback<TableColumn<ArticleCommandEntity, Void>, TableCell<ArticleCommandEntity, Void>>() {
+        Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>> editCellFactory = new Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>>() {
             @Override
-            public TableCell<ArticleCommandEntity, Void> call(final TableColumn<ArticleCommandEntity, Void> param) {
-                final TableCell<ArticleCommandEntity, Void> cell = new TableCell<ArticleCommandEntity, Void>() {
+            public TableCell<OrderItemsEntity, Void> call(final TableColumn<OrderItemsEntity, Void> param) {
+                final TableCell<OrderItemsEntity, Void> cell = new TableCell<OrderItemsEntity, Void>() {
 
                     private final Button btn = new Button("Edit");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            ArticleCommandEntity data = getTableView().getItems().get(getIndex());
+                            OrderItemsEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData: " + data.getId());
 
 
@@ -662,16 +662,16 @@ public class CommandGeneratorController implements Initializable {
         };
 
 
-        Callback<TableColumn<ArticleCommandEntity, Void>, TableCell<ArticleCommandEntity, Void>> deleteCellFactory = new Callback<TableColumn<ArticleCommandEntity, Void>, TableCell<ArticleCommandEntity, Void>>() {
+        Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>> deleteCellFactory = new Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>>() {
             @Override
-            public TableCell<ArticleCommandEntity, Void> call(final TableColumn<ArticleCommandEntity, Void> param) {
-                final TableCell<ArticleCommandEntity, Void> cell = new TableCell<ArticleCommandEntity, Void>() {
+            public TableCell<OrderItemsEntity, Void> call(final TableColumn<OrderItemsEntity, Void> param) {
+                final TableCell<OrderItemsEntity, Void> cell = new TableCell<OrderItemsEntity, Void>() {
 
                     private final Button btn = new Button("Delete");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            ArticleCommandEntity data = getTableView().getItems().get(getIndex());
+                            OrderItemsEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData delete: " + data.getId());
                             commandDetails.getArticleOrders().remove( data );
                             loadDataTable();

@@ -35,7 +35,7 @@ public class PriceEntity {
 
     @OneToMany
     @JoinColumn(name = "price_id")
-    protected Set<ArticleCommandEntity> articleCommands ;
+    protected Set<OrderItemsEntity> articleCommands ;
 
     @Override
     public String toString(){
