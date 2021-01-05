@@ -33,8 +33,6 @@ public class AccessoryController implements Initializable {
 
     @FXML TableView<AccessoryEntity> tableViewOfAlumAccessories;
     @FXML TableColumn<AccessoryEntity , String> accessoryName ;
-    @FXML TableColumn<AccessoryEntity , Float> accessoryBuyPrice;
-    @FXML TableColumn<AccessoryEntity , Integer> accessoryQuantity;
     @FXML TableColumn<AccessoryEntity , String> accessoryColor;
     @FXML TableColumn<AccessoryEntity , String> accessoryCreationDate;
     @FXML TableColumn<AccessoryEntity , Float> accessorySellingPrice;
@@ -44,8 +42,6 @@ public class AccessoryController implements Initializable {
 
     @FXML TextField accessoryIdForm;
     @FXML TextField accessoryNameForm;
-    @FXML TextField accessoryBuyPriceForm ;
-    @FXML TextField accessoryQuantityForm;
     @FXML ComboBox<AccessoryColor>  accessoryColorForm;
     @FXML TextField accessorySellPriceForm;
 
@@ -70,13 +66,9 @@ public class AccessoryController implements Initializable {
 
 
         accessoryName.setCellValueFactory( new PropertyValueFactory<>("name") ); ;
-        accessoryBuyPrice.setCellValueFactory(new PropertyValueFactory<>("priceOfBuy"));
-        //accessoryQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper<>( (int) cellDate.getValue().getQuantity() ));
-
         accessoryColor.setCellValueFactory(new PropertyValueFactory<>("color"));
         accessoryCreationDate.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
-                "dd/MM/yyyy"
-               // DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+               DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
         ));
         accessorySellingPrice.setCellValueFactory(
                 cellDate -> new ReadOnlyObjectWrapper(
@@ -100,8 +92,6 @@ public class AccessoryController implements Initializable {
 
                             accessoryIdForm.setText( String.valueOf( data.getId() ) );
                             accessoryNameForm.setText( data.getName() );
-//                            accessoryBuyPriceForm.setText( String.valueOf( data.getPriceOfBuy() ) );
-//                            accessoryQuantityForm.setText( String.valueOf( (int) data.getQuantity() ) );
                             accessoryColorForm.getSelectionModel().select( data.getColor() );
                             accessorySellPriceForm.setText( String.valueOf( data.getPrices().stream().findFirst().get().getPrice() ) );
 
@@ -140,9 +130,7 @@ public class AccessoryController implements Initializable {
 
         accessoryIdForm.setText("");
         accessoryNameForm.setText("");
-        accessoryBuyPriceForm.setText("");
         accessoryColorForm.getSelectionModel().selectFirst();
-        accessoryQuantityForm.setText("");
         accessorySellPriceForm.setText("");
 
     }
@@ -151,12 +139,6 @@ public class AccessoryController implements Initializable {
         AccessoryEntity accessoryEntity = accessoryService.getAlumenuim( Integer.valueOf( accessoryIdForm.getText() ) );
 
         accessoryEntity.setName(accessoryNameForm.getText());
-
-//        if( !accessoryQuantityForm.getText().equals("") )
-//            accessoryEntity.setQuantity( Float.valueOf( accessoryQuantityForm.getText() ) );
-//
-//        if( !accessoryBuyPriceForm.getText().equals("") )
-//            accessoryEntity.setPriceOfBuy( Float.valueOf( accessoryBuyPriceForm.getText() ) );
 
         accessoryEntity.setColor( accessoryColorForm.getSelectionModel().getSelectedItem());
 
@@ -187,11 +169,7 @@ public class AccessoryController implements Initializable {
     private void addProduct() {
         AccessoryEntity accessoryEntity = new AccessoryEntity();
         accessoryEntity.setName(accessoryNameForm.getText());
-        // accessoryEntity.setPriceOfBuy(!accessoryBuyPriceForm.getText().equals("") ? Float.valueOf(accessoryBuyPriceForm.getText()) : 0f);
-
         accessoryEntity.setColor(accessoryColorForm.getSelectionModel().getSelectedItem());
-        // accessoryEntity.setQuantity(!accessoryQuantityForm.getText().equals("") ? Float.valueOf(accessoryQuantityForm.getText()) : 0f);
-
         PriceEntity defaultPrice = new PriceEntity();
         defaultPrice.setName("default");
         defaultPrice.setPrice((!accessorySellPriceForm.getText().equals("")) ? Float.valueOf(accessorySellPriceForm.getText()) : 0f);
