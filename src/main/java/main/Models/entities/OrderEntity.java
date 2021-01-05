@@ -40,7 +40,7 @@ public class OrderEntity {
     protected ClientEntity client ;
 
     @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "payments_made_id")
+    @JoinColumn(name = "order_id")
     protected Set<PaymentsMadeEntity> paymentsMades = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER)

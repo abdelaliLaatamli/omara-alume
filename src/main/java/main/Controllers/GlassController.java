@@ -78,11 +78,13 @@ public class GlassController implements Initializable {
 
         glassName.setCellValueFactory(new PropertyValueFactory<>("name"));
         glassBuyPrice.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
-        glassQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ));
+        glassQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getId() ));
+        // glassQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ));
         glassColor.setCellValueFactory( new PropertyValueFactory<>("color") );
         glassThicknessType.setCellValueFactory( new PropertyValueFactory<>("thicknessType") );
-        glassCreationDate.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
-                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+        glassCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                "15/23/2301"
+                // DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
         ));
         glassSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
                 ( cellDate.getValue().getPrices().size() > 0 ) ?
@@ -104,8 +106,13 @@ public class GlassController implements Initializable {
 
                             glassIdForm.setText( String.valueOf( data.getId() ) );
                             glassNameForm.setText( data.getName() );
-                            glassBuyPriceForm.setText( String.valueOf( data.getPriceOfBuy() ) );
-                            glassQuantityForm.setText( String.valueOf( data.getQuantity() ) );
+//                            glassBuyPriceForm.setText( String.valueOf( data.getPriceOfBuy() ) );
+//                            glassQuantityForm.setText( String.valueOf( data.getQuantity() ) );
+
+                            glassBuyPriceForm.setText( String.valueOf( 16 ) );
+                            glassQuantityForm.setText( String.valueOf( 18 ) );
+
+
                             glassColorForm.getSelectionModel().select( data.getColor() );
                             glassThicknessTypeForm.getSelectionModel().select( data.getThicknessType() );
                             glassSellPriceForm.setText( String.valueOf( data.getPrices().stream().findFirst().get().getPrice() ) );
@@ -176,11 +183,12 @@ public class GlassController implements Initializable {
 
         glassEntity.setName(glassNameForm.getText());
 
-        if( !glassQuantityForm.getText().equals("") )
-            glassEntity.setQuantity( Float.valueOf( glassQuantityForm.getText() ) );
 
-        if( !glassBuyPriceForm.getText().equals("") )
-            glassEntity.setPriceOfBuy( Float.valueOf( glassBuyPriceForm.getText() ) );
+//        if( !glassQuantityForm.getText().equals("") )
+//            glassEntity.setQuantity( Float.valueOf( glassQuantityForm.getText() ) );
+//
+//        if( !glassBuyPriceForm.getText().equals("") )
+//            glassEntity.setPriceOfBuy( Float.valueOf( glassBuyPriceForm.getText() ) );
 
         glassEntity.setColor( glassColorForm.getSelectionModel().getSelectedItem());
         glassEntity.setThicknessType( glassThicknessTypeForm.getSelectionModel().getSelectedItem() );
@@ -214,9 +222,9 @@ public class GlassController implements Initializable {
 
         GlassEntity glassEntity = new GlassEntity();
         glassEntity.setName(glassNameForm.getText());
-        glassEntity.setPriceOfBuy(!glassBuyPriceForm.getText().equals("") ? Float.valueOf(  glassBuyPriceForm.getText() ) : 0f );
+        // glassEntity.setPriceOfBuy(!glassBuyPriceForm.getText().equals("") ? Float.valueOf(  glassBuyPriceForm.getText() ) : 0f );
         glassEntity.setColor( glassColorForm.getSelectionModel().getSelectedItem());
-        glassEntity.setQuantity( !glassQuantityForm.getText().equals("") ? Float.valueOf( glassQuantityForm.getText() ) : 0f );
+        // glassEntity.setQuantity( !glassQuantityForm.getText().equals("") ? Float.valueOf( glassQuantityForm.getText() ) : 0f );
         glassEntity.setThicknessType( glassThicknessTypeForm.getSelectionModel().getSelectedItem() );
         //glassEntity.setType("aaaaa");
         //glassEntity.setThicknessType("5 mil");

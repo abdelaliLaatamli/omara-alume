@@ -108,12 +108,14 @@ public class AluminumController implements Initializable {
         observableEntities.addAll( listAlum );
 
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ) );
+        //productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ) );
+        productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper(  cellDate.getValue().getName() ) );
         productColor.setCellValueFactory(new PropertyValueFactory<>("color"));
         productBuyPrice.setCellValueFactory(new PropertyValueFactory<>("priceOfBuy"));
         productCountryManufacture.setCellValueFactory(new PropertyValueFactory<>("madeBy"));
         productCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
-                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+                "aaaa"
+               // DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue())
         ));
 
         productSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
@@ -136,9 +138,11 @@ public class AluminumController implements Initializable {
                             System.out.println("selectedData: " + data.getId());
 
                             productIdForm.setText( String.valueOf( data.getId() ) );
-                            productQuantityForm.setText(  String.valueOf( (int) data.getQuantity() ) );
+                            // productQuantityForm.setText(  String.valueOf( (int) data.getQuantity() ) );
+                            productQuantityForm.setText(  String.valueOf( 15 ) );
                             productNameForm.setText( data.getName() );
-                            buyPriceProductForm.setText( String.valueOf( data.getPriceOfBuy() ) );
+                            // buyPriceProductForm.setText( String.valueOf( data.getPriceOfBuy() ) );
+                            buyPriceProductForm.setText( String.valueOf( 15 ) );
                             colorProductForm.getSelectionModel().select( data.getColor() );
                             productCountryManufactureForm.getSelectionModel().select( data.getMadeBy() );// getSelectedItem();
                             sellPriceForm.setText( String.valueOf( data.getPrices().stream().findFirst().get().getPrice() ) );
@@ -208,11 +212,11 @@ public class AluminumController implements Initializable {
 
         aluminumEntity.setName(productNameForm.getText());
 
-        if( !productQuantityForm.getText().equals("") )
-            aluminumEntity.setQuantity( Float.valueOf( productQuantityForm.getText() ) );
+//        if( !productQuantityForm.getText().equals("") )
+//            aluminumEntity.setQuantity( Float.valueOf( productQuantityForm.getText() ) );
 
-        if( !buyPriceProductForm.getText().equals("") )
-            aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
+//        if( !buyPriceProductForm.getText().equals("") )
+//            aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
 
         aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
 
@@ -246,10 +250,10 @@ public class AluminumController implements Initializable {
     private void addProduct() {
         AluminumEntity aluminumEntity = new AluminumEntity();
         aluminumEntity.setName(productNameForm.getText());
-        aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0f );
+        // aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0f );
         aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
         aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
-        aluminumEntity.setQuantity( !productQuantityForm.getText().equals("") ? Float.valueOf( productQuantityForm.getText() ) : 0f );
+        // aluminumEntity.setQuantity( !productQuantityForm.getText().equals("") ? Float.valueOf( productQuantityForm.getText() ) : 0f );
 
         PriceEntity defaultPrice  = new PriceEntity();
         defaultPrice.setName( "default" );
