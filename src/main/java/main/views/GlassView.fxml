@@ -24,14 +24,12 @@
 
         <TableView fx:id="tableViewOfGlass" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
             <columns>
-                <TableColumn fx:id="glassName" prefWidth="125.0" text="Nom de Verre" />
-                <TableColumn fx:id="glassBuyPrice" prefWidth="108.0" text="Prix d'achat" />
-                <TableColumn fx:id="glassQuantity" prefWidth="108.0" text="Quantité" />
-                <TableColumn fx:id="glassColor" prefWidth="98.0" text="Color" />
-                <TableColumn fx:id="glassThicknessType" prefWidth="62.0" text="Épaisseur" />
-                <TableColumn fx:id="glassCreationDate" minWidth="0.0" prefWidth="150.0" text="Date de Creation" />
-                <TableColumn fx:id="glassSellingPrice" prefWidth="98.0" text="Prix de vente" />
-                <TableColumn fx:id="glassEdit" text="Edit Glass" />
+                <TableColumn fx:id="glassName" prefWidth="233.0" text="Nom de Verre" />
+                <TableColumn fx:id="glassColor" prefWidth="89.0" text="Color" />
+                <TableColumn fx:id="glassThicknessType" prefWidth="98.0" text="Épaisseur" />
+                <TableColumn fx:id="glassCreationDate" minWidth="0.0" prefWidth="156.0" text="Date de Creation" />
+                <TableColumn fx:id="glassSellingPrice" prefWidth="129.0" text="Prix de vente" />
+                <TableColumn fx:id="glassEdit" prefWidth="124.0" text="Edit Glass" />
             </columns>
         </TableView>
 
@@ -44,22 +42,16 @@
                 <Label layoutX="14.0" layoutY="90.0" prefHeight="17.0" prefWidth="127.0" text="Nom de verre * : " />
                 <TextField fx:id="glassNameForm" layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" />
 
-                <Label layoutX="14.0" layoutY="160.0" prefHeight="17.0" prefWidth="127.0" text="Prix d'achat : " />
-                <TextField fx:id="glassBuyPriceForm" layoutX="14.0" layoutY="177.0" prefHeight="25.0" prefWidth="310.0" />
+                <Label layoutX="14.0" layoutY="160.0" prefHeight="17.0" prefWidth="127.0" text="Color :" />
+                <ComboBox fx:id="glassColorForm" layoutX="14.0" layoutY="177.0" prefHeight="25.0" prefWidth="310.0" />
 
-                <Label layoutX="14.0" layoutY="233.0" text="Quantité :" />
-                <TextField fx:id="glassQuantityForm" layoutX="15.0" layoutY="250.0" prefHeight="25.0" prefWidth="310.0" />
+                <Label layoutX="14.0" layoutY="233.0" text="Épaisseur :" />
+                <ComboBox fx:id="glassThicknessTypeForm" layoutX="15.0" layoutY="250.0" prefHeight="25.0" prefWidth="310.0" />
 
-                <Label layoutX="14.0" layoutY="306.0" prefHeight="17.0" prefWidth="127.0" text="Color :" />
-                <ComboBox fx:id="glassColorForm" layoutX="14.0" layoutY="323.0" prefHeight="25.0" prefWidth="310.0" />
+                <Label layoutX="14.0" layoutY="306.0" prefHeight="17.0" prefWidth="127.0" text="Prix de vente :" />
+                <TextField fx:id="glassSellPriceForm" layoutX="14.0" layoutY="323.0" prefHeight="25.0" prefWidth="310.0" />
 
-                <Label layoutX="14.0" layoutY="378.0" text="Épaisseur :" />
-                <ComboBox fx:id="glassThicknessTypeForm" layoutX="14.0" layoutY="395.0" prefHeight="25.0" prefWidth="310.0" />
-
-                <Label layoutX="16.0" layoutY="447.0" prefHeight="17.0" prefWidth="127.0" text="Prix de vente :" />
-                <TextField fx:id="glassSellPriceForm" layoutX="16.0" layoutY="464.0" prefHeight="25.0" prefWidth="310.0" />
-
-                <Button layoutX="14.0" layoutY="534.0" mnemonicParsing="false" onMouseClicked="#saveGlassForm" prefHeight="25.0" prefWidth="127.0" text="Enregistrer" />
+                <Button layoutX="14.0" layoutY="390.0" mnemonicParsing="false" onMouseClicked="#saveGlassForm" prefHeight="25.0" prefWidth="127.0" text="Enregistrer" />
 
 
 

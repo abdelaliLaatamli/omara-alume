@@ -33,8 +33,6 @@ public class GlassController implements Initializable {
 
     @FXML TableView<GlassEntity> tableViewOfGlass ;
     @FXML TableColumn<GlassEntity,String> glassName ;
-    @FXML TableColumn<GlassEntity,Float> glassBuyPrice ;
-    @FXML TableColumn<GlassEntity,String> glassQuantity ;
     @FXML TableColumn<GlassEntity,String> glassColor ;
     @FXML TableColumn<GlassEntity,String> glassThicknessType;
     @FXML TableColumn<GlassEntity,String> glassCreationDate ;
@@ -45,12 +43,9 @@ public class GlassController implements Initializable {
 
     @FXML TextField glassIdForm;
     @FXML TextField glassNameForm;
-    @FXML TextField glassBuyPriceForm ;
-    @FXML TextField glassQuantityForm;
     @FXML ComboBox<GlassColor> glassColorForm;
     @FXML ComboBox<ThicknessType> glassThicknessTypeForm;
     @FXML TextField glassSellPriceForm;
-
 
 
     @Override
@@ -77,14 +72,10 @@ public class GlassController implements Initializable {
         observableEntities.addAll( listGlass );
 
         glassName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        glassBuyPrice.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
-        glassQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getId() ));
-        // glassQuantity.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ));
         glassColor.setCellValueFactory( new PropertyValueFactory<>("color") );
         glassThicknessType.setCellValueFactory( new PropertyValueFactory<>("thicknessType") );
         glassCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
-                "15/23/2301"
-                // DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
         ));
         glassSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
                 ( cellDate.getValue().getPrices().size() > 0 ) ?
@@ -106,11 +97,6 @@ public class GlassController implements Initializable {
 
                             glassIdForm.setText( String.valueOf( data.getId() ) );
                             glassNameForm.setText( data.getName() );
-//                            glassBuyPriceForm.setText( String.valueOf( data.getPriceOfBuy() ) );
-//                            glassQuantityForm.setText( String.valueOf( data.getQuantity() ) );
-
-                            glassBuyPriceForm.setText( String.valueOf( 16 ) );
-                            glassQuantityForm.setText( String.valueOf( 18 ) );
 
 
                             glassColorForm.getSelectionModel().select( data.getColor() );
@@ -172,8 +158,6 @@ public class GlassController implements Initializable {
         glassIdForm.setText("");
         glassNameForm.setText("");
         glassColorForm.getSelectionModel().selectFirst();
-        glassBuyPriceForm.setText("");
-        glassQuantityForm.setText("");
         glassSellPriceForm.setText("");
 
     }
@@ -183,12 +167,6 @@ public class GlassController implements Initializable {
 
         glassEntity.setName(glassNameForm.getText());
 
-
-//        if( !glassQuantityForm.getText().equals("") )
-//            glassEntity.setQuantity( Float.valueOf( glassQuantityForm.getText() ) );
-//
-//        if( !glassBuyPriceForm.getText().equals("") )
-//            glassEntity.setPriceOfBuy( Float.valueOf( glassBuyPriceForm.getText() ) );
 
         glassEntity.setColor( glassColorForm.getSelectionModel().getSelectedItem());
         glassEntity.setThicknessType( glassThicknessTypeForm.getSelectionModel().getSelectedItem() );
@@ -222,12 +200,8 @@ public class GlassController implements Initializable {
 
         GlassEntity glassEntity = new GlassEntity();
         glassEntity.setName(glassNameForm.getText());
-        // glassEntity.setPriceOfBuy(!glassBuyPriceForm.getText().equals("") ? Float.valueOf(  glassBuyPriceForm.getText() ) : 0f );
         glassEntity.setColor( glassColorForm.getSelectionModel().getSelectedItem());
-        // glassEntity.setQuantity( !glassQuantityForm.getText().equals("") ? Float.valueOf( glassQuantityForm.getText() ) : 0f );
         glassEntity.setThicknessType( glassThicknessTypeForm.getSelectionModel().getSelectedItem() );
-        //glassEntity.setType("aaaaa");
-        //glassEntity.setThicknessType("5 mil");
 
         PriceEntity defaultPrice  = new PriceEntity();
         defaultPrice.setName( "default" );
