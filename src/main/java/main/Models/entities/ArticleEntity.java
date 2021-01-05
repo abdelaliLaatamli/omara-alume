@@ -27,14 +27,8 @@ public abstract class ArticleEntity {
     @Column
     protected String name ;
 
-/*    @Column
-    protected Float priceOfBuy;*/
-
-/*    @Column
-    protected float quantity;*/
-
-/*    @Column
-    protected Instant createdAt = Instant.now() ;*/
+    @Column
+    protected Instant createdAt = Instant.now() ;
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "article_id")

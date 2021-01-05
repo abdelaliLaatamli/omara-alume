@@ -34,56 +34,22 @@ public class AluminumController implements Initializable {
 
     private AluminumService aluminumService = new AluminumService();
 
-    @FXML
-    TableView<AluminumEntity> tableViewOfAlumProducts;
+    @FXML TableView<AluminumEntity> tableViewOfAlumProducts;
 
-    @FXML
-    TableColumn<AluminumEntity , String> productName;
-
-    @FXML
-    TableColumn<AluminumEntity , Integer> productQuantity;
-
-    @FXML
-    TableColumn<AluminumEntity , String> productColor;
-
-    @FXML
-    TableColumn<AluminumEntity , Float> productBuyPrice;
-
-    @FXML
-    TableColumn<AluminumEntity , String> productCountryManufacture;
-
-    @FXML
-    TableColumn<AluminumEntity, Instant> productCreationDate;
-
-    @FXML
-    TableColumn<AluminumEntity , String> productSellingPrice;
-
-
-    @FXML
-    TableColumn productEdit ;
+    @FXML TableColumn<AluminumEntity , String>  productName;
+    @FXML TableColumn<AluminumEntity , String>  productColor;
+    @FXML TableColumn<AluminumEntity , String>  productCountryManufacture;
+    @FXML TableColumn<AluminumEntity , Instant> productCreationDate;
+    @FXML TableColumn<AluminumEntity , String>  productSellingPrice;
+    @FXML TableColumn<AluminumEntity , Void>  productEdit ;
 
     ObservableList<AluminumEntity> observableEntities = FXCollections.observableArrayList();
 
-    @FXML
-    TextField productIdForm;
-
-    @FXML
-    TextField productNameForm;
-
-    @FXML
-    TextField productQuantityForm;
-
-    @FXML
-    TextField buyPriceProductForm;
-
-    @FXML
-    ComboBox<AluminumColor> colorProductForm;
-
-    @FXML
-    ComboBox<MadeBy> productCountryManufactureForm;
-
-    @FXML
-    TextField sellPriceForm;
+    @FXML TextField productIdForm;
+    @FXML TextField productNameForm;
+    @FXML ComboBox<AluminumColor> colorProductForm;
+    @FXML ComboBox<MadeBy> productCountryManufactureForm;
+    @FXML TextField sellPriceForm;
 
 
     @Override
@@ -108,14 +74,10 @@ public class AluminumController implements Initializable {
         observableEntities.addAll( listAlum );
 
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        //productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper( (int) cellDate.getValue().getQuantity() ) );
-        productQuantity.setCellValueFactory( cellDate -> new ReadOnlyObjectWrapper(  cellDate.getValue().getName() ) );
         productColor.setCellValueFactory(new PropertyValueFactory<>("color"));
-        productBuyPrice.setCellValueFactory(new PropertyValueFactory<>("priceOfBuy"));
         productCountryManufacture.setCellValueFactory(new PropertyValueFactory<>("madeBy"));
         productCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
-                "aaaa"
-               // DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue())
+               DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
         ));
 
         productSellingPrice.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper(
@@ -138,13 +100,9 @@ public class AluminumController implements Initializable {
                             System.out.println("selectedData: " + data.getId());
 
                             productIdForm.setText( String.valueOf( data.getId() ) );
-                            // productQuantityForm.setText(  String.valueOf( (int) data.getQuantity() ) );
-                            productQuantityForm.setText(  String.valueOf( 15 ) );
                             productNameForm.setText( data.getName() );
-                            // buyPriceProductForm.setText( String.valueOf( data.getPriceOfBuy() ) );
-                            buyPriceProductForm.setText( String.valueOf( 15 ) );
                             colorProductForm.getSelectionModel().select( data.getColor() );
-                            productCountryManufactureForm.getSelectionModel().select( data.getMadeBy() );// getSelectedItem();
+                            productCountryManufactureForm.getSelectionModel().select( data.getMadeBy() );
                             sellPriceForm.setText( String.valueOf( data.getPrices().stream().findFirst().get().getPrice() ) );
 
                         });
@@ -199,10 +157,8 @@ public class AluminumController implements Initializable {
 
         productIdForm.setText("");
         productNameForm.setText("");
-        buyPriceProductForm.setText("");
         colorProductForm.getSelectionModel().selectFirst();
         productCountryManufactureForm.getSelectionModel().selectFirst();
-        productQuantityForm.setText("");
         sellPriceForm.setText("");
 
     }
@@ -212,11 +168,6 @@ public class AluminumController implements Initializable {
 
         aluminumEntity.setName(productNameForm.getText());
 
-//        if( !productQuantityForm.getText().equals("") )
-//            aluminumEntity.setQuantity( Float.valueOf( productQuantityForm.getText() ) );
-
-//        if( !buyPriceProductForm.getText().equals("") )
-//            aluminumEntity.setPriceOfBuy( Float.valueOf( buyPriceProductForm.getText() ) );
 
         aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
 
@@ -250,10 +201,8 @@ public class AluminumController implements Initializable {
     private void addProduct() {
         AluminumEntity aluminumEntity = new AluminumEntity();
         aluminumEntity.setName(productNameForm.getText());
-        // aluminumEntity.setPriceOfBuy(!buyPriceProductForm.getText().equals("") ? Float.valueOf(  buyPriceProductForm.getText() ) : 0f );
         aluminumEntity.setColor( colorProductForm.getSelectionModel().getSelectedItem());
         aluminumEntity.setMadeBy( productCountryManufactureForm.getSelectionModel().getSelectedItem() );
-        // aluminumEntity.setQuantity( !productQuantityForm.getText().equals("") ? Float.valueOf( productQuantityForm.getText() ) : 0f );
 
         PriceEntity defaultPrice  = new PriceEntity();
         defaultPrice.setName( "default" );

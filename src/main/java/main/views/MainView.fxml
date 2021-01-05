@@ -6,13 +6,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.MainContoller">
    <children>
-      <VBox layoutX="300.0" layoutY="125.0" prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #1d355780; -fx-border-radius: 5px;">
+      <VBox layoutX="150.0" layoutY="100.0" prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: #1d355780; -fx-border-radius: 5px;">
          <children>
-            <HBox prefHeight="250.0" prefWidth="600.0">
+            <HBox prefHeight="250.0" prefWidth="900.0">
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button onMouseClicked="#displayClientsPage" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Clients">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayClientsPage" prefHeight="88.0" prefWidth="126.0" text="Clients">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -20,19 +20,28 @@
                      </children></AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button  onMouseClicked="#displayProductsPage" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Products" >
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayProductsPage" prefHeight="88.0" prefWidth="126.0" text="Products">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
                         </Button>
                      </children></AnchorPane>
+                  <AnchorPane prefHeight="200.0" prefWidth="300.0">
+                     <children>
+                        <Button onMouseClicked="#displayStockView" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Stock">
+                           <font>
+                              <Font name="Cambria Bold" size="17.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
                </children>
             </HBox>
             <HBox prefHeight="250.0" prefWidth="200.0">
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button onMouseClicked="#displayCommandsPage" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0"  text="Commands">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayCommandsPage" prefHeight="88.0" prefWidth="126.0" text="Commands">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -41,7 +50,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button onMouseClicked="#displayAccountingPage" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0"  text="Accounting">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayAccountingPage" prefHeight="88.0" prefWidth="126.0" text="Accounting">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
