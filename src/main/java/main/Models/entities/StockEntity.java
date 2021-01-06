@@ -28,4 +28,8 @@ public class StockEntity {
     @Column
     protected Instant importedAt = Instant.now();
 
+
+    @ManyToOne
+    protected ProviderEntity provider ;
+
 }
