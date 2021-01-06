@@ -52,4 +52,12 @@ public class MainContoller {
         main.JavaFxApplication.mainStage.show();
 
     }
+
+    public void goToFournisseurView(MouseEvent mouseEvent) throws IOException {
+
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ProviderView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle(" Fournisseur -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
+    }
 }
