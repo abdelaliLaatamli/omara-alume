@@ -44,7 +44,7 @@
                 <TextField layoutX="14.0" layoutY="234.0" prefHeight="25.0" prefWidth="310.0" fx:id="pIdentifyForm" />
 
                 <Label layoutX="14.0" layoutY="283.0" prefHeight="17.0" prefWidth="127.0" text="Address :" />
-                <TextField layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" fx:id="pAdressForm" />
+                <TextField layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" fx:id="pAddressForm" />
 
                 <Button layoutX="14.0" layoutY="358.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Enregistrer"
                         onMouseClicked="#saveProvider"

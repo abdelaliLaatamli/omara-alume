@@ -14,7 +14,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
-import main.Models.utils.CurrentCrudOperation;
 import main.Services.ProviderService;
 
 import java.io.IOException;
@@ -42,7 +41,7 @@ public class ProviderController implements Initializable {
     @FXML TextField pNameForm;
     @FXML TextField pTeleForm;
     @FXML TextField pIdentifyForm;
-    @FXML TextField pAdressForm;
+    @FXML TextField pAddressForm;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -55,30 +54,12 @@ public class ProviderController implements Initializable {
         observableProviders.clear();
         observableProviders.addAll( providerService.getAll() );
 
-//        pName;
-//        pTele;
-//        pIdentify;
-//        pAddress;
-//        pDateInsert;
-//        pNOrders;
-//        providerEdit;
-        /*
-            int id ;
-            String name ;
-            String identify;
-            String tele;
-            String address;
-            Instant createAd = Instant.now();
-
-         */
-
         pName.setCellValueFactory(new PropertyValueFactory<>("name"));
         pTele.setCellValueFactory(new PropertyValueFactory<>("tele"));
         pIdentify.setCellValueFactory(new PropertyValueFactory<>("identify"));
         pAddress.setCellValueFactory( new PropertyValueFactory<>("address"));
 
         pNOrders.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( cellData.getValue().getStocks().size() ) );
-        //pDateInsert.setCellValueFactory( new PropertyValueFactory<>("createAd"));
         pDateInsert.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreateAd())
         ));
@@ -101,7 +82,7 @@ public class ProviderController implements Initializable {
                             pNameForm.setText( data.getName() );
                             pIdentifyForm.setText( data.getIdentify() );
                             pTeleForm.setText( data.getTele() );
-                            pAdressForm.setText( data.getAddress() );
+                            pAddressForm.setText( data.getAddress() );
 
 
                         });
@@ -146,7 +127,7 @@ public class ProviderController implements Initializable {
         provider.setName( pNameForm.getText() );
         provider.setIdentify( pIdentifyForm.getText() );
         provider.setTele( pTeleForm.getText() );
-        provider.setAddress( pAdressForm.getText() );
+        provider.setAddress( pAddressForm.getText() );
 
         boolean saved = false;
         if( pIDForm.getText() == null || pIDForm.getText().equals("") ){
@@ -173,7 +154,7 @@ public class ProviderController implements Initializable {
             pNameForm.setText( "" );
             pTeleForm.setText( "" );
             pIdentifyForm.setText( "" );
-            pAdressForm.setText( "" );
+            pAddressForm.setText( "" );
             this.loadDataTable();
 
     }
