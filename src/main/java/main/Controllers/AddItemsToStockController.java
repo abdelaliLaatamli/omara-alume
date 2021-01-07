@@ -16,19 +16,16 @@ import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.enums.ProductsType;
 import main.Models.utils.CurrentCrudOperation;
-import main.Services.AccessoryService;
-import main.Services.AluminumService;
-import main.Services.GlassService;
-import main.Services.ProviderService;
+import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Set;
+
 
 public class AddItemsToStockController implements Initializable {
 
+    private final StockService stockService = new StockService();
     private final ProviderService providerService = new ProviderService();
     private final AccessoryService accessoryService = new AccessoryService();
     private final AluminumService aluminumService = new AluminumService();
@@ -232,7 +229,34 @@ public class AddItemsToStockController implements Initializable {
 
 
 
-    public void saveStockOrder(MouseEvent mouseEvent) {
+    public void saveStockOrder(MouseEvent mouseEvent) throws IOException {
+
+        stockEntity.setName( sProductName.getText() );
+        stockEntity.setProvider( sProvider.getSelectionModel().getSelectedItem() );
+
+
+        boolean saved = stockService.add( stockEntity );
+
+
+        if( saved ){
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'ajout en Stock réussi");
+            alert.setHeaderText("l'ordre Stock est bien ajouté");
+            alert.showAndWait();
+
+            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockView.fxml"));
+            main.JavaFxApplication.mainStage.setScene(new Scene(root));
+            main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
+            main.JavaFxApplication.mainStage.show();
+
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'ajouter");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+
+        }
 
 
     }
