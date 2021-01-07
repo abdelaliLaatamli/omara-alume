@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,5 +33,9 @@ public class StockEntity {
 
     @ManyToOne
     protected ProviderEntity provider ;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "stock_id")
+    protected Set<StockItemsEntity> stockItems = new HashSet<>();
 
 }

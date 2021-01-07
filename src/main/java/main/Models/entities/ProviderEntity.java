@@ -43,4 +43,9 @@ public class ProviderEntity {
     @JoinColumn(name = "provider_id")
     protected Set<StockEntity> stocks = new HashSet<>();
 
+
+    @Override
+    public String toString() {
+        return name ;
+    }
 }

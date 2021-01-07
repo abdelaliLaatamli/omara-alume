@@ -34,6 +34,11 @@ public abstract class ArticleEntity {
     @JoinColumn(name = "article_id")
     protected Set<PriceEntity> prices = new HashSet<>();
 
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "article_id")
+    protected Set<StockItemsEntity> stockItems = new HashSet<>();
+
     @Override
     public String toString(){
         return this.name;

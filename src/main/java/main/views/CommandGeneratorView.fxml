@@ -118,22 +118,30 @@
                         </Tab>
                     </tabs>
                   </TabPane>
-                  <Label layoutX="14.0" layoutY="15.0" prefHeight="17.0" prefWidth="139.0" text="Nom De client :" />
-      
-                  <ComboBox fx:id="clientNameForm" editable="true" layoutX="164.0" layoutY="11.0" prefHeight="25.0" prefWidth="210.0" />
+
+
+                   <Label layoutX="14.0" layoutY="15.0" prefHeight="17.0" prefWidth="139.0" text="Nom De client :" />
+                   <ComboBox fx:id="clientNameForm" editable="true" layoutX="164.0" layoutY="11.0" prefHeight="25.0" prefWidth="210.0" />
                    <Button layoutX="388.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#goToClientView" prefHeight="25.0" prefWidth="93.0" text="Ajouter client" />
-                  <Label layoutX="14.0" layoutY="72.0" />
-                  <Label layoutX="466.0" layoutY="81.0" prefHeight="17.0" prefWidth="120.0" text="Total :" />
-                  <Label fx:id="totalePriceCommand" layoutX="466.0" layoutY="99.0" prefHeight="27.0" prefWidth="120.0" text="00,00DH">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
+
+<!--                   <Label layoutX="14.0" layoutY="72.0" />-->
+
+                   <Label layoutX="466.0" layoutY="81.0" prefHeight="17.0" prefWidth="120.0" text="Total :" />
+                   <Label fx:id="totalePriceCommand" layoutX="466.0" layoutY="99.0" prefHeight="27.0" prefWidth="120.0" text="00,00DH">
+                        <font>
+                            <Font size="15.0" />
+                        </font>
+                   </Label>
+
+
                   <Label layoutX="14.0" layoutY="81.0" prefHeight="17.0" prefWidth="139.0" text="Payement :" />
                   <ComboBox fx:id="comboPaymentStatus" layoutX="164.0" layoutY="77.0" prefHeight="25.0" prefWidth="210.0" />
+
                   <Label layoutX="14.0" layoutY="147.0" prefHeight="17.0" prefWidth="139.0" text="Le montant payé :" />
                   <TextField fx:id="amountToPayText" editable="false" layoutX="164.0" layoutY="143.0" prefHeight="25.0" prefWidth="210.0" text="0.0" />
+
                   <Button layoutX="426.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#saveCommandEvent" prefHeight="25.0" prefWidth="150.0" text="Enregistrer Command" />
+
                </children>
             </AnchorPane>
              <TableView fx:id="tableProductsOfCommand" layoutX="621.0" layoutY="14.0" prefHeight="610.0" prefWidth="552.0">

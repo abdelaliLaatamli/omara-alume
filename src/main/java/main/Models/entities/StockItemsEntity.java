@@ -26,11 +26,14 @@ public class StockItemsEntity {
     @Column
     private float quantity;
 
+    @Column float priceOfBuy;
+
+
     @ManyToOne
     protected StockEntity stock;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "import_items_id")
-    protected Set<ArticleEntity> articles = new HashSet<>();
+    @ManyToOne
+    protected ArticleEntity article;
+
 
 }
