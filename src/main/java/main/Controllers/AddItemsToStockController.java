@@ -58,6 +58,22 @@ public class AddItemsToStockController implements Initializable {
     StockItemsEntity currentStockItemEdited = null ;
 
 
+    CurrentCrudOperation currentCrudOperationStock = CurrentCrudOperation.ADD;
+
+
+    public void setData( StockEntity stock  ){
+
+        stockEntity = stock ;
+        currentCrudOperationStock = CurrentCrudOperation.EDIT;
+
+        sProvider.getSelectionModel().select( stockEntity.getProvider() );
+        sProvider.setDisable( true );
+
+        sLable.setText( stockEntity.getName() );
+
+        this.loadDataTable();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -199,10 +215,6 @@ public class AddItemsToStockController implements Initializable {
     public void saveArticleInStock(MouseEvent mouseEvent) {
 
 
-
-
-
-
         if( currentOperationStockItem == CurrentCrudOperation.ADD ){
             StockItemsEntity stockItemsEntity = new StockItemsEntity();
             stockItemsEntity.setArticle( sProduit.getSelectionModel().getSelectedItem());
@@ -230,19 +242,25 @@ public class AddItemsToStockController implements Initializable {
 
 
     public void saveStockOrder(MouseEvent mouseEvent) throws IOException {
-
-        stockEntity.setName( sProductName.getText() );
+        //System.out.println(sProductName.getText());
+        stockEntity.setName( sLable.getText() );
         stockEntity.setProvider( sProvider.getSelectionModel().getSelectedItem() );
+        boolean saved = false ;
 
+        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
 
-        boolean saved = stockService.add( stockEntity );
-
+             saved = stockService.add( stockEntity );
+            System.out.println( "add" );
+        }else{
+             saved = stockService.update(stockEntity);
+            System.out.println( "update" );
+        }
 
         if( saved ){
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("l'ajout en Stock réussi");
-            alert.setHeaderText("l'ordre Stock est bien ajouté");
+            alert.setTitle("l'enregistrement en Stock réussi");
+            alert.setHeaderText("l'ordre Stock est bien enregistrer");
             alert.showAndWait();
 
             Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockView.fxml"));
@@ -252,11 +270,13 @@ public class AddItemsToStockController implements Initializable {
 
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error D'ajouter");
+            alert.setTitle("Error D'enregistrement");
             alert.setHeaderText("Oups, il y a eu une erreur!");
             alert.showAndWait();
 
         }
+
+
 
 
     }

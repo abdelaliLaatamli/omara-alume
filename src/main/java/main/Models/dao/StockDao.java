@@ -80,7 +80,16 @@ public class StockDao {
             // start a transaction
             transaction = session.beginTransaction();
             // save the student object
+            Set<StockItemsEntity> savedStockItems = new HashSet<>();
 
+            for ( StockItemsEntity stockItemsEntity : entity.getStockItems() ){
+                if( stockItemsEntity.getId() == 0 ){
+                    session.save( stockItemsEntity );
+                }
+                savedStockItems.add( stockItemsEntity );
+            }
+
+            entity.setStockItems( savedStockItems );
 
             session.update(entity);
             // commit transaction

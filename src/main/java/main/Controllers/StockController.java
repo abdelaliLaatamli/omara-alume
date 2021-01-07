@@ -73,9 +73,25 @@ public class StockController implements Initializable {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
+
                             StockEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData Edit: " + data.getId());
 
+
+                            try {
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/views/AddItemsToStockView.fxml"));
+                                Parent root = loader.load();
+                                AddItemsToStockController controller = loader.<AddItemsToStockController>getController();
+                                controller.setData(data);
+                                main.JavaFxApplication.mainStage.setScene(new Scene(root));
+                                main.JavaFxApplication.mainStage.setTitle("Ajouter Order -- Aluminium et verre");
+                                main.JavaFxApplication.mainStage.show();
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                         });
                     }
