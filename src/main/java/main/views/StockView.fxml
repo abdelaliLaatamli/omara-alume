@@ -26,16 +26,15 @@
 
 
 
-        <TableView fx:id="tableProductsOfCommand" layoutX="10.0" layoutY="64.0" prefHeight="630.0" prefWidth="1180.0">
+        <TableView fx:id="tableOfStockOrders" layoutX="10.0" layoutY="64.0" prefHeight="630.0" prefWidth="1180.0">
             <columns>
-                <TableColumn fx:id="lableOfCommand" prefWidth="285.0" text="Name" />
-                <TableColumn fx:id="priceProductOfCommand" prefWidth="170.0" text="Price" />
-                <TableColumn fx:id="quentityProductOfCommand" prefWidth="147.0" text="Quentity" />
-                <TableColumn fx:id="priceCommand" prefWidth="139.0" text="Price Command" />
+                <TableColumn fx:id="sNameOfStock" prefWidth="285.0" text="reference" />
+                <TableColumn fx:id="sProviderName" prefWidth="147.0" text="fournisseur" />
+                <TableColumn fx:id="sTotalOrder" prefWidth="170.0" text="total" />
+                <TableColumn fx:id="numberItems" prefWidth="218.0" text="number Items" />
                 <TableColumn fx:id="importAt" prefWidth="119.0" text="Import At" />
-                <TableColumn fx:id="numberItems" prefWidth="121.0" text="number Items" />
-                <TableColumn fx:id="editProductOfCommand" prefWidth="103.0" text="Edit" />
-                <TableColumn fx:id="deleteProductOfCommand" prefWidth="95.0" text="Delete" />
+                <TableColumn fx:id="editProductOfCommand" prefWidth="127.0" text="Edit" />
+                <TableColumn fx:id="deleteProductOfCommand" prefWidth="113.0" text="Delete" />
             </columns>
         </TableView>
 
