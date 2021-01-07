@@ -55,14 +55,14 @@
                     </children>
                 </AnchorPane>
 
-                <TableView fx:id="tableProductsOfCommand" layoutX="523.0" layoutY="14.0" prefHeight="610.0" prefWidth="650.0">
+                <TableView fx:id="tableProductsOfStockOrder" layoutX="523.0" layoutY="14.0" prefHeight="610.0" prefWidth="650.0">
                     <columns>
-                        <TableColumn fx:id="lableOfCommand" prefWidth="139.0" text="Name" />
-                        <TableColumn fx:id="priceProductOfCommand" prefWidth="85.0" text="Price" />
-                        <TableColumn fx:id="quentityProductOfCommand" prefWidth="94.0" text="Quentity" />
-                        <TableColumn fx:id="priceCommand" prefWidth="149.0" text="Price Command" />
-                        <TableColumn fx:id="editProductOfCommand" prefWidth="86.0" text="Edit" />
-                        <TableColumn fx:id="deleteProductOfCommand" prefWidth="96.0" text="Delete" />
+                        <TableColumn fx:id="sProductName" prefWidth="139.0" text="Name" />
+                        <TableColumn fx:id="sProductsQuentityColumn" prefWidth="94.0" text="Quentité" />
+                        <TableColumn fx:id="sPriceOfBuyColumn" prefWidth="85.0" text="Price" />
+                        <TableColumn fx:id="sTotalOrder" prefWidth="149.0" text="Total du Produit" />
+                        <TableColumn fx:id="sEditProductItem" prefWidth="86.0" text="Edit" />
+                        <TableColumn fx:id="sRemoveProductFromStockItems" prefWidth="96.0" text="Annule" />
                     </columns>
                 </TableView>
 
