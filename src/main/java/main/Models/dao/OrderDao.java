@@ -27,8 +27,8 @@ public class OrderDao {
 
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
                 if( paymentsMadeEntity.getAmountPaid() != 0 ){
-                    session.save( paymentsMadeEntity );
-                    savedPayement.add( paymentsMadeEntity );
+                session.save( paymentsMadeEntity );
+                savedPayement.add( paymentsMadeEntity );
                 }
             }
 
@@ -58,43 +58,6 @@ public class OrderDao {
         return entity;
     }
 
-//    public CommandEntity save(CommandEntity entity) {
-//        Transaction transaction = null;
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            // start a transaction
-//            transaction = session.beginTransaction();
-//
-//            Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
-//
-//            for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
-//                if( paymentsMadeEntity.getAmountPaid() != 0 ){
-//                    session.save( paymentsMadeEntity );
-//                    savedPayement.add( paymentsMadeEntity );
-//                }
-//            }
-//
-//            Set< ArticleCommandEntity > savedArticleCommands = new HashSet<>();
-//
-//            for ( ArticleCommandEntity articleCommandEntity : entity.getArticleCommands() ){
-//                session.save( articleCommandEntity );
-//                savedArticleCommands.add( articleCommandEntity );
-//            }
-//
-//            entity.setPaymentsMades( savedPayement );
-//            entity.setArticleCommands( savedArticleCommands );
-//
-//            // save the student object
-//            session.save(entity);
-//            // commit transaction
-//            transaction.commit();
-//        } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
-//        }
-//        return entity;
-//    }
 
 
     /**
@@ -135,9 +98,8 @@ public class OrderDao {
 
                 //if( paymentsMadeEntity.getId() == 0 || paymentsMadeEntity.getAmountPaid() == 0 ){
                 if (paymentsMadeEntity.getAmountPaid() != 0) {
-                    if (paymentsMadeEntity.getId() == 0)
-                        session.save(paymentsMadeEntity);
-
+                    session.save(paymentsMadeEntity);
+                    //if (paymentsMadeEntity.getId() == 0)
                     savedPayement.add(paymentsMadeEntity);
                 }
             }

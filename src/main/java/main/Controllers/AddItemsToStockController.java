@@ -242,13 +242,11 @@ public class AddItemsToStockController implements Initializable {
 
 
     public void saveStockOrder(MouseEvent mouseEvent) throws IOException {
-        //System.out.println(sProductName.getText());
         stockEntity.setName( sLable.getText() );
         stockEntity.setProvider( sProvider.getSelectionModel().getSelectedItem() );
         boolean saved = false ;
-
+        System.out.println( currentCrudOperationStock );
         if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
-
              saved = stockService.add( stockEntity );
             System.out.println( "add" );
         }else{
@@ -273,7 +271,6 @@ public class AddItemsToStockController implements Initializable {
             alert.setTitle("Error D'enregistrement");
             alert.setHeaderText("Oups, il y a eu une erreur!");
             alert.showAndWait();
-
         }
 
 

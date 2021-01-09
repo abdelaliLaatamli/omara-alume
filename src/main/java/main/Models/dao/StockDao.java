@@ -29,9 +29,7 @@ public class StockDao {
             Set<StockItemsEntity> savedStockItems = new HashSet<>();
 
             for ( StockItemsEntity stockItemsEntity : entity.getStockItems() ){
-                if( stockItemsEntity.getId() == 0 ){
-                    session.save( stockItemsEntity );
-                }
+                session.save( stockItemsEntity );
                 savedStockItems.add( stockItemsEntity );
             }
 
@@ -83,9 +81,7 @@ public class StockDao {
             Set<StockItemsEntity> savedStockItems = new HashSet<>();
 
             for ( StockItemsEntity stockItemsEntity : entity.getStockItems() ){
-                if( stockItemsEntity.getId() == 0 ){
-                    session.save( stockItemsEntity );
-                }
+                session.save( stockItemsEntity );
                 savedStockItems.add( stockItemsEntity );
             }
 

@@ -726,37 +726,32 @@ public class CommandGeneratorController implements Initializable {
 
         commandDetails.getPaymentsMades().add( paymentsMadeEntity );
 
+        boolean saved = false ;
+
         if( operationCommand == CurrentCrudOperation.ADD ) {
-
-            boolean saved = commandService.addCommand(commandDetails);
-
-            if (saved) {
-
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("l'ajout de Command réussi");
-                alert.setHeaderText("le Command est bien ajouté");
-                alert.showAndWait();
-
-                Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
-                main.JavaFxApplication.mainStage.setScene(new Scene(root));
-                main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
-                main.JavaFxApplication.mainStage.show();
-
-            }else{
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error D'ajouter");
-                alert.setHeaderText("Oups, il y a eu une erreur!");
-                alert.showAndWait();
-            }
+            saved = commandService.addCommand(commandDetails);
         }else{
-            System.out.println(" Operation Edit ");
-
-
-            boolean saved = commandService.updateOrder(commandDetails);
-
-            System.out.println( saved );
-
+            saved = commandService.updateOrder(commandDetails);
         }
+
+        if (saved) {
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'enregistrement en Command réussi");
+            alert.setHeaderText("le Command est bien enregistrer");
+            alert.showAndWait();
+
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'enregistrement");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
+
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListCommandsView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
 
     }
 }
