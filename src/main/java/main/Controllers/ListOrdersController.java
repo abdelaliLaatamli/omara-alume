@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 
-public class ListCommandsController implements Initializable {
+public class ListOrdersController implements Initializable {
 
     CommandService commandService = new CommandService();
 
@@ -88,9 +88,9 @@ public class ListCommandsController implements Initializable {
 
                             try {
 
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/views/CommandGeneratorView.fxml"));
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/views/OrderCreationView.fxml"));
                                 Parent root = loader.load();
-                                CommandGeneratorController controller = loader.<CommandGeneratorController>getController();
+                                OrderCreationController controller = loader.<OrderCreationController>getController();
                                 controller.setData(data);
                                 main.JavaFxApplication.mainStage.setScene(new Scene(root));
                                 main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
@@ -289,7 +289,7 @@ public class ListCommandsController implements Initializable {
 
 
     public void goToCommandGenerator(MouseEvent mouseEvent) throws IOException {
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/CommandGeneratorView.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/OrderCreationView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
