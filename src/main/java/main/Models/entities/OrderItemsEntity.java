@@ -20,7 +20,8 @@ public class OrderItemsEntity {
     @GeneratedValue
     protected int id ;
 
-    @Column String name ;
+    @Column
+    protected String name ;
 
     @Column
     protected float quantity;

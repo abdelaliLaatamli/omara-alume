@@ -15,11 +15,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.OrderEntity;
 import main.Services.CommandService;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -194,6 +198,7 @@ public class ListOrdersController implements Initializable {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
                             //cancleOrder( order );
+                            printOrder( order );
 
                         });
                     }
@@ -220,6 +225,19 @@ public class ListOrdersController implements Initializable {
         listCommandTable.setItems( observableCommand );
 
 
+    }
+
+    private void printOrder( OrderEntity order ) throws JRException {
+        System.out.println( order.getId() );
+
+        HashMap m = new HashMap();
+        m.put( "order_id" , order.getId() );
+
+       // System.out.println( this.getClass().getResource("/main/views/invoice.jrxml") );
+
+        JasperDesign jasperDesign = JRXmlLoader.load( this.getClass().getResource("/main/views/invoice.jrxml").toString() );
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport , m , );
     }
 
     private void cancleOrder( OrderEntity order ){

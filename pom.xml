@@ -139,6 +139,7 @@
                 <directory>src/main/java</directory>
                 <includes>
                     <include>**/*.fxml</include>
+                    <include>**/*.jrxml</include>
                 </includes>
             </resource>
         </resources>
