@@ -14,13 +14,21 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.OrderEntity;
-import main.Services.CommandService;
+import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.util.JRResourcesUtil;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -31,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class ListOrdersController implements Initializable {
 
-    CommandService commandService = new CommandService();
+    OrderService orderService = new OrderService();
 
     @FXML TableView<OrderEntity> listCommandTable;
     @FXML TableColumn<OrderEntity, String > referenceCommand;
@@ -47,6 +55,9 @@ public class ListOrdersController implements Initializable {
 
     ObservableList<OrderEntity> observableCommand = FXCollections.observableArrayList();
 
+    public ListOrdersController() throws JRException {
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.loadData();
@@ -55,7 +66,7 @@ public class ListOrdersController implements Initializable {
 
     public void loadData(){
 
-        List<OrderEntity> commands = commandService.getAllCommands();
+        List<OrderEntity> commands = orderService.getAllCommands();
         observableCommand.clear();
         observableCommand.addAll( commands );
 
@@ -198,7 +209,27 @@ public class ListOrdersController implements Initializable {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
                             //cancleOrder( order );
-                            printOrder( order );
+                            try {
+                                printOrder( order );
+                            } catch (JRException e) {
+                                e.printStackTrace();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
+
+                            //List<Object> oo = orderService.getOrder( 1 );
+
+                            //System.out.println( oo );
+
+
+//
+//                            try {
+//                                //printOrder( order );
+//                            } catch (JRException e) {
+//                                e.printStackTrace();
+//                            }
 
                         });
                     }
@@ -227,24 +258,33 @@ public class ListOrdersController implements Initializable {
 
     }
 
-    private void printOrder( OrderEntity order ) throws JRException {
+    private void printOrder( OrderEntity order ) throws JRException, ClassNotFoundException, SQLException {
         System.out.println( order.getId() );
 
         HashMap m = new HashMap();
         m.put( "order_id" , order.getId() );
 
-       // System.out.println( this.getClass().getResource("/main/views/invoice.jrxml") );
 
-        JasperDesign jasperDesign = JRXmlLoader.load( this.getClass().getResource("/main/views/invoice.jrxml").toString() );
-        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport , m , );
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con=  DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/omar_alum","root","");
+
+
+        File file = new File(String.valueOf(this.getClass().getResource("/main/views/invoice.jrxml")));
+
+        String myReport = "C:/Users/Abdelali/Desktop/omara-alume/target/classes/main/views/invoice.jrxml";
+        // JasperReport jasperReport = JasperCompileManager.compileReport( this.getClass().getResource("/main/views/invoice.jrxml").getFile() );
+        JasperReport jasperReport = JasperCompileManager.compileReport( myReport );
+        JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport , m , con );
+        JasperViewer.viewReport( jasperPrint );
+
     }
 
     private void cancleOrder( OrderEntity order ){
 
         order.setIsCanceled( true );
 
-        boolean canceled = commandService.updateOrder( order );
+        boolean canceled = orderService.updateOrder( order );
 
         if (canceled) {
 
@@ -266,7 +306,7 @@ public class ListOrdersController implements Initializable {
     private void lockOrder( OrderEntity order ){
         order.setIsLocked( true );
 
-        boolean canceled = commandService.updateOrder( order );
+        boolean canceled = orderService.updateOrder( order );
 
         if (canceled) {
 

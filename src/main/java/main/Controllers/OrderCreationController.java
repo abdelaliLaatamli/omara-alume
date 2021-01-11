@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 public class OrderCreationController implements Initializable {
 
-    private final CommandService commandService = new CommandService();
+    private final OrderService orderService = new OrderService();
     private final ClientServices clientServices = new ClientServices();
     private final AccessoryService accessoryService = new AccessoryService();
     private final AluminumService aluminumService = new AluminumService();
@@ -729,9 +729,9 @@ public class OrderCreationController implements Initializable {
         boolean saved = false ;
 
         if( operationCommand == CurrentCrudOperation.ADD ) {
-            saved = commandService.addCommand(commandDetails);
+            saved = orderService.addCommand(commandDetails);
         }else{
-            saved = commandService.updateOrder(commandDetails);
+            saved = orderService.updateOrder(commandDetails);
         }
 
         if (saved) {

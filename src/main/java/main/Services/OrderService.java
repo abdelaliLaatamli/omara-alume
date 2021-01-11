@@ -2,10 +2,13 @@ package main.Services;
 
 import main.Models.dao.OrderDao;
 import main.Models.entities.OrderEntity;
+import main.Models.utils.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
-public class CommandService {
+public class OrderService {
 
     private OrderDao commandDao = new OrderDao();
 
@@ -46,6 +49,7 @@ public class CommandService {
 
         return newAlum;
     }
+
 
 
 }

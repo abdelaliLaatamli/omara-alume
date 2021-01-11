@@ -79,6 +79,12 @@
             <version>6.15.0</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.codehaus.groovy</groupId>-->
+<!--            <artifactId>groovy-all</artifactId>-->
+<!--            <version>3.0.4</version>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -94,6 +100,17 @@
 
 
     </dependencies>
+
+<!--    <repositories>-->
+<!--            <repository>-->
+<!--                <id>jasperreports</id>-->
+<!--                <url>http://jasperreports.sourceforge.net/maven2</url>-->
+<!--            </repository>-->
+<!--            <repository>-->
+<!--                <id>jaspersoft-third-party</id>-->
+<!--                <url>http://jaspersoft.artifactoryonline.com/jaspersoft/third-party-ce-artifacts/</url>-->
+<!--            </repository>-->
+<!--    </repositories>-->
 
     <build>
         <plugins>
