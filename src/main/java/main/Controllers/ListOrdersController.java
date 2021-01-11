@@ -208,18 +208,18 @@ public class ListOrdersController implements Initializable {
                         btn.setOnAction((ActionEvent event) -> {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
-                            //cancleOrder( order );
-                            try {
-                                printOrder( order );
-                            } catch (JRException e) {
-                                e.printStackTrace();
-                            } catch (SQLException throwables) {
-                                throwables.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
 
-                            //List<Object> oo = orderService.getOrder( 1 );
+//                            try {
+//                                printOrder( order );
+//                            } catch (JRException e) {
+//                                e.printStackTrace();
+//                            } catch (SQLException throwables) {
+//                                throwables.printStackTrace();
+//                            } catch (ClassNotFoundException e) {
+//                                e.printStackTrace();
+//                            }
+
+                            List<Object> oo = orderService.getOrder( 1 );
 
                             //System.out.println( oo );
 
@@ -259,7 +259,6 @@ public class ListOrdersController implements Initializable {
     }
 
     private void printOrder( OrderEntity order ) throws JRException, ClassNotFoundException, SQLException {
-        // System.out.println( order.getId() );
 
         String logo = String.valueOf(getClass().getClassLoader().getResource("logo.PNG") ).replace("file:/" , "" );
 

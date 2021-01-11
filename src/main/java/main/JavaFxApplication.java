@@ -7,16 +7,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.io.InputStream;
-
-
 public class JavaFxApplication extends Application {
 
     public static Stage mainStage ;
 
+//    Logger logger = Logger.getLogger(JavaFxApplication.class.getName());
+
     @Override
     public void start(Stage stage) throws Exception {
-
+//        logger.setLevel(Level.ALL);
         mainStage = stage;
         mainStage.setResizable(false);
 

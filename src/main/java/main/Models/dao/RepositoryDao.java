@@ -156,10 +156,25 @@ public class RepositoryDao<T> {
         return listOfEntities;
     }
 
-//    public List<Object> getOrder(int orderId){
-//
-//        List < Object > listOfEntities = null;
-//
+    public List<Object> getOrder(int orderId){
+
+        List < Object > listOfEntities = null;
+
+        String query = "SELECT " +
+                "OI.id AS order_items_id , " +
+                "OI.name AS order_items_name , " +
+                "OI.price AS order_items_price , " +
+                "OI.priceOfArticle_id AS order_items_priceOfArticle_id " +
+//                "O.`orderDate` AS orders_orderDate, " +
+//                "O.`paymentStatus` AS orders_paymentStatus, " +
+//                "C.`name` AS clients_name, " +
+                " FROM " +
+                " main.Models.entities.OrderItemsEntity as OI ";// +
+//                "INNER JOIN main.Models.entities.OrderEntity as O ON OI.`order_id` = O.`id` " +
+//                "INNER JOIN ClientEntity C ON O.`client_id` = C.`id` " +
+//                " WHERE " +
+//                "O.`id` = " +orderId;
+
 //        String query = "SELECT " +
 //                            "OI.`id` AS order_items_id, " +
 //                            "OI.`name` AS order_items_name, " +
@@ -177,45 +192,63 @@ public class RepositoryDao<T> {
 //                            "INNER JOIN ClientEntity C ON O.`client_id` = C.`id` " +
 //                        "WHERE " +
 //                            "O.`id` = " +orderId;
-//
-////        String query = "SELECT order_items.`id` AS order_items_id, " +
-////                "order_items.`name` AS order_items_name, " +
-////                "order_items.`price` AS order_items_price, " +
-////                "order_items.`quantity` AS order_items_quantity, " +
-////                "order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id, " +
-////                "orders.`orderDate` AS orders_orderDate, " +
-////                "orders.`paymentStatus` AS orders_paymentStatus, " +
-////                "clients.`name` AS clients_name, " +
-////                "( SELECT sum(order_items.`price` * order_items.`quantity`) from `order_items` order_items WHERE order_items.`order_id` = orders.`id` ) as total , " +
-////                "IFNULL(( SELECT SUM( `payements_made`.`amountPaid`) FROM `payements_made` WHERE `order_id` = orders.`id` ), 0 )as paid " +
-////                "FROM " +
-////                "`order_items` order_items " +
-////                "INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id` " +
-////                "INNER JOIN `clients` clients ON orders.`client_id` = clients.`id` " +
-////                "WHERE " +
-////                "orders.`id` = " +orderId;
-//
-//
-//        Transaction transaction = null;
-//
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            // start a transaction
-//            transaction = session.beginTransaction();
-//            // get an user object
-//
-//            listOfEntities = session.createQuery(query).getResultList();
-//
-//            // commit transaction
-//            transaction.commit();
-//        } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            e.printStackTrace();
-//        }
-//        return listOfEntities;
-//
-//
-//    }
+
+//        String query = "SELECT order_items.`id` AS order_items_id, " +
+//                "order_items.`name` AS order_items_name, " +
+//                "order_items.`price` AS order_items_price, " +
+//                "order_items.`quantity` AS order_items_quantity, " +
+//                "order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id, " +
+//                "orders.`orderDate` AS orders_orderDate, " +
+//                "orders.`paymentStatus` AS orders_paymentStatus, " +
+//                "clients.`name` AS clients_name, " +
+//                "( SELECT sum(order_items.`price` * order_items.`quantity`) from `order_items` order_items WHERE order_items.`order_id` = orders.`id` ) as total , " +
+//                "IFNULL(( SELECT SUM( `payements_made`.`amountPaid`) FROM `payements_made` WHERE `order_id` = orders.`id` ), 0 )as paid " +
+//                "FROM " +
+//                "`order_items` order_items " +
+//                "INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id` " +
+//                "INNER JOIN `clients` clients ON orders.`client_id` = clients.`id` " +
+//                "WHERE " +
+//                "orders.`id` = " +orderId;
+
+//        SELECT
+//        order_items.`id` AS order_items_id,
+//        order_items.`name` AS order_items_name,
+//        order_items.`price` AS order_items_price,
+//        order_items.`quantity` AS order_items_quantity,
+//        order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
+//        orders.`orderDate` AS orders_orderDate,
+//        orders.`paymentStatus` AS orders_paymentStatus,
+//        clients.`name` AS clients_name,
+//        ( SELECT ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
+//        ( SELECT ifnull( SUM( `payements_made`.`amountPaid`) , 0 )FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
+//        FROM
+//     `order_items` order_items
+//        INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
+//        INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
+//        WHERE
+//        orders.`id` = 2
+
+
+        Transaction transaction = null;
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            listOfEntities = session.createQuery(query).getResultList();
+
+            // commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return listOfEntities;
+
+
+    }
 
 }
