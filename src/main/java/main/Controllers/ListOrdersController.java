@@ -259,7 +259,7 @@ public class ListOrdersController implements Initializable {
     }
 
     private void printOrder( OrderEntity order ) throws JRException, ClassNotFoundException, SQLException {
-        System.out.println( order.getId() );
+        // System.out.println( order.getId() );
 
         String logo = String.valueOf(getClass().getClassLoader().getResource("logo.PNG") ).replace("file:/" , "" );
 
@@ -272,7 +272,6 @@ public class ListOrdersController implements Initializable {
         Connection con=  DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/omar_alum","root","");
 
-        System.out.println( logo );
 
         String myReport = String.valueOf(this.getClass().getResource("/main/views/invoice.jrxml")).replace("file:/" , "") ;
         JasperReport jasperReport = JasperCompileManager.compileReport( myReport );
