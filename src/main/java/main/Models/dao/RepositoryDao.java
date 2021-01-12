@@ -1,16 +1,10 @@
 package main.Models.dao;
 
-import main.Models.entities.Invoice;
-import main.Models.enums.PaymentStatus;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RepositoryDao<T> {
 
@@ -162,52 +156,5 @@ public class RepositoryDao<T> {
         return listOfEntities;
     }
 
-    public List<Object> getOrder(int orderId){
-
-        List <Object> listOfEntities = null;
-
-        String query =
-                "SELECT " +
-                    "OI.id AS order_items_id , " +
-                    "OI.name AS order_items_name , " +
-                    "OI.quantity AS order_items_quantity , " +
-                    "OI.price AS order_items_price , " +
-                    "O.orderDate AS orders_orderDate , " +
-                    "O.paymentStatus AS orders_paymentStatus , " +
-                    "C.name AS clients_name , " +
-                    "( SELECT COALESCE( sum(OI.price * OI.quantity ) , 0 )  from OI WHERE OI.order = O ) as total , " +
-                    "( SELECT COALESCE( SUM( P.amountPaid ) , 0 ) FROM main.Models.entities.PaymentsMadeEntity as P WHERE P.order = O ) as paid " +
-                " FROM " +
-                    " main.Models.entities.OrderItemsEntity as OI " +
-                    " INNER JOIN main.Models.entities.OrderEntity as O ON OI.order = O " +
-                    " INNER JOIN main.Models.entities.ClientEntity C ON O.client = C " +
-                " WHERE " +
-                    "O.id = " +orderId;
-
-
-        Transaction transaction = null;
-
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            // start a transaction
-            transaction = session.beginTransaction();
-            // get an user object
-
-           //listOfEntities = (List<Invoice>) session.createQuery(query).getResultList();
-            listOfEntities = session.createQuery(query).getResultList();
-
-
-
-            // commit transaction
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        }
-        return listOfEntities;
-
-
-    }
 
 }

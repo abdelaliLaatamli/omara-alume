@@ -13,19 +13,12 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
-import main.Models.entities.Invoice;
 import main.Models.entities.OrderEntity;
 import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.util.JRResourcesUtil;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -210,27 +203,17 @@ public class ListOrdersController implements Initializable {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
 
-//                            try {
-//                                printOrder( order );
-//                            } catch (JRException e) {
-//                                e.printStackTrace();
-//                            } catch (SQLException throwables) {
-//                                throwables.printStackTrace();
-//                            } catch (ClassNotFoundException e) {
-//                                e.printStackTrace();
-//                            }
-
-                            List<Object> oo = orderService.getOrder( 1 );
-
-                            System.out.println( oo );
+                            try {
+                                printOrder( order );
+                            } catch (JRException e) {
+                                e.printStackTrace();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
 
 
-//
-//                            try {
-//                                //printOrder( order );
-//                            } catch (JRException e) {
-//                                e.printStackTrace();
-//                            }
 
                         });
                     }

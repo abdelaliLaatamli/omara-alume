@@ -1,12 +1,7 @@
 package main.Services;
 
 import main.Models.dao.OrderDao;
-import main.Models.dao.RepositoryDao;
-import main.Models.entities.Invoice;
 import main.Models.entities.OrderEntity;
-import main.Models.utils.HibernateUtil;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -51,12 +46,5 @@ public class OrderService {
 
         return newAlum;
     }
-    private RepositoryDao<Object> repositoryDao= new RepositoryDao<Object>();
 
-    public List<Object> getOrder(int i) {
-        List<Object>  aa = null ;
-        aa = repositoryDao.getOrder( i );
-        System.out.println(aa);
-        return aa ;
-    }
 }
