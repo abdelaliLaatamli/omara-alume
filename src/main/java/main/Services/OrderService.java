@@ -2,6 +2,7 @@ package main.Services;
 
 import main.Models.dao.OrderDao;
 import main.Models.dao.RepositoryDao;
+import main.Models.entities.Invoice;
 import main.Models.entities.OrderEntity;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;

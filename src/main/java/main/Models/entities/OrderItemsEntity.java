@@ -30,7 +30,7 @@ public class OrderItemsEntity {
     protected float price ;
 
     @ManyToOne
-    protected OrderEntity command ;
+    protected OrderEntity order;
 
     @ManyToOne
     protected ArticleEntity article ;

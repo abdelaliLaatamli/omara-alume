@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import main.Models.entities.Invoice;
 import main.Models.entities.OrderEntity;
 import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
@@ -209,19 +210,19 @@ public class ListOrdersController implements Initializable {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
 
-                            try {
-                                printOrder( order );
-                            } catch (JRException e) {
-                                e.printStackTrace();
-                            } catch (SQLException throwables) {
-                                throwables.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                printOrder( order );
+//                            } catch (JRException e) {
+//                                e.printStackTrace();
+//                            } catch (SQLException throwables) {
+//                                throwables.printStackTrace();
+//                            } catch (ClassNotFoundException e) {
+//                                e.printStackTrace();
+//                            }
 
-                            // List<Object> oo = orderService.getOrder( 1 );
+                            List<Object> oo = orderService.getOrder( 1 );
 
-                            //System.out.println( oo );
+                            System.out.println( oo );
 
 
 //

@@ -1,10 +1,16 @@
 package main.Models.dao;
 
+import main.Models.entities.Invoice;
+import main.Models.enums.PaymentStatus;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RepositoryDao<T> {
 
@@ -158,75 +164,25 @@ public class RepositoryDao<T> {
 
     public List<Object> getOrder(int orderId){
 
-        List < Object > listOfEntities = null;
+        List <Object> listOfEntities = null;
 
-        String query = "SELECT " +
-                "OI.id AS order_items_id , " +
-                "OI.name AS order_items_name , " +
-                "OI.price AS order_items_price , " +
-                "OI.priceOfArticle_id AS order_items_priceOfArticle_id " +
-//                "O.`orderDate` AS orders_orderDate, " +
-//                "O.`paymentStatus` AS orders_paymentStatus, " +
-//                "C.`name` AS clients_name, " +
+        String query =
+                "SELECT " +
+                    "OI.id AS order_items_id , " +
+                    "OI.name AS order_items_name , " +
+                    "OI.quantity AS order_items_quantity , " +
+                    "OI.price AS order_items_price , " +
+                    "O.orderDate AS orders_orderDate , " +
+                    "O.paymentStatus AS orders_paymentStatus , " +
+                    "C.name AS clients_name , " +
+                    "( SELECT COALESCE( sum(OI.price * OI.quantity ) , 0 )  from OI WHERE OI.order = O ) as total , " +
+                    "( SELECT COALESCE( SUM( P.amountPaid ) , 0 ) FROM main.Models.entities.PaymentsMadeEntity as P WHERE P.order = O ) as paid " +
                 " FROM " +
-                " main.Models.entities.OrderItemsEntity as OI ";// +
-//                "INNER JOIN main.Models.entities.OrderEntity as O ON OI.`order_id` = O.`id` " +
-//                "INNER JOIN ClientEntity C ON O.`client_id` = C.`id` " +
-//                " WHERE " +
-//                "O.`id` = " +orderId;
-
-//        String query = "SELECT " +
-//                            "OI.`id` AS order_items_id, " +
-//                            "OI.`name` AS order_items_name, " +
-//                            "OI.`price` AS order_items_price, " +
-//                            "OI.`quantity` AS order_items_quantity, " +
-//                            "OI.`priceOfArticle_id` AS order_items_priceOfArticle_id, " +
-//                            "O.`orderDate` AS orders_orderDate, " +
-//                            "O.`paymentStatus` AS orders_paymentStatus, " +
-//                            "C.`name` AS clients_name, " +
-//                            "( SELECT sum(OI.`price` * OI.`quantity`) from OI WHERE OI.`order_id` = O.`id` ) as total , " +
-//                            "IFNULL(( SELECT SUM( P.`amountPaid`) FROM main.Models.entities.PaymentsMadeEntity as P WHERE P.`order_id` = O.`id` ), 0 )as paid " +
-//                        "FROM " +
-//                             "main.Models.entities.OrderItemsEntity as OI " +
-//                            "INNER JOIN main.Models.entities.OrderEntity as O ON OI.`order_id` = O.`id` " +
-//                            "INNER JOIN ClientEntity C ON O.`client_id` = C.`id` " +
-//                        "WHERE " +
-//                            "O.`id` = " +orderId;
-
-//        String query = "SELECT order_items.`id` AS order_items_id, " +
-//                "order_items.`name` AS order_items_name, " +
-//                "order_items.`price` AS order_items_price, " +
-//                "order_items.`quantity` AS order_items_quantity, " +
-//                "order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id, " +
-//                "orders.`orderDate` AS orders_orderDate, " +
-//                "orders.`paymentStatus` AS orders_paymentStatus, " +
-//                "clients.`name` AS clients_name, " +
-//                "( SELECT sum(order_items.`price` * order_items.`quantity`) from `order_items` order_items WHERE order_items.`order_id` = orders.`id` ) as total , " +
-//                "IFNULL(( SELECT SUM( `payements_made`.`amountPaid`) FROM `payements_made` WHERE `order_id` = orders.`id` ), 0 )as paid " +
-//                "FROM " +
-//                "`order_items` order_items " +
-//                "INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id` " +
-//                "INNER JOIN `clients` clients ON orders.`client_id` = clients.`id` " +
-//                "WHERE " +
-//                "orders.`id` = " +orderId;
-
-//        SELECT
-//        order_items.`id` AS order_items_id,
-//        order_items.`name` AS order_items_name,
-//        order_items.`price` AS order_items_price,
-//        order_items.`quantity` AS order_items_quantity,
-//        order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
-//        orders.`orderDate` AS orders_orderDate,
-//        orders.`paymentStatus` AS orders_paymentStatus,
-//        clients.`name` AS clients_name,
-//        ( SELECT ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
-//        ( SELECT ifnull( SUM( `payements_made`.`amountPaid`) , 0 )FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
-//        FROM
-//     `order_items` order_items
-//        INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
-//        INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
-//        WHERE
-//        orders.`id` = 2
+                    " main.Models.entities.OrderItemsEntity as OI " +
+                    " INNER JOIN main.Models.entities.OrderEntity as O ON OI.order = O " +
+                    " INNER JOIN main.Models.entities.ClientEntity C ON O.client = C " +
+                " WHERE " +
+                    "O.id = " +orderId;
 
 
         Transaction transaction = null;
@@ -236,7 +192,10 @@ public class RepositoryDao<T> {
             transaction = session.beginTransaction();
             // get an user object
 
+           //listOfEntities = (List<Invoice>) session.createQuery(query).getResultList();
             listOfEntities = session.createQuery(query).getResultList();
+
+
 
             // commit transaction
             transaction.commit();

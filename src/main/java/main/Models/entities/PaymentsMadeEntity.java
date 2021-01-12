@@ -29,6 +29,6 @@ public class PaymentsMadeEntity {
     protected Instant paymentDate = Instant.now();
 
     @ManyToOne
-    protected OrderEntity command;
+    protected OrderEntity order;
 
 }
