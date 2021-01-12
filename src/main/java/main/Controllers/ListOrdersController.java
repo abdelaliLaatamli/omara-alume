@@ -209,17 +209,17 @@ public class ListOrdersController implements Initializable {
                             OrderEntity order = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData print : " + order.getId());
 
-//                            try {
-//                                printOrder( order );
-//                            } catch (JRException e) {
-//                                e.printStackTrace();
-//                            } catch (SQLException throwables) {
-//                                throwables.printStackTrace();
-//                            } catch (ClassNotFoundException e) {
-//                                e.printStackTrace();
-//                            }
+                            try {
+                                printOrder( order );
+                            } catch (JRException e) {
+                                e.printStackTrace();
+                            } catch (SQLException throwables) {
+                                throwables.printStackTrace();
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            }
 
-                            List<Object> oo = orderService.getOrder( 1 );
+                            // List<Object> oo = orderService.getOrder( 1 );
 
                             //System.out.println( oo );
 
@@ -268,8 +268,8 @@ public class ListOrdersController implements Initializable {
 
 
         Class.forName("com.mysql.jdbc.Driver");
-        Connection con=  DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/omar_alum","root","");
+        Connection con= DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/omar_alum" ,"root","");
 
 
         String myReport = String.valueOf(this.getClass().getResource("/main/views/invoice.jrxml")).replace("file:/" , "") ;

@@ -15,7 +15,7 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-//        logger.setLevel(Level.ALL);
+
         mainStage = stage;
         mainStage.setResizable(false);
 
