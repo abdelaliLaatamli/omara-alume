@@ -6,10 +6,9 @@
 	<parameter name="order_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="imageUrl" class="java.io.InputStream">
+	<parameter name="imageUrl" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-
 
 	<queryString>
 		<![CDATA[SELECT
@@ -70,6 +69,7 @@ WHERE
 		<band height="66" splitType="Stretch">
 			<image>
 				<reportElement x="-12" y="0" width="102" height="45" uuid="d36db365-a9aa-4105-a1fa-5d9be327d5f5"/>
+<!--				<imageExpression> <![CDATA[$P{imageURL}]]> </imageExpression>-->
 				<imageExpression><![CDATA[$P{imageUrl}]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">

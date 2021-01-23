@@ -7,11 +7,16 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+
 public class JavaFxApplication extends Application {
 
     public static Stage mainStage ;
 
-//    Logger logger = Logger.getLogger(JavaFxApplication.class.getName());
+    // private final static Logger LOGGER = Logger.getLogger(MyLogger.class.getName());
+    // Logger logger = Logger.getLogger(JavaFxApplication.class.getName());
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -30,7 +35,25 @@ public class JavaFxApplication extends Application {
     }
 
 
-    public static void main(String[] args) {
-       launch();
+    public static void main(String[] args) throws IOException {
+
+
+
+//        logger.severe("severe message");
+//
+//        logger.warning("warning message");
+//
+//        logger.info("info message");
+//
+//        logger.config("config message");
+//
+//        logger.fine("fine message");
+//
+//        logger.finer("finer message");
+//
+//        logger.finest("finest message");
+
+
+        launch();
     }
 }

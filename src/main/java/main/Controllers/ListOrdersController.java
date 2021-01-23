@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
@@ -18,16 +19,26 @@ import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -205,14 +216,9 @@ public class ListOrdersController implements Initializable {
 
                             try {
                                 printOrder( order );
-                            } catch (JRException e) {
-                                e.printStackTrace();
-                            } catch (SQLException throwables) {
-                                throwables.printStackTrace();
-                            } catch (ClassNotFoundException e) {
+                            }  catch (IOException e) {
                                 e.printStackTrace();
                             }
-
 
 
                         });
@@ -242,24 +248,56 @@ public class ListOrdersController implements Initializable {
 
     }
 
-    private void printOrder( OrderEntity order ) throws JRException, ClassNotFoundException, SQLException {
-
-        String logo = String.valueOf(getClass().getClassLoader().getResource("logo.PNG") ).replace("file:/" , "" );
-
-        HashMap m = new HashMap();
-        m.put( "order_id" , order.getId() );
-        m.put( "imageUrl" , logo );
+    private void printOrder( OrderEntity order ) throws IOException {
 
 
-        Class.forName("com.mysql.jdbc.Driver");
-        Connection con= DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/omar_alum" ,"root","");
+        FileHandler handler = new FileHandler("default.log", true);
+        Logger logger = Logger.getLogger("main");
+        logger.addHandler(handler);
+        InputStream logo = this.getClass().getClassLoader().getResourceAsStream("logo.PNG");
+        try {
+
+            HashMap m = new HashMap();
+            m.put( "order_id" , order.getId() );
+            m.put( "imageUrl" , logo );
 
 
-        String myReport = String.valueOf(this.getClass().getResource("/main/views/invoice.jrxml")).replace("file:/" , "") ;
-        JasperReport jasperReport = JasperCompileManager.compileReport( myReport );
-        JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport , m , con );
-        JasperViewer.viewReport( jasperPrint );
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con= DriverManager.getConnection(
+                        "jdbc:mysql://localhost:3306/omar_alum" ,"root","");
+
+            InputStream is = this.getClass().getResourceAsStream("/main/views/invoice.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport( is );
+            JasperPrint jasperPrint = JasperFillManager.fillReport( jasperReport , m , con );
+            JasperViewer.viewReport( jasperPrint , false);
+
+
+        } catch (JRException e) {
+            logger.warning( e.getMessage() );
+            logger.log( Level.WARNING , "JRException" , Arrays.stream(e.getStackTrace())
+                    .map(s->s.toString())
+                    .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
+            e.printStackTrace();
+        }catch (SQLException e) {
+            logger.warning( e.getMessage() );
+            logger.log( Level.WARNING , "SQLException" , Arrays.stream(e.getStackTrace())
+                    .map(s->s.toString())
+                    .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            logger.warning( e.getMessage() );
+            logger.log( Level.WARNING , "ClassNotFoundException" , Arrays.stream(e.getStackTrace())
+                    .map(s->s.toString())
+                    .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
+            e.printStackTrace();
+        } catch (Exception e){
+            logger.warning( e.getMessage() );
+            logger.log( Level.WARNING , "Exception" , Arrays.stream(e.getStackTrace())
+                    .map(s->s.toString())
+                    .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
+                    System.out.println( e.getMessage() );
+        }
+
 
     }
 
