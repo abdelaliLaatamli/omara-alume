@@ -140,84 +140,143 @@ public class OrderCreationController implements Initializable {
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().selectFirst();
+
         comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
 
             amountToPayText.setEditable( (int) newValue == 1 );
 
-            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
+            switch ( (int) newValue ){
+                case 0 :
+                case 1 :
+                    amountToPayText.setText( 0 + "" );
+                    break;
 
-                isWorkingPayementCombo = true ;
+                case 2 :
 
-                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
-                    amountToPayText.setText("0");
-                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
-                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
-                    }
+                    float totalPaid = orderDetails
+                                            .getPaymentsMades()
+                                            .stream()
+                                            .map( e -> e.getAmountPaid() )
+                                            .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-                }else if( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
-                    amountToPayText.setText("0");
-                    if(  comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
-                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
-                    }else{
-                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - OldTotal + "" : "0.0" );
-                    }
+                    float totalOrder = orderDetails
+                                            .getArticleOrders()
+                                            .stream()
+                                            .map( e -> e.getPrice() * e.getQuantity() )
+                                            .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-                }else if ( OldPayementStatusBkp == PaymentStatus.PARTRANCHES) {
-
-                    amountToPayText.setText("0");
-                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
-                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
-                    }
-
-                }
-
-
-            }else if ( operationOrder == CurrentCrudOperation.ADD && !isWorkingPriceTextFiltred ) {
-                isWorkingPayementCombo = true ;
-                amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
-
+                    amountToPayText.setText( ( totalOrder  - totalPaid )  + "" );
+                    break;
             }
-            isWorkingPayementCombo = false ;
 
-        } );
+
+        });
+
 
         amountToPayText.textProperty().addListener( (observable, oldValue, newValue) -> {
 
-            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPayementCombo ){
+            float totalPaid = orderDetails
+                    .getPaymentsMades()
+                    .stream()
+                    .map( e -> e.getAmountPaid() )
+                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-                isWorkingPriceTextFiltred = true ;
+            float totalOrder = orderDetails
+                    .getArticleOrders()
+                    .stream()
+                    .map( e -> e.getPrice() * e.getQuantity() )
+                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
+            if( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PARTRANCHES ){
 
-                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+                if( Float.valueOf( newValue ) >= ( totalOrder  - totalPaid ) ){
                         comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
-                        amountToPayText.setText( getTotal() - payedMount + "" );
-                    }
-
-                }else if( OldPayementStatusBkp == PaymentStatus.PARTRANCHES ) {
-
-                    try {
-
-                       if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
-                            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
-                            amountToPayText.setText( getTotal() - payedMount + "" );
-                        }
-
-                    }catch (Exception e ){
-                        //System.out.println("aaa" );
-                    }
-
-
-
-                }else if ( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
-                    // System.out.println("dddddd");
+                        amountToPayText.setText( totalOrder - totalPaid  + "" );
                 }
 
-
             }
-            isWorkingPriceTextFiltred = false ;
 
         } );
+
+//        comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
+//
+//            amountToPayText.setEditable( (int) newValue == 1 );
+//
+//            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
+//
+//                isWorkingPayementCombo = true ;
+//
+//                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
+//                    amountToPayText.setText("0");
+//                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
+//                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+//                    }
+//
+//                }else if( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
+//                    amountToPayText.setText("0");
+//                    if(  comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
+//                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+//                    }else{
+//                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - OldTotal + "" : "0.0" );
+//                    }
+//
+//                }else if ( OldPayementStatusBkp == PaymentStatus.PARTRANCHES) {
+//
+//                    amountToPayText.setText("0");
+//                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
+//                        amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
+//                    }
+//
+//                }
+//
+//
+//            }else if ( operationOrder == CurrentCrudOperation.ADD && !isWorkingPriceTextFiltred ) {
+//                isWorkingPayementCombo = true ;
+//                amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
+//
+//            }
+//            isWorkingPayementCombo = false ;
+//
+//        } );
+//
+//        amountToPayText.textProperty().addListener( (observable, oldValue, newValue) -> {
+//
+//            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPayementCombo ){
+//
+//                isWorkingPriceTextFiltred = true ;
+//
+//                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
+//
+//                    if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+//                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
+//                        amountToPayText.setText( getTotal() - payedMount + "" );
+//                    }
+//
+//                }else if( OldPayementStatusBkp == PaymentStatus.PARTRANCHES ) {
+//
+//                    try {
+//
+//                       if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
+//                            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
+//                            amountToPayText.setText( getTotal() - payedMount + "" );
+//                        }
+//
+//                    }catch (Exception e ){
+//                        //System.out.println("aaa" );
+//                    }
+//
+//
+//
+//                }
+////                else if ( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
+////                    // System.out.println("dddddd");
+////                }
+//
+//
+//            }
+//            isWorkingPriceTextFiltred = false ;
+//
+//        } );
 
 
         initialiseAluminumTab();
@@ -436,8 +495,8 @@ public class OrderCreationController implements Initializable {
 
         this.loadDataTable();
 
-        if( this.operationOrder == CurrentCrudOperation.EDIT )
-            restorePaimentStatus();
+//        if( this.operationOrder == CurrentCrudOperation.EDIT )
+//            restorePaimentStatus();
 
         aluminuimProduct.getSelectionModel().select(-1);
         aluminuimLabel.setText("");
@@ -511,8 +570,8 @@ public class OrderCreationController implements Initializable {
         }
         this.loadDataTable();
 
-        if( this.operationOrder == CurrentCrudOperation.EDIT )
-            restorePaimentStatus();
+//        if( this.operationOrder == CurrentCrudOperation.EDIT )
+//            restorePaimentStatus();
 
         accessoireProduct.getSelectionModel().select(-1); ;
         accessoireLabel.setText(""); ;
@@ -546,8 +605,8 @@ public class OrderCreationController implements Initializable {
 
         this.loadDataTable();
 
-        if( this.operationOrder == CurrentCrudOperation.EDIT )
-            restorePaimentStatus();
+//        if( this.operationOrder == CurrentCrudOperation.EDIT )
+//            restorePaimentStatus();
 
         glassProduct.getSelectionModel().select(-1);
         glassLabel.setText("");
@@ -557,15 +616,15 @@ public class OrderCreationController implements Initializable {
         this.operation = CurrentCrudOperation.ADD;
     }
 
-    void restorePaimentStatus(){
-
-        if( OldPayementStatusBkp == PaymentStatus.PAYÉ && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ){
-            float newF = this.getTotal();
-            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
-            amountToPayText.setText( newF - OldTotal + " " );
-        }
-
-    }
+//    void restorePaimentStatus(){
+//
+//        if( OldPayementStatusBkp == PaymentStatus.PAYÉ && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ){
+//            float newF = this.getTotal();
+//            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
+//            amountToPayText.setText( newF - OldTotal + " " );
+//        }
+//
+//    }
 
     void loadDataTable(){
 
@@ -577,6 +636,25 @@ public class OrderCreationController implements Initializable {
 
         amountRemainedOrder.setText("00,00 DH");
         amountRemainedOrder.setText( String.format("%.2f DH ", getTotal() - calculAmountPaid() ) );
+
+
+        if( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
+
+            float totalPaid = orderDetails
+                    .getPaymentsMades()
+                    .stream()
+                    .map( e -> e.getAmountPaid() )
+                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
+
+            float totalOrder = orderDetails
+                    .getArticleOrders()
+                    .stream()
+                    .map( e -> e.getPrice() * e.getQuantity() )
+                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
+
+            amountToPayText.setText( totalOrder - totalPaid  + "" );
+
+        }
 
         observableArticleCommand.clear();
         observableArticleCommand.addAll( orderDetails.getArticleOrders() );
@@ -753,9 +831,15 @@ public class OrderCreationController implements Initializable {
         PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText() == "Espéce" ?
                                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
-        ClientEntity clientEntity = ( operationOrder == CurrentCrudOperation.ADD ) ?
-                    clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) :
-                    clientNameForm.getSelectionModel().getSelectedItem() ;
+        ClientEntity clientEntity = getSelectedClientEntity();
+
+        if( clientEntity == null  ){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur D'enregistrement");
+            alert.setHeaderText("veuillez choisir un client");
+            alert.showAndWait();
+            return;
+        }
 
         orderDetails.setClient( clientEntity );
         orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
@@ -767,7 +851,10 @@ public class OrderCreationController implements Initializable {
 
         orderDetails.getPaymentsMades().add( paymentsMadeEntity );
 
+
+
         boolean saved = false ;
+
 
         if( operationOrder == CurrentCrudOperation.ADD ) {
             saved = orderService.addOrder(orderDetails);
@@ -794,5 +881,23 @@ public class OrderCreationController implements Initializable {
         main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
 
+    }
+
+    private ClientEntity getSelectedClientEntity() {
+        ClientEntity clientEntity = null;
+        if( operationOrder == CurrentCrudOperation.ADD ){
+            if( clientNameForm.getSelectionModel().getSelectedItem() == null ) return null ;
+
+            if( clientNameForm.getSelectionModel().getSelectedItem() instanceof String ){
+                return clientNameForm.getItems().stream()
+                        .filter( e -> e.getName().contains( clientNameForm.getSelectionModel().getSelectedItem().toString() ) )
+                        .findFirst().orElse(null);
+            }
+
+            clientEntity = clientNameForm.getSelectionModel().getSelectedItem();
+        }else{
+            clientEntity = clientNameForm.getSelectionModel().getSelectedItem() ;
+        }
+        return clientEntity;
     }
 }

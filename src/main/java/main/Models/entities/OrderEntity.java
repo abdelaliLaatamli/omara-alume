@@ -36,7 +36,7 @@ public class OrderEntity {
     @Column
     protected Boolean isCanceled = false ;
 
-    @ManyToOne  
+    @ManyToOne(optional = false)
     protected ClientEntity client ;
 
     @OneToMany(fetch = FetchType.EAGER)
