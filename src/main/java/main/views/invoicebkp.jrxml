@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="421" pageHeight="595" columnWidth="381" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="872"/>
-	<property name="ireport.y" value="144"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+			  name="null" language="java" pageWidth="421" pageHeight="595" columnWidth="381"
+			  leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+			  uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
+
 	<parameter name="order_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+
+	<parameter name="imageUrl" class="java.io.InputStream">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+
 	<queryString>
 		<![CDATA[SELECT
-     order_items.`id` AS order_items_id,
-     order_items.`name` AS order_items_name,
-     order_items.`price` AS order_items_price,
-     order_items.`quantity` AS order_items_quantity,
-     order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
-     orders.`orderDate` AS orders_orderDate,
-     orders.`paymentStatus` AS orders_paymentStatus,
-     clients.`name` AS clients_name,
-     ( SELECT sum(order_items.`price` * order_items.`quantity`) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
-   	 ( SELECT SUM( `payements_made`.`amountPaid`) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
-FROM
-     `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
-     INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
-WHERE
-      orders.`id` = $P{order_id}]]>
+                        orders.`id` AS order_items_id,
+                        order_items.`name` AS order_items_name,
+                        order_items.`price` AS order_items_price,
+                        order_items.`quantity` AS order_items_quantity,
+                        order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
+                        orders.`orderDate` AS orders_orderDate,
+                        orders.`paymentStatus` AS orders_paymentStatus,
+                        clients.`name` AS clients_name,
+                        ( SELECT  ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
+                            ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
+                    FROM
+                         `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
+                         INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
+                    WHERE
+                          orders.`id` = $P{order_id}]]>
 	</queryString>
 	<field name="order_items_id" class="java.lang.Integer"/>
 	<field name="order_items_name" class="java.lang.String"/>
@@ -37,6 +45,9 @@ WHERE
 	<group name="total">
 		<groupFooter>
 			<band height="32">
+				<line>
+					<reportElement x="0" y="0" width="381" height="1" uuid="231713dc-580b-4aae-93fd-ac428de2f189"/>
+				</line>
 				<textField>
 					<reportElement x="310" y="0" width="72" height="15" uuid="93967e23-5058-41ca-ac28-713c53517c75"/>
 					<textElement textAlignment="Right"/>
@@ -65,7 +76,7 @@ WHERE
 		<band height="66" splitType="Stretch">
 			<image>
 				<reportElement x="-12" y="0" width="102" height="45" uuid="d36db365-a9aa-4105-a1fa-5d9be327d5f5"/>
-				<imageExpression><![CDATA["C:\\Users\\Abdo\\Desktop\\rectangle\\logo.PNG"]]></imageExpression>
+				<imageExpression><![CDATA[$P{imageUrl}]]></imageExpression>
 			</image>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="281" y="0" width="100" height="20" uuid="6f00f891-d11c-4447-8da8-3ea86c3b22f9"/>
@@ -105,7 +116,8 @@ WHERE
 			</textField>
 			<textField>
 				<reportElement x="306" y="46" width="75" height="20" uuid="6286cf33-5029-40c2-8dd8-383b22926ae2"/>
-				<textFieldExpression><![CDATA[String.format("REF%010d", $F{order_items_id})]]></textFieldExpression>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[String.format("REF%08d", $F{order_items_id})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -116,28 +128,28 @@ WHERE
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Désignation]]></text>
+				<text><![CDATA[  Désignation]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="47" height="20" uuid="b41f3d28-f8fb-4fe2-b4c3-33e799bde7b4"/>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ Qte]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="233" y="0" width="77" height="20" uuid="69163294-dadb-41d6-b6f9-4ae6eb23dc95"/>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Prix unit.]]></text>
+				<text><![CDATA[  Prix unit.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="310" y="0" width="71" height="20" uuid="5c2ee99f-1226-4e87-9dc6-e8c2cf89d9ca"/>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[  Total]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="20" width="381" height="1" uuid="642fbc25-35f6-4999-bb95-76f2e5e18b73"/>
@@ -147,6 +159,15 @@ WHERE
 			</line>
 			<line>
 				<reportElement x="381" y="-1" width="1" height="22" uuid="f00a7ef1-b273-4f0f-85a0-800d36a80638"/>
+			</line>
+			<line>
+				<reportElement x="47" y="0" width="1" height="20" uuid="548f2746-9ea9-4292-bbb8-565cffca29cb"/>
+			</line>
+			<line>
+				<reportElement x="233" y="0" width="1" height="20" uuid="9f60fc51-83eb-41a8-a0b7-818e90d4c036"/>
+			</line>
+			<line>
+				<reportElement x="310" y="0" width="1" height="20" uuid="e9db284a-7c21-4eb8-82a7-458f97db2c42"/>
 			</line>
 		</band>
 	</columnHeader>
@@ -158,7 +179,7 @@ WHERE
 			<textField>
 				<reportElement x="47" y="0" width="186" height="20" uuid="485c715a-bbcc-48b3-8612-6c3b86576f57"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{order_items_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[  "  " +$F{order_items_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="47" height="20" uuid="d6fb5be2-4ebb-49fe-a338-f47485bc06c5"/>
@@ -167,19 +188,25 @@ WHERE
 			</textField>
 			<textField>
 				<reportElement x="233" y="0" width="77" height="20" uuid="65a09332-644d-4331-b970-699adb2ea8f5"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[ String.format("%.2f",$F{order_items_price})]]></textFieldExpression>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[String.format("%.2f",$F{order_items_price})]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="0" y="21" width="381" height="1" uuid="231713dc-580b-4aae-93fd-ac428de2f189"/>
-			</line>
 			<textField>
 				<reportElement x="310" y="0" width="72" height="20" uuid="bea28452-278e-4ca2-91a1-4d5bedfd6622"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[ String.format("%.2f", $F{order_items_price}*$F{order_items_quantity})]]></textFieldExpression>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[String.format("%.2f", $F{order_items_price}*$F{order_items_quantity}) + " DH"]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="-1" y="0" width="1" height="22" uuid="b095010c-01cb-4417-a211-fbf36cc4804c"/>
+			</line>
+			<line>
+				<reportElement x="47" y="0" width="1" height="22" uuid="ebf68f2b-69ad-481d-a39f-ffb75bd68813"/>
+			</line>
+			<line>
+				<reportElement x="233" y="0" width="1" height="22" uuid="af2866ca-ada5-4b7b-bb8d-58d5add7f7a0"/>
+			</line>
+			<line>
+				<reportElement x="310" y="0" width="1" height="22" uuid="a57c0ce6-ae0a-44dc-877b-7cd163fbe01c"/>
 			</line>
 		</band>
 	</detail>

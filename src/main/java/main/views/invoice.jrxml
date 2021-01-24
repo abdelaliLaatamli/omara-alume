@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="java" pageWidth="421" pageHeight="595" columnWidth="381" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="872"/>
-	<property name="ireport.y" value="144"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+			  name="null" language="java" pageWidth="421" pageHeight="595" columnWidth="381" leftMargin="20" rightMargin="20"
+			  topMargin="20" bottomMargin="20"
+			  uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
+
 	<parameter name="order_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -13,26 +16,26 @@
 
 	<queryString>
 		<![CDATA[SELECT
-     order_items.`id` AS order_items_id,
-     order_items.`name` AS order_items_name,
-     order_items.`price` AS order_items_price,
-     order_items.`quantity` AS order_items_quantity,
-     order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
-     orders.`orderDate` AS orders_orderDate,
-     orders.`paymentStatus` AS orders_paymentStatus,
-     clients.`name` AS clients_name,
-     ( SELECT  ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
-   	 ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
-FROM
-     `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
-     INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
-WHERE
-      orders.`id` = $P{order_id}]]>
+                        orders.`id` AS order_items_id,
+                        order_items.`name` AS order_items_name,
+                        order_items.`price` AS order_items_price,
+                        order_items.`quantity` AS order_items_quantity,
+                        order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
+                        orders.`orderDate` AS orders_orderDate,
+                        orders.`paymentStatus` AS orders_paymentStatus,
+                        clients.`name` AS clients_name,
+                        ( SELECT  ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
+                            ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
+                    FROM
+                         `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
+                         INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
+                    WHERE
+                          orders.`id` = $P{order_id}]]>
 	</queryString>
 	<field name="order_items_id" class="java.lang.Integer"/>
 	<field name="order_items_name" class="java.lang.String"/>
 	<field name="order_items_price" class="java.lang.Float"/>
-	<field name="order_items_quantity" class="java.lang.Float"/>
+	<field name="order_items_quantity" class="java.lang.Integer"/>
 	<field name="order_items_priceOfArticle_id" class="java.lang.Integer"/>
 	<field name="orders_orderDate" class="java.sql.Timestamp"/>
 	<field name="orders_paymentStatus" class="java.lang.Integer"/>
@@ -41,25 +44,61 @@ WHERE
 	<field name="paid" class="java.lang.Double"/>
 	<group name="total">
 		<groupFooter>
-			<band height="32">
+			<band height="63">
+				<line>
+					<reportElement x="-1" y="0" width="383" height="1" uuid="231713dc-580b-4aae-93fd-ac428de2f189"/>
+				</line>
+				<rectangle radius="5">
+					<reportElement x="0" y="25" width="381" height="25" uuid="ee633e97-c1c7-4525-9b42-9f0a2de3f703"/>
+				</rectangle>
 				<textField>
-					<reportElement x="310" y="0" width="72" height="15" uuid="93967e23-5058-41ca-ac28-713c53517c75"/>
-					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} ) +"DH"]]></textFieldExpression>
+					<reportElement x="298" y="3" width="84" height="15" uuid="93967e23-5058-41ca-ac28-713c53517c75"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} ) +" DH"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="47" y="16" width="88" height="16" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
+					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
+					<textElement textAlignment="Center"/>
 					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="233" y="0" width="77" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
+					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
 					<textElement textAlignment="Right"/>
-					<text><![CDATA[total :]]></text>
+					<text><![CDATA[Total :]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="16" width="47" height="16" uuid="e1c5081d-615e-4050-b6ab-31c025034420"/>
-					<text><![CDATA[paid :]]></text>
+					<reportElement x="8" y="30" width="38" height="17" uuid="e1c5081d-615e-4050-b6ab-31c025034420"/>
+					<textElement>
+						<font isUnderline="true" isStrikeThrough="false"/>
+					</textElement>
+					<text><![CDATA[Espéce:]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="124" y="30" width="38" height="17" uuid="3938212a-df0f-4931-8eeb-70c649358c5b"/>
+					<textElement>
+						<font isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Chéque:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="161" y="30" width="70" height="17" uuid="1968d98d-7cb8-4900-97f8-7786df680e90"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="240" y="30" width="34" height="16" uuid="e206e3d4-ea6f-4b3c-9846-6e7b45bd0bac"/>
+					<textElement>
+						<font isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[Crédit :]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="273" y="30" width="70" height="16" uuid="e17fcc2e-0179-43fc-a414-2d294347cc61"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -74,7 +113,9 @@ WHERE
 			</image>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="281" y="0" width="100" height="20" uuid="6f00f891-d11c-4447-8da8-3ea86c3b22f9"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -105,12 +146,17 @@ WHERE
 			</staticText>
 			<textField>
 				<reportElement x="90" y="46" width="123" height="20" uuid="13233a94-7357-469b-bc8a-af0a4b72fd13"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{clients_name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="306" y="46" width="75" height="20" uuid="6286cf33-5029-40c2-8dd8-383b22926ae2"/>
-				<textFieldExpression><![CDATA[String.format("REF%010d", $F{order_items_id})]]></textFieldExpression>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[String.format("REF%08d", $F{order_items_id})]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -121,28 +167,28 @@ WHERE
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Désignation]]></text>
+				<text><![CDATA[  Désignation]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="0" width="47" height="20" uuid="b41f3d28-f8fb-4fe2-b4c3-33e799bde7b4"/>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ Qte]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="233" y="0" width="77" height="20" uuid="69163294-dadb-41d6-b6f9-4ae6eb23dc95"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="233" y="0" width="65" height="20" uuid="69163294-dadb-41d6-b6f9-4ae6eb23dc95"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Prix unit.]]></text>
+				<text><![CDATA[  Prix unit.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="310" y="0" width="71" height="20" uuid="5c2ee99f-1226-4e87-9dc6-e8c2cf89d9ca"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="299" y="0" width="82" height="20" uuid="5c2ee99f-1226-4e87-9dc6-e8c2cf89d9ca"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[  Total]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="20" width="381" height="1" uuid="642fbc25-35f6-4999-bb95-76f2e5e18b73"/>
@@ -153,48 +199,68 @@ WHERE
 			<line>
 				<reportElement x="381" y="-1" width="1" height="22" uuid="f00a7ef1-b273-4f0f-85a0-800d36a80638"/>
 			</line>
+			<line>
+				<reportElement x="47" y="0" width="1" height="20" uuid="548f2746-9ea9-4292-bbb8-565cffca29cb"/>
+			</line>
+			<line>
+				<reportElement x="233" y="0" width="1" height="20" uuid="9f60fc51-83eb-41a8-a0b7-818e90d4c036"/>
+			</line>
+			<line>
+				<reportElement x="298" y="0" width="1" height="20" uuid="e9db284a-7c21-4eb8-82a7-458f97db2c42"/>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<line>
-				<reportElement x="381" y="0" width="1" height="22" uuid="7e41d2eb-8a67-41de-b178-1c18dca31a86"/>
+				<reportElement x="381" y="0" width="1" height="18" uuid="7e41d2eb-8a67-41de-b178-1c18dca31a86"/>
 			</line>
 			<textField>
-				<reportElement x="47" y="0" width="186" height="20" uuid="485c715a-bbcc-48b3-8612-6c3b86576f57"/>
+				<reportElement x="47" y="0" width="186" height="16" uuid="485c715a-bbcc-48b3-8612-6c3b86576f57"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{order_items_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[  "  " +$F{order_items_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="0" width="47" height="20" uuid="d6fb5be2-4ebb-49fe-a338-f47485bc06c5"/>
+				<reportElement x="233" y="0" width="65" height="16" uuid="65a09332-644d-4331-b970-699adb2ea8f5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[String.format("%.2f", $F{order_items_quantity})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[String.format("%.2f",$F{order_items_price})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="233" y="0" width="77" height="20" uuid="65a09332-644d-4331-b970-699adb2ea8f5"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[ String.format("%.2f",$F{order_items_price})]]></textFieldExpression>
+				<reportElement x="299" y="0" width="78" height="16" uuid="bea28452-278e-4ca2-91a1-4d5bedfd6622"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[String.format("%.2f", $F{order_items_price}*$F{order_items_quantity}) + " DH"]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="21" width="381" height="1" uuid="231713dc-580b-4aae-93fd-ac428de2f189"/>
+				<reportElement x="-1" y="0" width="1" height="18" uuid="b095010c-01cb-4417-a211-fbf36cc4804c"/>
+			</line>
+			<line>
+				<reportElement x="47" y="0" width="1" height="18" uuid="ebf68f2b-69ad-481d-a39f-ffb75bd68813"/>
+			</line>
+			<line>
+				<reportElement x="233" y="0" width="1" height="18" uuid="af2866ca-ada5-4b7b-bb8d-58d5add7f7a0"/>
+			</line>
+			<line>
+				<reportElement x="298" y="0" width="1" height="18" uuid="a57c0ce6-ae0a-44dc-877b-7cd163fbe01c"/>
 			</line>
 			<textField>
-				<reportElement x="310" y="0" width="72" height="20" uuid="bea28452-278e-4ca2-91a1-4d5bedfd6622"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[ String.format("%.2f", $F{order_items_price}*$F{order_items_quantity})]]></textFieldExpression>
+				<reportElement x="0" y="0" width="47" height="16" uuid="d6fb5be2-4ebb-49fe-a338-f47485bc06c5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[String.format("%d", $F{order_items_quantity})]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="-1" y="0" width="1" height="22" uuid="b095010c-01cb-4417-a211-fbf36cc4804c"/>
-			</line>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="45" splitType="Stretch"/>
-	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="51" splitType="Stretch">
+			<rectangle radius="5">
+				<reportElement x="0" y="25" width="382" height="25" uuid="90ee5b83-eb5d-4ebc-a158-df0f2dcf62f4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="10" y="25" width="362" height="25" uuid="23fe2770-ccde-4716-b3ff-76f614447529"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hay seffah à coté de café Bruxelles - chouakrich - gzenaya || GSM : 0636353525]]></text>
+			</staticText>
+		</band>
 	</pageFooter>
-	<summary>
-		<band height="42" splitType="Stretch"/>
-	</summary>
 </jasperReport>
