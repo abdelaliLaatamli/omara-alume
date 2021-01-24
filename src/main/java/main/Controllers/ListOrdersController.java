@@ -75,7 +75,7 @@ public class ListOrdersController implements Initializable {
         observableCommand.clear();
         observableCommand.addAll( commands );
 
-        referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%010d", cellData.getValue().getId())  ));
+        referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%08d", cellData.getValue().getId())  ));
         dateCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getOrderDate())
         ));

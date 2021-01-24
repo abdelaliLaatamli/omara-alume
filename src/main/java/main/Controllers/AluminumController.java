@@ -92,7 +92,7 @@ public class AluminumController implements Initializable {
             public TableCell<AluminumEntity, Void> call(final TableColumn<AluminumEntity, Void> param) {
                 final TableCell<AluminumEntity, Void> cell = new TableCell<AluminumEntity, Void>() {
 
-                    private final Button btn = new Button("Edit");
+                    private final Button btn = new Button("Modifier");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {

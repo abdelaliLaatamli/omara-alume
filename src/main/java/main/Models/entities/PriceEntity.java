@@ -33,9 +33,9 @@ public class PriceEntity {
     @ManyToOne
     protected ArticleEntity article;
 
-    @OneToMany
-    @JoinColumn(name = "price_id")
-    protected Set<OrderItemsEntity> articleCommands ;
+//    @OneToMany
+//    @JoinColumn(name = "price_id")
+//    protected Set<OrderItemsEntity> articleCommands ;
 
     @Override
     public String toString(){
