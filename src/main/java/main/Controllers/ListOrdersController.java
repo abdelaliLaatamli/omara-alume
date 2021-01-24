@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.OrderEntity;
 import main.Models.entities.OrderItemsEntity;
+import main.Models.utils.DBConnection;
 import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
@@ -264,9 +265,12 @@ public class ListOrdersController implements Initializable {
             m.put( "imageUrl" , logo );
 
 
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName(DBConnection.dbDRIVER);
             Connection con= DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/omar_alum" ,"root","");
+                    DBConnection.dbURL,
+                    DBConnection.dbUSER,
+                    DBConnection.dbPASS
+            );
 
             InputStream is = this.getClass().getResourceAsStream("/main/views/invoice.jrxml");
             JasperReport jasperReport = JasperCompileManager.compileReport( is );
