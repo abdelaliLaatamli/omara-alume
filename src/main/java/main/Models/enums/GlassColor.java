@@ -1,5 +1,5 @@
 package main.Models.enums;
 
 public enum GlassColor {
-    GREEN , BROWN , BLUE , CLEAR
+    VERT, MARRON, BLEU, CLAIR
 }

@@ -15,7 +15,8 @@
 
 
 	<queryString>
-		<![CDATA[SELECT
+		<![CDATA[
+					SELECT
                         orders.`id` AS order_items_id,
                         order_items.`name` AS order_items_name,
                         order_items.`price` AS order_items_price,
@@ -25,7 +26,9 @@
                         orders.`paymentStatus` AS orders_paymentStatus,
                         clients.`name` AS clients_name,
                         ( SELECT  ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
-                            ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid
+                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid ,
+                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 0 ) as paid_espace,
+                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 1) as paid_cheque
                     FROM
                          `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
                          INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
@@ -42,6 +45,9 @@
 	<field name="clients_name" class="java.lang.String"/>
 	<field name="total" class="java.lang.Double"/>
 	<field name="paid" class="java.lang.Double"/>
+	<field name="paid_espace" class="java.lang.Double"/>
+	<field name="paid_cheque" class="java.lang.Double"/>
+
 	<group name="total">
 		<groupFooter>
 			<band height="63">
@@ -51,6 +57,11 @@
 				<rectangle radius="5">
 					<reportElement x="0" y="25" width="381" height="25" uuid="ee633e97-c1c7-4525-9b42-9f0a2de3f703"/>
 				</rectangle>
+				<staticText>
+					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Total :]]></text>
+				</staticText>
 				<textField>
 					<reportElement x="298" y="3" width="84" height="15" uuid="93967e23-5058-41ca-ac28-713c53517c75"/>
 					<textElement textAlignment="Right">
@@ -58,16 +69,7 @@
 					</textElement>
 					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} ) +" DH"]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
-					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
-					<textElement textAlignment="Right"/>
-					<text><![CDATA[Total :]]></text>
-				</staticText>
+
 				<staticText>
 					<reportElement x="8" y="30" width="38" height="17" uuid="e1c5081d-615e-4050-b6ab-31c025034420"/>
 					<textElement>
@@ -75,6 +77,14 @@
 					</textElement>
 					<text><![CDATA[Espéce:]]></text>
 				</staticText>
+
+				<textField>
+					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid_espace}) +"DH"]]></textFieldExpression>
+				</textField>
+
+
 				<staticText>
 					<reportElement x="124" y="30" width="38" height="17" uuid="3938212a-df0f-4931-8eeb-70c649358c5b"/>
 					<textElement>
@@ -82,11 +92,13 @@
 					</textElement>
 					<text><![CDATA[Chéque:]]></text>
 				</staticText>
+
 				<textField>
 					<reportElement x="161" y="30" width="70" height="17" uuid="1968d98d-7cb8-4900-97f8-7786df680e90"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid_cheque}) +"DH"]]></textFieldExpression>
 				</textField>
+
 				<staticText>
 					<reportElement x="240" y="30" width="34" height="16" uuid="e206e3d4-ea6f-4b3c-9846-6e7b45bd0bac"/>
 					<textElement>
@@ -97,7 +109,7 @@
 				<textField>
 					<reportElement x="273" y="30" width="70" height="16" uuid="e17fcc2e-0179-43fc-a414-2d294347cc61"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} - $F{paid} ) +"DH"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>

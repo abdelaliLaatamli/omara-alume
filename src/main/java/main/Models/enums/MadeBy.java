@@ -1,6 +1,6 @@
 package main.Models.enums;
 
 public enum MadeBy {
-     MOROCCO
+     MAROC
 }
 // Morrocco

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.Models.enums.PayementMethod;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -24,6 +25,9 @@ public class PaymentsMadeEntity {
 
     @Column
     protected float amountPaid ;
+
+    @Column
+    protected PayementMethod payementMethod = PayementMethod.ESPECE ;
 
     @Column
     protected Instant paymentDate = Instant.now();
