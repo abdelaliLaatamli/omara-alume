@@ -33,7 +33,7 @@ public class OrderDao {
             }
 
             float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
-            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
+            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
 
             Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
@@ -45,7 +45,6 @@ public class OrderDao {
             entity.setPaymentsMades( savedPayement );
             entity.setArticleOrders( savedArticleCommands );
 
-            // save the student object
             session.save(entity);
             // commit transaction
             transaction.commit();
@@ -104,7 +103,7 @@ public class OrderDao {
                 }
             }
             float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
-            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CREDIT );
+            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
 
             Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 

@@ -148,24 +148,24 @@ public class OrderCreationController implements Initializable {
 
                 isWorkingPayementCombo = true ;
 
-                if( OldPayementStatusBkp == PaymentStatus.CREDIT ){
+                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
                     amountToPayText.setText("0");
-                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
                         amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
                     }
 
-                }else if( OldPayementStatusBkp == PaymentStatus.COMPLETED ){
+                }else if( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
                     amountToPayText.setText("0");
-                    if(  comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                    if(  comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
                         amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
                     }else{
                         amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - OldTotal + "" : "0.0" );
                     }
 
-                }else if ( OldPayementStatusBkp == PaymentStatus.PAYINPARTS) {
+                }else if ( OldPayementStatusBkp == PaymentStatus.PARTRANCHES) {
 
                     amountToPayText.setText("0");
-                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED ){
+                    if ( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
                         amountToPayText.setText( (int) newValue == 2 || (int) newValue == 1 ? getTotal() - payedMount + "" : "0.0" );
                     }
 
@@ -187,19 +187,19 @@ public class OrderCreationController implements Initializable {
 
                 isWorkingPriceTextFiltred = true ;
 
-                if( OldPayementStatusBkp == PaymentStatus.CREDIT ){
+                if( OldPayementStatusBkp == PaymentStatus.CRÉDIT ){
 
                     if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
-                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
                         amountToPayText.setText( getTotal() - payedMount + "" );
                     }
 
-                }else if( OldPayementStatusBkp == PaymentStatus.PAYINPARTS ) {
+                }else if( OldPayementStatusBkp == PaymentStatus.PARTRANCHES ) {
 
                     try {
 
                        if( Float.valueOf( newValue ) >= (getTotal() - payedMount) ){
-                            comboPaymentStatus.getSelectionModel().select( PaymentStatus.COMPLETED );
+                            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
                             amountToPayText.setText( getTotal() - payedMount + "" );
                         }
 
@@ -209,7 +209,7 @@ public class OrderCreationController implements Initializable {
 
 
 
-                }else if ( OldPayementStatusBkp == PaymentStatus.COMPLETED ){
+                }else if ( OldPayementStatusBkp == PaymentStatus.PAYÉ ){
                     // System.out.println("dddddd");
                 }
 
@@ -450,8 +450,7 @@ public class OrderCreationController implements Initializable {
     }
 
     private float getPrice(ComboBox comboPrice){
-//        Object aa = comboPrice.getSelectionModel().getSelectedItem();
-//        System.out.println(aa );
+
         if( comboPrice.getSelectionModel().getSelectedItem() != null ){
             if( (comboPrice.getSelectionModel().getSelectedItem()) instanceof String ){
                 return getPriceFromString( comboPrice );
@@ -500,18 +499,16 @@ public class OrderCreationController implements Initializable {
 
             accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
             accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
-            accessoireArticle.setPrice( getPrice(accessoirePrice) ); //  accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
+            accessoireArticle.setPrice( getPrice(accessoirePrice) );
             accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
-//            accessoireArticle.setPriceOfArticle(accessoirePrice.getSelectionModel().getSelectedItem());
             commandDetails.getArticleOrders().add(accessoireArticle);
 
         }else{
             OrderItemsEntity accessoireArticle = editableCommandArticle;
             accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
             accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
-            accessoireArticle.setPrice( getPrice(accessoirePrice) );// accessoirePrice.getSelectionModel().getSelectedItem().getPrice());
+            accessoireArticle.setPrice( getPrice(accessoirePrice) );
             accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
-//            accessoireArticle.setPriceOfArticle(accessoirePrice.getSelectionModel().getSelectedItem());
             editableCommandArticle = null;
         }
         this.loadDataTable();
@@ -535,7 +532,7 @@ public class OrderCreationController implements Initializable {
 
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
-            glassArticle.setPrice( getPrice(glassPrice) );//glassPrice.getSelectionModel().getSelectedItem().getPrice());
+            glassArticle.setPrice( getPrice(glassPrice) );
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
 
             commandDetails.getArticleOrders().add(glassArticle);
@@ -543,7 +540,7 @@ public class OrderCreationController implements Initializable {
             OrderItemsEntity glassArticle = editableCommandArticle ;
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
-            glassArticle.setPrice( getPrice(glassPrice) );// glassPrice.getSelectionModel().getSelectedItem().getPrice());
+            glassArticle.setPrice( getPrice(glassPrice) );
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
 
             editableCommandArticle = null;
@@ -564,9 +561,9 @@ public class OrderCreationController implements Initializable {
 
     void restorePaimentStatus(){
 
-        if( OldPayementStatusBkp == PaymentStatus.COMPLETED && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.COMPLETED){
+        if( OldPayementStatusBkp == PaymentStatus.PAYÉ && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ){
             float newF = this.getTotal();
-            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYINPARTS );
+            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
             amountToPayText.setText( newF - OldTotal + " " );
         }
 
@@ -589,7 +586,14 @@ public class OrderCreationController implements Initializable {
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
         quentityProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( cellData.getValue().getQuantity() * cellData.getValue().getPrice() + " DH" ) );
+        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( cellData.getValue().getQuantity() * cellData.getValue().getPrice()
+                //String.format("%.2f DH ", cellData.getValue().getQuantity() * cellData.getValue().getPrice() )
+        ) );
+//        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper(
+//                Math.round(cellData.getValue().getQuantity() * cellData.getValue().getPrice() * 2) / 2.0f + " DH"
+//        ) );
+
+
 
 
         Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>> editCellFactory = new Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>>() {
@@ -598,7 +602,6 @@ public class OrderCreationController implements Initializable {
                 final TableCell<OrderItemsEntity, Void> cell = new TableCell<OrderItemsEntity, Void>() {
 
                     private final Button btn = new Button("Modifier");
-
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
@@ -650,7 +653,6 @@ public class OrderCreationController implements Initializable {
 
                                     glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
                                     glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
-//                                    glassPrice.getSelectionModel().select( data.getPriceOfArticle() );
                                     glassPrice.getSelectionModel().select( data.getPrice()+"" );
                                     glassQuentity.setText( data.getQuantity() + "" );
 
@@ -697,12 +699,14 @@ public class OrderCreationController implements Initializable {
                     private final Button btn = new Button("Delete");
 
                     {
+
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData delete: " + data.getId());
                             commandDetails.getArticleOrders().remove( data );
                             loadDataTable();
                         });
+                        //btn.setDisable();
                     }
 
                     @Override
@@ -745,7 +749,7 @@ public class OrderCreationController implements Initializable {
         return payedMount;
     }
 
-    public void saveCommandEvent(MouseEvent mouseEvent) throws IOException {
+    public void saveOrderEvent(MouseEvent mouseEvent) throws IOException {
 
 
         PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText() == "Espéce" ?

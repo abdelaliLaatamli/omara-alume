@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.OrderEntity;
+import main.Models.entities.OrderItemsEntity;
 import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
@@ -101,10 +102,11 @@ public class ListOrdersController implements Initializable {
                     private final Button btn = new Button("Edit");
 
                     {
+                        //OrderEntity datass = getTableView().getItems().get(getIndex());
+
                         btn.setOnAction((ActionEvent event) -> {
                             OrderEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData Edit: " + data.getId());
-
 
                             try {
 
@@ -116,14 +118,14 @@ public class ListOrdersController implements Initializable {
                                 main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
                                 main.JavaFxApplication.mainStage.show();
 
-
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
 
-
-
                         });
+
+                        //btn.setDisable( true );
+
                     }
 
                     @Override
