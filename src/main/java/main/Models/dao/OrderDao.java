@@ -95,10 +95,9 @@ public class OrderDao {
             Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
 
-                //if( paymentsMadeEntity.getId() == 0 || paymentsMadeEntity.getAmountPaid() == 0 ){
                 if (paymentsMadeEntity.getAmountPaid() != 0) {
-                    session.save(paymentsMadeEntity);
-                    //if (paymentsMadeEntity.getId() == 0)
+                    if( paymentsMadeEntity.getId() == 0 )
+                        session.save(paymentsMadeEntity);
                     savedPayement.add(paymentsMadeEntity);
                 }
             }
@@ -108,7 +107,10 @@ public class OrderDao {
             Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
             for ( OrderItemsEntity orderItemsEntity : entity.getArticleOrders() ){
-                session.save(orderItemsEntity);
+                if( orderItemsEntity.getId() == 0 )
+                    session.save(orderItemsEntity);
+                else
+                    session.update(orderItemsEntity);
                 savedArticleCommands.add(orderItemsEntity);
             }
 

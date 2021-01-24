@@ -36,7 +36,7 @@ public class OrderCreationController implements Initializable {
     private final GlassService glassService = new GlassService();
 
     private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
-    private CurrentCrudOperation operationCommand = CurrentCrudOperation.ADD ;
+    private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
 
 
     @FXML ComboBox<ClientEntity> clientNameForm ;
@@ -93,7 +93,7 @@ public class OrderCreationController implements Initializable {
     ObservableList<OrderItemsEntity> observableArticleCommand = FXCollections.observableArrayList();
 
 
-    public OrderEntity commandDetails ;
+    public OrderEntity orderDetails;
     private PaymentStatus OldPayementStatusBkp ;
     private float OldTotal ;
     private float payedMount ;
@@ -105,7 +105,7 @@ public class OrderCreationController implements Initializable {
     private OrderItemsEntity editableCommandArticle = null;
 
     public void setData( OrderEntity entity ){
-        operationCommand = CurrentCrudOperation.EDIT;
+        operationOrder = CurrentCrudOperation.EDIT;
 
         OldTotal = entity.getArticleOrders().stream()
                 .map( n -> n.getPrice()* n.getQuantity() )
@@ -119,7 +119,7 @@ public class OrderCreationController implements Initializable {
 
         OldPayementStatusBkp = entity.getPaymentStatus();
 
-        commandDetails = entity;
+        orderDetails = entity;
 
         loadDataEdit();
     }
@@ -127,7 +127,7 @@ public class OrderCreationController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        commandDetails = new OrderEntity();
+        orderDetails = new OrderEntity();
         loadDataAdd();
 
     }
@@ -144,7 +144,7 @@ public class OrderCreationController implements Initializable {
 
             amountToPayText.setEditable( (int) newValue == 1 );
 
-            if( operationCommand == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
+            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPriceTextFiltred){
 
                 isWorkingPayementCombo = true ;
 
@@ -172,7 +172,7 @@ public class OrderCreationController implements Initializable {
                 }
 
 
-            }else if ( operationCommand == CurrentCrudOperation.ADD && !isWorkingPriceTextFiltred ) {
+            }else if ( operationOrder == CurrentCrudOperation.ADD && !isWorkingPriceTextFiltred ) {
                 isWorkingPayementCombo = true ;
                 amountToPayText.setText( (int) newValue == 2 ? getTotal() + "" : "0.0" );
 
@@ -183,7 +183,7 @@ public class OrderCreationController implements Initializable {
 
         amountToPayText.textProperty().addListener( (observable, oldValue, newValue) -> {
 
-            if( operationCommand == CurrentCrudOperation.EDIT && !isWorkingPayementCombo ){
+            if( operationOrder == CurrentCrudOperation.EDIT && !isWorkingPayementCombo ){
 
                 isWorkingPriceTextFiltred = true ;
 
@@ -229,11 +229,11 @@ public class OrderCreationController implements Initializable {
     void loadDataEdit(){
 
 
-        clientNameForm.getSelectionModel().select( commandDetails.getClient() );
+        clientNameForm.getSelectionModel().select( orderDetails.getClient() );
         clientNameForm.setDisable(true);
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
-        comboPaymentStatus.getSelectionModel().select( commandDetails.getPaymentStatus() );
+        comboPaymentStatus.getSelectionModel().select( orderDetails.getPaymentStatus() );
 
         this.loadDataTable();
 
@@ -253,7 +253,6 @@ public class OrderCreationController implements Initializable {
 
         });
 
-       // glassPrice.getSelectionModel().selectedIndexProperty().addListener(  (options, oldValue, newValue) -> {
         glassPrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
 
             float number = 0f;
@@ -300,7 +299,6 @@ public class OrderCreationController implements Initializable {
 
         });
 
-        // accessoirePrice.getSelectionModel().selectedIndexProperty().addListener(  (options, oldValue, newValue) -> {
         accessoirePrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
 
             float number = 0f;
@@ -421,7 +419,7 @@ public class OrderCreationController implements Initializable {
             float price = this.getPrice( priceAluminumCombo) ;
             alumenuimProduct.setPrice( price );
             alumenuimProduct.setQuantity( Float.valueOf( aluminuimQuentity.getText() ) );
-            commandDetails.getArticleOrders().add( alumenuimProduct );
+            orderDetails.getArticleOrders().add( alumenuimProduct );
 
         }else{
 
@@ -438,7 +436,7 @@ public class OrderCreationController implements Initializable {
 
         this.loadDataTable();
 
-        if( this.operationCommand == CurrentCrudOperation.EDIT )
+        if( this.operationOrder == CurrentCrudOperation.EDIT )
             restorePaimentStatus();
 
         aluminuimProduct.getSelectionModel().select(-1);
@@ -501,7 +499,7 @@ public class OrderCreationController implements Initializable {
             accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
             accessoireArticle.setPrice( getPrice(accessoirePrice) );
             accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
-            commandDetails.getArticleOrders().add(accessoireArticle);
+            orderDetails.getArticleOrders().add(accessoireArticle);
 
         }else{
             OrderItemsEntity accessoireArticle = editableCommandArticle;
@@ -513,7 +511,7 @@ public class OrderCreationController implements Initializable {
         }
         this.loadDataTable();
 
-        if( this.operationCommand == CurrentCrudOperation.EDIT )
+        if( this.operationOrder == CurrentCrudOperation.EDIT )
             restorePaimentStatus();
 
         accessoireProduct.getSelectionModel().select(-1); ;
@@ -535,7 +533,7 @@ public class OrderCreationController implements Initializable {
             glassArticle.setPrice( getPrice(glassPrice) );
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
 
-            commandDetails.getArticleOrders().add(glassArticle);
+            orderDetails.getArticleOrders().add(glassArticle);
         }else{
             OrderItemsEntity glassArticle = editableCommandArticle ;
             glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
@@ -548,7 +546,7 @@ public class OrderCreationController implements Initializable {
 
         this.loadDataTable();
 
-        if( this.operationCommand == CurrentCrudOperation.EDIT )
+        if( this.operationOrder == CurrentCrudOperation.EDIT )
             restorePaimentStatus();
 
         glassProduct.getSelectionModel().select(-1);
@@ -581,7 +579,7 @@ public class OrderCreationController implements Initializable {
         amountRemainedOrder.setText( String.format("%.2f DH ", getTotal() - calculAmountPaid() ) );
 
         observableArticleCommand.clear();
-        observableArticleCommand.addAll( commandDetails.getArticleOrders() );
+        observableArticleCommand.addAll( orderDetails.getArticleOrders() );
 
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -703,7 +701,7 @@ public class OrderCreationController implements Initializable {
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData delete: " + data.getId());
-                            commandDetails.getArticleOrders().remove( data );
+                            orderDetails.getArticleOrders().remove( data );
                             loadDataTable();
                         });
                         //btn.setDisable();
@@ -726,14 +724,14 @@ public class OrderCreationController implements Initializable {
         editProductOfCommand.setCellFactory( editCellFactory );
         deleteProductOfCommand.setCellFactory(deleteCellFactory );
 
-        tableProductsOfCommand.setItems( FXCollections.observableArrayList(commandDetails.getArticleOrders()) );
+        tableProductsOfCommand.setItems( FXCollections.observableArrayList(orderDetails.getArticleOrders()) );
         tableProductsOfCommand.setItems( this.observableArticleCommand );
 
     }
 
     private Float getTotal(){
 
-        float total = commandDetails.getArticleOrders().stream()
+        float total = orderDetails.getArticleOrders().stream()
                           .map( n -> n.getPrice()* n.getQuantity() )
                           .collect( Collectors.toList() )
                           .stream()
@@ -743,7 +741,7 @@ public class OrderCreationController implements Initializable {
 
     private Float calculAmountPaid(){
 
-        payedMount = commandDetails.getPaymentsMades()
+        payedMount = orderDetails.getPaymentsMades()
                 .stream().map( n -> n.getAmountPaid() )
                 .reduce( 0f , (sub , elem) -> sub+elem );
         return payedMount;
@@ -755,26 +753,26 @@ public class OrderCreationController implements Initializable {
         PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText() == "Espéce" ?
                                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
-        ClientEntity clientEntity = ( operationCommand == CurrentCrudOperation.ADD ) ?
+        ClientEntity clientEntity = ( operationOrder == CurrentCrudOperation.ADD ) ?
                     clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) :
                     clientNameForm.getSelectionModel().getSelectedItem() ;
 
-        commandDetails.setClient( clientEntity );
-        commandDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
+        orderDetails.setClient( clientEntity );
+        orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
 
         PaymentsMadeEntity paymentsMadeEntity = new PaymentsMadeEntity();
 
         paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
         paymentsMadeEntity.setPayementMethod(payementMethod);
 
-        commandDetails.getPaymentsMades().add( paymentsMadeEntity );
+        orderDetails.getPaymentsMades().add( paymentsMadeEntity );
 
         boolean saved = false ;
 
-        if( operationCommand == CurrentCrudOperation.ADD ) {
-            saved = orderService.addCommand(commandDetails);
+        if( operationOrder == CurrentCrudOperation.ADD ) {
+            saved = orderService.addOrder(orderDetails);
         }else{
-            saved = orderService.updateOrder(commandDetails);
+            saved = orderService.updateOrder(orderDetails);
         }
 
         if (saved) {

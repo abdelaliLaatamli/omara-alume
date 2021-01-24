@@ -7,42 +7,41 @@ import java.util.List;
 
 public class OrderService {
 
-    private OrderDao commandDao = new OrderDao();
+    private OrderDao orderDao = new OrderDao();
 
     public List<OrderEntity> getAllCommands(){
 
-        List<OrderEntity> listCommands = commandDao.getAll();
+        List<OrderEntity> listCommands = orderDao.getAll();
 
         return listCommands;
 
     }
 
-    //public boolean addProduct( CommandEntity command, PriceEntity defaultPrice){
-    public boolean addCommand( OrderEntity command ){
+    public boolean addOrder(OrderEntity command ){
 
-        OrderEntity newAlum = commandDao.save( command );
+        OrderEntity newAlum = orderDao.save( command );
 
         return newAlum != null ;
     }
 
 
-    public OrderEntity saveCommand(OrderEntity command ){
+    public OrderEntity saveOrder(OrderEntity command ){
 
-        OrderEntity updatedCommand = commandDao.updateEntity( command );
+        OrderEntity updatedOrder = orderDao.updateEntity( command );
 
-        return updatedCommand ;
+        return updatedOrder ;
     }
 
     public boolean updateOrder(OrderEntity command ){
 
-        boolean isSaved = commandDao.update( command );
+        boolean isSaved = orderDao.update( command );
 
         return isSaved ;
     }
 
     public OrderEntity getCommand(int id ){
 
-        OrderEntity newAlum = commandDao.get( id );
+        OrderEntity newAlum = orderDao.get( id );
 
         return newAlum;
     }
