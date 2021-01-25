@@ -27,7 +27,7 @@
             <TableColumn fx:id="referenceCommand" prefWidth="160.0" text="Reference Command" />
             <TableColumn fx:id="clientCommand" prefWidth="202.0" text="Client" />
             <TableColumn fx:id="paymentStatusCommand" minWidth="4.0" prefWidth="126.0" text="Payment Status" />
-            <TableColumn fx:id="paymentsMadesOfCommand" prefWidth="114.0" text="payments Faits" />
+            <TableColumn fx:id="paymentsMadesOfCommand" prefWidth="114.0" text="Montant Payé" />
             <TableColumn fx:id="totalPriceOfCommand" prefWidth="100.0" text="Total " />
             <TableColumn fx:id="dateCommand" minWidth="4.0" prefWidth="99.0" text="Date Command" />
             <TableColumn fx:id="editCommand" prefWidth="96.0" text="Edit Command" />

@@ -39,7 +39,8 @@ public class OrderCreationController implements Initializable {
     private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
 
 
-    @FXML ComboBox<ClientEntity> clientNameForm ;
+    // @FXML ComboBox<ClientEntity> clientNameForm ;
+    @FXML ComboBox<Object> clientNameForm ;
     @FXML Label totalPriceOrder;
     @FXML Label amountPaidOrder;
     @FXML Label amountRemainedOrder;
@@ -135,7 +136,8 @@ public class OrderCreationController implements Initializable {
     void loadDataAdd(){
 
         List<ClientEntity> clients = clientServices.getAll();
-        clientNameForm.setItems(FXCollections.observableArrayList( clients ));
+        clientNameForm.setItems( FXCollections.observableArrayList( clients ) );
+        //clientNameForm.setItems(FXCollections.observableArrayList( clients ));
         new AutoCompleteBox(clientNameForm);
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
@@ -548,8 +550,6 @@ public class OrderCreationController implements Initializable {
 
     }
 
-
-
     public void addAccessoireToOrder(MouseEvent mouseEvent) {
         if( operation == CurrentCrudOperation.ADD ) {
             OrderItemsEntity accessoireArticle = new OrderItemsEntity();
@@ -831,7 +831,7 @@ public class OrderCreationController implements Initializable {
         PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText() == "Espéce" ?
                                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
-        ClientEntity clientEntity = getSelectedClientEntity();
+        ClientEntity clientEntity = getSelectedClientEntity(clientNameForm);
 
         if( clientEntity == null  ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -883,20 +883,22 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    private ClientEntity getSelectedClientEntity() {
+    private ClientEntity getSelectedClientEntity(ComboBox clientBox) {
         ClientEntity clientEntity = null;
         if( operationOrder == CurrentCrudOperation.ADD ){
-            if( clientNameForm.getSelectionModel().getSelectedItem() == null ) return null ;
+            if( clientBox.getSelectionModel().getSelectedItem() == null ) return null ;
 
-            if( clientNameForm.getSelectionModel().getSelectedItem() instanceof String ){
-                return clientNameForm.getItems().stream()
+            if( clientBox.getSelectionModel().getSelectedItem() instanceof String ){
+                List<ClientEntity> clients = clientBox.getItems() ;
+                return clients.stream()
                         .filter( e -> e.getName().contains( clientNameForm.getSelectionModel().getSelectedItem().toString() ) )
                         .findFirst().orElse(null);
+            }else {
+                clientEntity = (ClientEntity) clientNameForm.getSelectionModel().getSelectedItem();
             }
 
-            clientEntity = clientNameForm.getSelectionModel().getSelectedItem();
         }else{
-            clientEntity = clientNameForm.getSelectionModel().getSelectedItem() ;
+            clientEntity = (ClientEntity) clientBox.getSelectionModel().getSelectedItem() ;
         }
         return clientEntity;
     }
