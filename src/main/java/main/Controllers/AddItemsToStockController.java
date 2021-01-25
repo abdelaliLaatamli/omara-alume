@@ -244,15 +244,34 @@ public class AddItemsToStockController implements Initializable {
     public void saveStockOrder(MouseEvent mouseEvent) throws IOException {
         stockEntity.setName( sLable.getText() );
         stockEntity.setProvider( sProvider.getSelectionModel().getSelectedItem() );
-        boolean saved = false ;
-        System.out.println( currentCrudOperationStock );
-        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
-             saved = stockService.add( stockEntity );
-            System.out.println( "add" );
-        }else{
-             saved = stockService.update(stockEntity);
-            System.out.println( "update" );
+
+        if( sProvider.getSelectionModel().getSelectedItem() == null ){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur D'enregistrement");
+            alert.setHeaderText("veuillez choisir un Fournisseur");
+            alert.showAndWait();
+            return;
         }
+
+        boolean saved = ( currentCrudOperationStock == CurrentCrudOperation.ADD ) ?
+                            stockService.add( stockEntity ) :
+                            stockService.update(stockEntity) ;
+//        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
+//             saved = stockService.add( stockEntity );
+////            System.out.println( "add" );
+//        }else{
+//             saved = stockService.update(stockEntity);
+////            System.out.println( "update" );
+//        }
+
+//        boolean saved = false ;
+//        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
+//             saved = stockService.add( stockEntity );
+////            System.out.println( "add" );
+//        }else{
+//             saved = stockService.update(stockEntity);
+////            System.out.println( "update" );
+//        }
 
         if( saved ){
 
@@ -274,8 +293,6 @@ public class AddItemsToStockController implements Initializable {
         }
 
 
-
-
     }
 
 
@@ -288,5 +305,12 @@ public class AddItemsToStockController implements Initializable {
     }
 
 
+    public void goToProvider(MouseEvent mouseEvent) throws IOException {
 
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ProviderView.fxml"));
+        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+        main.JavaFxApplication.mainStage.setTitle(" Fournisseur -- Aluminium et verre");
+        main.JavaFxApplication.mainStage.show();
+
+    }
 }

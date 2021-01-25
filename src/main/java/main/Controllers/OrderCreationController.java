@@ -582,7 +582,7 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void saveGlassInCommand(MouseEvent mouseEvent) {
+    public void addGlassInOrder(MouseEvent mouseEvent) {
 
         if( operation == CurrentCrudOperation.ADD ) {
             OrderItemsEntity glassArticle = new OrderItemsEntity();
@@ -827,8 +827,7 @@ public class OrderCreationController implements Initializable {
 
     public void saveOrderEvent(MouseEvent mouseEvent) throws IOException {
 
-
-        PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText() == "Espéce" ?
+        PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
                                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
         ClientEntity clientEntity = getSelectedClientEntity(clientNameForm);
@@ -851,16 +850,16 @@ public class OrderCreationController implements Initializable {
 
         orderDetails.getPaymentsMades().add( paymentsMadeEntity );
 
+        boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
+                orderService.addOrder(orderDetails) :
+                orderService.updateOrder(orderDetails);
+//        boolean saved = false ;
 
-
-        boolean saved = false ;
-
-
-        if( operationOrder == CurrentCrudOperation.ADD ) {
-            saved = orderService.addOrder(orderDetails);
-        }else{
-            saved = orderService.updateOrder(orderDetails);
-        }
+//        if( operationOrder == CurrentCrudOperation.ADD ) {
+//            saved = orderService.addOrder(orderDetails);
+//        }else{
+//            saved = orderService.updateOrder(orderDetails);
+//        }
 
         if (saved) {
 
