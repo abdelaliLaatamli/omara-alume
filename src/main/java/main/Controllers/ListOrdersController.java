@@ -34,10 +34,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -100,7 +98,7 @@ public class ListOrdersController implements Initializable {
             public TableCell<OrderEntity, Void> call(final TableColumn<OrderEntity, Void> param) {
                 final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
-                    private final Button btn = new Button("Edit");
+                    private final Button btn = new Button("Modifier");
 
                     {
                         //OrderEntity datass = getTableView().getItems().get(getIndex());
@@ -125,6 +123,10 @@ public class ListOrdersController implements Initializable {
 
                         });
 
+
+//                        btn.setDisable( () -> {
+//                            return true;
+//                        } );
                         //btn.setDisable( true );
 
                     }
@@ -135,6 +137,10 @@ public class ListOrdersController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
+
+                            OrderEntity data = getTableView().getItems().get(getIndex());
+                            btn.setDisable( data.getIsLocked() );
+
                             setGraphic(btn);
                         }
                     }
@@ -154,8 +160,41 @@ public class ListOrdersController implements Initializable {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             OrderEntity order = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData verrouiller: " + order.getId());
-                            lockOrder( order );
+                            // System.out.println("selectedData verrouiller: " + order.getId());
+                            // https://code.makery.ch/blog/javafx-dialogs-official/
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                            alert.setTitle("Verrouiller La commande ");
+                            alert.setHeaderText("Êtes-vous d'accord pour verrouiller cette commande?");
+
+                            Optional<ButtonType> result = alert.showAndWait();
+                            if (result.get() == ButtonType.OK){
+                                // ... user chose OK
+                                // System.out.println("OK");
+                                float total = order
+                                                .getArticleOrders()
+                                                .stream()
+                                                .map( e -> e.getPrice() * e.getQuantity() )
+                                                .reduce(0f , (subTotal , currentElement) -> subTotal + currentElement );
+
+                                float amoutPaid = order
+                                                    .getPaymentsMades()
+                                                    .stream()
+                                                    .map( e -> e.getAmountPaid() )
+                                                    .reduce( 0f , (subTotal , currentElement) -> subTotal + currentElement  );
+
+
+                                if( total - amoutPaid == 0 )
+                                    lockOrder( order );
+                                else{
+                                    Alert alertNon = new Alert(Alert.AlertType.ERROR);
+                                    alertNon.setTitle("Erreur de verrouillage");
+                                    alertNon.setHeaderText("solde Le paiement n'est pas égal");
+                                    alertNon.showAndWait();
+                                }
+
+                            }
+
+                            // lockOrder( order );
 
                         });
                     }
@@ -166,6 +205,8 @@ public class ListOrdersController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            OrderEntity order = getTableView().getItems().get(getIndex());
+                            btn.setDisable( order.getIsLocked() );
                             setGraphic(btn);
                         }
                     }
@@ -197,6 +238,10 @@ public class ListOrdersController implements Initializable {
                         if (empty) {
                             setGraphic(null);
                         } else {
+
+                            OrderEntity data = getTableView().getItems().get(getIndex());
+                            btn.setDisable( data.getIsLocked() );
+
                             setGraphic(btn);
                         }
                     }
@@ -338,14 +383,14 @@ public class ListOrdersController implements Initializable {
         if (canceled) {
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("annulation du Command réussi");
-            alert.setHeaderText("le Command est annulé");
+            alert.setTitle("Verrouillage de commande réussi");
+            alert.setHeaderText("l'Ordre est verrouillé");
             alert.showAndWait();
             this.loadData();
 
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error D'annulation");
+            alert.setTitle("Erreur de verrouillage");
             alert.setHeaderText("Oups, il y a eu une erreur!");
             alert.showAndWait();
         }
