@@ -604,6 +604,7 @@ public class OrderCreationController implements Initializable {
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
             glassArticle.setPrice( getPrice(glassPrice) );
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
+            glassArticle.setNumberItems( nombrePieceGlass.getValue() );
 
             editableCommandArticle = null;
         }
@@ -736,6 +737,7 @@ public class OrderCreationController implements Initializable {
                                     glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
                                     glassPrice.getSelectionModel().select( data.getPrice()+"" );
                                     glassQuentity.setText( data.getQuantity() + "" );
+                                    nombrePieceGlass.getValueFactory().setValue( data.getNumberItems() );
 
 
                                     glassTotal.setText( Float.valueOf( data.getQuantity() ) * (

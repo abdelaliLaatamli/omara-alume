@@ -63,11 +63,7 @@ WHERE
 					</textElement>
 					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} ) +" DH"]]></textFieldExpression>
 				</textField>
-				<textField>
-					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
-					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
-				</textField>
+
 				<staticText>
 					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
 					<textElement textAlignment="Right"/>
@@ -80,6 +76,11 @@ WHERE
 					</textElement>
 					<text><![CDATA[Espéce:]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{paid_espace})]]></textFieldExpression>
+				</textField>
 				<staticText>
 					<reportElement x="124" y="30" width="38" height="17" uuid="3938212a-df0f-4931-8eeb-70c649358c5b"/>
 					<textElement>
@@ -90,7 +91,7 @@ WHERE
 				<textField>
 					<reportElement x="161" y="30" width="70" height="17" uuid="1968d98d-7cb8-4900-97f8-7786df680e90"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{paid_cheque}) ]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="240" y="30" width="34" height="16" uuid="e206e3d4-ea6f-4b3c-9846-6e7b45bd0bac"/>
@@ -102,7 +103,7 @@ WHERE
 				<textField>
 					<reportElement x="273" y="30" width="70" height="16" uuid="e17fcc2e-0179-43fc-a414-2d294347cc61"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{total} - $F{paid} )]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
