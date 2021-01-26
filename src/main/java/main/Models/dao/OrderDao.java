@@ -9,8 +9,19 @@ import org.hibernate.Transaction;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 public class OrderDao {
+
+
+    Logger logger = Logger.getLogger("OrderDao");
+
+//    FileHandler handler = new FileHandler("default.log", true);
+//
+//    logger.addHandler(handler);
+
+
 
     /**
      * Save User
