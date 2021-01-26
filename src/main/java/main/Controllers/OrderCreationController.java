@@ -476,33 +476,19 @@ public class OrderCreationController implements Initializable {
 
     public void addAlumnuimToOrder(MouseEvent mouseEvent) {
 
-        if( operation == CurrentCrudOperation.ADD ){
-            OrderItemsEntity alumenuimProduct = new OrderItemsEntity();
+
+            OrderItemsEntity alumenuimProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle;
 
             alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
             alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText() );
             float price = this.getPrice( priceAluminumCombo) ;
             alumenuimProduct.setPrice( price );
             alumenuimProduct.setQuantity( Float.valueOf( aluminuimQuentity.getText() ) );
-            orderDetails.getArticleOrders().add( alumenuimProduct );
 
-        }else{
-
-            OrderItemsEntity alumenuimProduct = editableCommandArticle;
-            alumenuimProduct.setArticle( aluminuimProduct.getSelectionModel().getSelectedItem() );
-            alumenuimProduct.setName( aluminuimProduct.getSelectionModel().getSelectedItem().getName() +" " + aluminuimLabel.getText()  );
-            float price = this.getPrice( priceAluminumCombo) ;
-            alumenuimProduct.setPrice( price );
-            alumenuimProduct.setQuantity( Float.valueOf( aluminuimQuentity.getText() ) );
-
-            editableCommandArticle = null;
-
-        }
+        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add( alumenuimProduct );
+        else editableCommandArticle = null;
 
         this.loadDataTable();
-
-//        if( this.operationOrder == CurrentCrudOperation.EDIT )
-//            restorePaimentStatus();
 
         aluminuimProduct.getSelectionModel().select(-1);
         aluminuimLabel.setText("");
@@ -555,27 +541,18 @@ public class OrderCreationController implements Initializable {
     }
 
     public void addAccessoireToOrder(MouseEvent mouseEvent) {
-        if( operation == CurrentCrudOperation.ADD ) {
-            OrderItemsEntity accessoireArticle = new OrderItemsEntity();
 
-            accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
-            accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
-            accessoireArticle.setPrice( getPrice(accessoirePrice) );
-            accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
-            orderDetails.getArticleOrders().add(accessoireArticle);
+        OrderItemsEntity accessoireArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle ;
 
-        }else{
-            OrderItemsEntity accessoireArticle = editableCommandArticle;
-            accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
-            accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
-            accessoireArticle.setPrice( getPrice(accessoirePrice) );
-            accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
-            editableCommandArticle = null;
-        }
+        accessoireArticle.setArticle(accessoireProduct.getSelectionModel().getSelectedItem());
+        accessoireArticle.setName(accessoireProduct.getSelectionModel().getSelectedItem().getName() + " " + accessoireLabel.getText());
+        accessoireArticle.setPrice( getPrice(accessoirePrice) );
+        accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
+
+        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(accessoireArticle);
+        else editableCommandArticle = null;
+
         this.loadDataTable();
-
-//        if( this.operationOrder == CurrentCrudOperation.EDIT )
-//            restorePaimentStatus();
 
         accessoireProduct.getSelectionModel().select(-1); ;
         accessoireLabel.setText(""); ;
@@ -588,31 +565,18 @@ public class OrderCreationController implements Initializable {
 
     public void addGlassInOrder(MouseEvent mouseEvent) {
 
-        if( operation == CurrentCrudOperation.ADD ) {
-            OrderItemsEntity glassArticle = new OrderItemsEntity();
+        OrderItemsEntity glassArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle;
 
-            glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
-            glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
-            glassArticle.setPrice( getPrice(glassPrice) );
-            glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
-            glassArticle.setNumberItems( nombrePieceGlass.getValue() );
+        glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
+        glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
+        glassArticle.setPrice( getPrice(glassPrice) );
+        glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
+        glassArticle.setNumberItems( nombrePieceGlass.getValue() );
 
-            orderDetails.getArticleOrders().add(glassArticle);
-        }else{
-            OrderItemsEntity glassArticle = editableCommandArticle ;
-            glassArticle.setArticle(glassProduct.getSelectionModel().getSelectedItem());
-            glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
-            glassArticle.setPrice( getPrice(glassPrice) );
-            glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
-            glassArticle.setNumberItems( nombrePieceGlass.getValue() );
-
-            editableCommandArticle = null;
-        }
+        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(glassArticle);
+        else editableCommandArticle = null;
 
         this.loadDataTable();
-
-//        if( this.operationOrder == CurrentCrudOperation.EDIT )
-//            restorePaimentStatus();
 
         glassProduct.getSelectionModel().select(-1);
         glassLabel.setText("");
@@ -622,15 +586,6 @@ public class OrderCreationController implements Initializable {
         this.operation = CurrentCrudOperation.ADD;
     }
 
-//    void restorePaimentStatus(){
-//
-//        if( OldPayementStatusBkp == PaymentStatus.PAYÉ && comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ){
-//            float newF = this.getTotal();
-//            comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
-//            amountToPayText.setText( newF - OldTotal + " " );
-//        }
-//
-//    }
 
     void loadDataTable(){
 

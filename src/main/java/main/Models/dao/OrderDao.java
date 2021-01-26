@@ -1,11 +1,14 @@
 package main.Models.dao;
 
+import lombok.SneakyThrows;
 import main.Models.entities.*;
 import main.Models.enums.PaymentStatus;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,12 +17,17 @@ import java.util.logging.Logger;
 
 public class OrderDao {
 
+    Logger logger = Logger.getLogger(String.valueOf(this.getClass()));
 
-    Logger logger = Logger.getLogger("OrderDao");
 
-//    FileHandler handler = new FileHandler("default.log", true);
-//
-//    logger.addHandler(handler);
+    @SneakyThrows
+    public OrderDao() {
+
+        FileHandler handler = new FileHandler("default.log", true);
+        logger.addHandler(handler);
+
+    }
+
 
 
 
@@ -216,10 +224,13 @@ public class OrderDao {
             // commit transaction
             transaction.commit();
         } catch (Exception e) {
+
+            logger.severe( e.getMessage() );
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            //e.printStackTrace();
+            return new ArrayList<OrderEntity>();
         }
         return listOfEntities;
     }
