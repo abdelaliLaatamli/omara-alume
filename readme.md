@@ -16,3 +16,4 @@
 - [Understanding Java Agents](https://dzone.com/articles/java-agent-1)
 - [JavaFX Dialogs (official)](https://code.makery.ch/blog/javafx-dialogs-official/)
 - [Guide To Design Database For Inventory Management System In MySQL](https://mysql.tutorials24x7.com/blog/guide-to-design-database-for-inventory-management-system-in-mysql)
+- add senglton to logger file
