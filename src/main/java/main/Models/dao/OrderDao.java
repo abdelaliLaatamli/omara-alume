@@ -1,6 +1,7 @@
 package main.Models.dao;
 
 import lombok.SneakyThrows;
+import main.Logging.FileHandlerLogger;
 import main.Models.entities.*;
 import main.Models.enums.PaymentStatus;
 import main.Models.utils.HibernateUtil;
@@ -17,14 +18,12 @@ import java.util.logging.Logger;
 
 public class OrderDao {
 
-    Logger logger = Logger.getLogger(String.valueOf(this.getClass()));
+
+    Logger logger = FileHandlerLogger.getHandlerFile( this.getClass().getName() );
 
 
     @SneakyThrows
     public OrderDao() {
-
-        FileHandler handler = new FileHandler("default.log", true);
-        logger.addHandler(handler);
 
     }
 

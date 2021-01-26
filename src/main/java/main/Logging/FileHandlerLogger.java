@@ -1,24 +1,39 @@
 package main.Logging;
 
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.FileHandler;
+import java.util.logging.*;
 
 
 public class FileHandlerLogger {
 
-    public static FileHandler getHandlerFile(){
+    public static Logger getHandlerFile( String className ){
 
-        FileHandler fh;
+
+         Logger logger = Logger.getLogger(className);
 
         try {
-            fh = new FileHandler("default.log" , true);
-            return fh ;
-        } catch (SecurityException e) {
-            return null ;
-        } catch (IOException e) {
-            return null ;
+            LogManager.getLogManager().readConfiguration(new FileInputStream("mylogging.properties"));
+        } catch (SecurityException | IOException e1) {
+            e1.printStackTrace();
         }
 
+            logger.setLevel(Level.FINE);
+            logger.addHandler(new ConsoleHandler());
+            //adding custom handler
+            logger.addHandler(new MyHandler());
+            try {
+
+                Handler fileHandler = new FileHandler("./logger.log" , true);
+                fileHandler.setFormatter(new MyFormatter());
+                //setting custom filter for FileHandler
+                fileHandler.setFilter(new MyFilter());
+                logger.addHandler(fileHandler);
+                fileHandler.close();
+            } catch (SecurityException | IOException e) {
+                return null;
+            }
+         return  logger;
     }
 
 }

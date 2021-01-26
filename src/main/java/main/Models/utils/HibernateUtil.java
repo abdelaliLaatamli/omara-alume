@@ -1,5 +1,6 @@
 package main.Models.utils;
 
+import main.Logging.FileHandlerLogger;
 import main.Models.entities.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -22,11 +23,8 @@ public class HibernateUtil {
 
     public static SessionFactory getSessionFactory() throws IOException {
 
-        FileHandler handler = new FileHandler("default.log", true);
-        System.setProperty("java.util.logging.SimpleFormatter.format",
-                "[%1$tF %1$tT] [%4$-7s] %5$s %n");
-        Logger logger = Logger.getLogger("main");
-        logger.addHandler(handler);
+        Logger logger = FileHandlerLogger.getHandlerFile( HibernateUtil.class.getName() );
+
 
         if (sessionFactory == null) {
             try {
@@ -34,10 +32,6 @@ public class HibernateUtil {
 
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
-//                settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
-//                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/omar_alum");
-//                settings.put(Environment.USER, "root");
-//                settings.put(Environment.PASS, "");
 
                 settings.put(Environment.DRIVER , DBConnection.dbDRIVER );
                 settings.put(Environment.URL    , DBConnection.dbURL    );
@@ -76,23 +70,18 @@ public class HibernateUtil {
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
                 return sessionFactory;
 
-            } catch (IllegalStateException e ){
-                //e.printStackTrace();
+            } catch ( Exception e  ){
+                logger.warning( e.getMessage() );
+                // e.printStackTrace();
 
                 //e.getStackTrace().toString()
-                logger.warning( e.getMessage() );
-                //System.out.println("a------------------------------");
-                logger.log( Level.WARNING , "aaaa" , Arrays.stream(e.getStackTrace())
-                        .map(s->s.toString())
-                        .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
-            } catch (Exception e) {
-                //e.printStackTrace();
-                logger.severe( e.getMessage() );
-                logger.log( Level.WARNING , "aaaa" , Arrays.stream(e.getStackTrace())
-                        .map(s->s.toString())
-                        .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
-                //logger.warning( );
+//                logger.warning( e.getMessage() );
+//                //System.out.println("a------------------------------");
+//                logger.log( Level.WARNING , "aaaa" , Arrays.stream(e.getStackTrace())
+//                        .map(s->s.toString())
+//                        .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
             }
+
         }
         return sessionFactory;
     }
