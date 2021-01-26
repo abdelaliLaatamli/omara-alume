@@ -23,11 +23,14 @@ public class OrderItemsEntity {
     @Column
     protected String name ;
 
-    @Column
+    @Column(nullable = false)
     protected float quantity;
 
-    @Column
+    @Column(nullable = false)
     protected float price ;
+
+    @Column
+    protected int numberItems = 0 ;
 
     @ManyToOne
     protected OrderEntity order;

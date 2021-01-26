@@ -77,6 +77,7 @@ public class OrderCreationController implements Initializable {
     @FXML ComboBox<Object> glassPrice ;
     @FXML TextField glassQuentity ;
     @FXML Label glassTotal ;
+    @FXML Spinner<Integer> nombrePieceGlass ;
 
     // --------- TABPANE Switch Produts-----------
 
@@ -301,6 +302,9 @@ public class OrderCreationController implements Initializable {
     }
 
     private void initialiseGlassTab() {
+
+        nombrePieceGlass.setValueFactory( new SpinnerValueFactory.IntegerSpinnerValueFactory(1 , 1000 , 1) );
+
         glassProduct.setItems( FXCollections.observableArrayList( glassService.getAllGlassProducts() ) );
 
         glassProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
@@ -591,6 +595,7 @@ public class OrderCreationController implements Initializable {
             glassArticle.setName(glassProduct.getSelectionModel().getSelectedItem().getName() + " " + glassLabel.getText());
             glassArticle.setPrice( getPrice(glassPrice) );
             glassArticle.setQuantity(Float.valueOf(glassQuentity.getText()));
+            glassArticle.setNumberItems( nombrePieceGlass.getValue() );
 
             orderDetails.getArticleOrders().add(glassArticle);
         }else{

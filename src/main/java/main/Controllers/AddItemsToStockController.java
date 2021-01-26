@@ -256,22 +256,6 @@ public class AddItemsToStockController implements Initializable {
         boolean saved = ( currentCrudOperationStock == CurrentCrudOperation.ADD ) ?
                             stockService.add( stockEntity ) :
                             stockService.update(stockEntity) ;
-//        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
-//             saved = stockService.add( stockEntity );
-////            System.out.println( "add" );
-//        }else{
-//             saved = stockService.update(stockEntity);
-////            System.out.println( "update" );
-//        }
-
-//        boolean saved = false ;
-//        if( currentCrudOperationStock == CurrentCrudOperation.ADD ){
-//             saved = stockService.add( stockEntity );
-////            System.out.println( "add" );
-//        }else{
-//             saved = stockService.update(stockEntity);
-////            System.out.println( "update" );
-//        }
 
         if( saved ){
 
