@@ -95,10 +95,10 @@ public class AutoCompleteBox implements EventHandler{
 
     private void setItems() {
         ObservableList list = FXCollections.observableArrayList();
-        System.out.println( this.data );
+        //System.out.println( this.data );
         for (Object datum : this.data) {
             String s = this.comboBox.getEditor().getText().toLowerCase();
-            if (datum.toString().toLowerCase().contains(s.toLowerCase())) {
+            if (datum.toString().toLowerCase().contains(s)) {
                 list.add(datum);
                 //list.add(datum.toString());
             }

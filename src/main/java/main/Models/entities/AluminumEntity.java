@@ -33,4 +33,6 @@ public class AluminumEntity extends ArticleEntity {
     public String getType() {
         return "AluminumEntity";
     }
+
+
 }
