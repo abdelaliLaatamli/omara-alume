@@ -1,53 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
-			  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			  xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-			  name="null" language="java" pageWidth="421" pageHeight="595" columnWidth="381" leftMargin="20" rightMargin="20"
-			  topMargin="20" bottomMargin="20"
-			  uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
+<jasperReport
+		xmlns="http://jasperreports.sourceforge.net/jasperreports"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+		name="null" language="java" pageWidth="421" pageHeight="595" columnWidth="381" leftMargin="20" rightMargin="20" topMargin="20"
+		bottomMargin="20" uuid="932c9883-a1e5-4ecb-9e97-852c9a0eb9fb">
 
 	<parameter name="order_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+
 	<parameter name="imageUrl" class="java.io.InputStream">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 
-
 	<queryString>
-		<![CDATA[
-					SELECT
-                        orders.`id` AS order_items_id,
-                        order_items.`name` AS order_items_name,
-                        order_items.`price` AS order_items_price,
-                        order_items.`quantity` AS order_items_quantity,
-                        order_items.`priceOfArticle_id` AS order_items_priceOfArticle_id,
-                        orders.`orderDate` AS orders_orderDate,
-                        orders.`paymentStatus` AS orders_paymentStatus,
-                        clients.`name` AS clients_name,
-                        ( SELECT  ifnull( sum(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
-                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid ,
-                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 0 ) as paid_espace,
-                        ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 1) as paid_cheque
-                    FROM
-                         `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
-                         INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
-                    WHERE
-                          orders.`id` = $P{order_id}]]>
+		<![CDATA[SELECT
+    orders.`id` AS order_items_id,
+	CASE WHEN articles.`article_type`="gls" THEN CONCAT( order_items.`name` , " >> ", order_items.`quantity` , " m²")  ELSE order_items.`name` END AS order_items_name ,
+    clients.`name` AS clients_name,
+    order_items.`price` AS order_items_price,
+    CASE WHEN articles.`article_type`="gls" THEN order_items.`numberItems` ELSE order_items.`quantity` END AS order_items_quantity ,
+    order_items.`price` * order_items.`quantity` as totalItem ,
+    orders.`orderDate` AS orders_orderDate,
+    orders.`paymentStatus` AS orders_paymentStatus,
+    ( SELECT  ifnull( SUM(order_items.`price` * order_items.`quantity`) , 0 ) from  `order_items` order_items WHERE  order_items.`order_id` = orders.`id` ) as total ,
+    ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` ) as paid ,
+    ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 0 ) as paid_espace,
+    ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 1) as paid_cheque
+FROM
+    `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
+    INNER JOIN `clients` clients ON orders.`client_id` = clients.`id`
+    INNER JOIN `articles` articles ON articles.`id` = order_items.`article_id`
+WHERE
+    orders.`id` = $P{order_id}]]>
 	</queryString>
 	<field name="order_items_id" class="java.lang.Integer"/>
 	<field name="order_items_name" class="java.lang.String"/>
+	<field name="clients_name" class="java.lang.String"/>
 	<field name="order_items_price" class="java.lang.Float"/>
 	<field name="order_items_quantity" class="java.lang.Integer"/>
-	<field name="order_items_priceOfArticle_id" class="java.lang.Integer"/>
+	<field name="totalItem" class="java.lang.Double"/>
 	<field name="orders_orderDate" class="java.sql.Timestamp"/>
 	<field name="orders_paymentStatus" class="java.lang.Integer"/>
-	<field name="clients_name" class="java.lang.String"/>
 	<field name="total" class="java.lang.Double"/>
 	<field name="paid" class="java.lang.Double"/>
 	<field name="paid_espace" class="java.lang.Double"/>
 	<field name="paid_cheque" class="java.lang.Double"/>
-
 	<group name="total">
 		<groupFooter>
 			<band height="63">
@@ -57,11 +56,6 @@
 				<rectangle radius="5">
 					<reportElement x="0" y="25" width="381" height="25" uuid="ee633e97-c1c7-4525-9b42-9f0a2de3f703"/>
 				</rectangle>
-				<staticText>
-					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
-					<textElement textAlignment="Right"/>
-					<text><![CDATA[Total :]]></text>
-				</staticText>
 				<textField>
 					<reportElement x="298" y="3" width="84" height="15" uuid="93967e23-5058-41ca-ac28-713c53517c75"/>
 					<textElement textAlignment="Right">
@@ -71,20 +65,22 @@
 				</textField>
 
 				<staticText>
+					<reportElement x="233" y="3" width="65" height="15" uuid="18ebc609-2d72-401d-bc47-57ccbb0a5b2e"/>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Total :]]></text>
+				</staticText>
+				<staticText>
 					<reportElement x="8" y="30" width="38" height="17" uuid="e1c5081d-615e-4050-b6ab-31c025034420"/>
 					<textElement>
 						<font isUnderline="true" isStrikeThrough="false"/>
 					</textElement>
 					<text><![CDATA[Espéce:]]></text>
 				</staticText>
-
 				<textField>
 					<reportElement x="45" y="30" width="70" height="17" uuid="6fe5fdc2-dd1a-4a9d-a570-b31827e8e462"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid_espace}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{paid_espace})]]></textFieldExpression>
 				</textField>
-
-
 				<staticText>
 					<reportElement x="124" y="30" width="38" height="17" uuid="3938212a-df0f-4931-8eeb-70c649358c5b"/>
 					<textElement>
@@ -92,13 +88,11 @@
 					</textElement>
 					<text><![CDATA[Chéque:]]></text>
 				</staticText>
-
 				<textField>
 					<reportElement x="161" y="30" width="70" height="17" uuid="1968d98d-7cb8-4900-97f8-7786df680e90"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{paid_cheque}) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{paid_cheque}) ]]></textFieldExpression>
 				</textField>
-
 				<staticText>
 					<reportElement x="240" y="30" width="34" height="16" uuid="e206e3d4-ea6f-4b3c-9846-6e7b45bd0bac"/>
 					<textElement>
@@ -109,7 +103,7 @@
 				<textField>
 					<reportElement x="273" y="30" width="70" height="16" uuid="e17fcc2e-0179-43fc-a414-2d294347cc61"/>
 					<textElement textAlignment="Center"/>
-					<textFieldExpression><![CDATA[String.format("%.2f", $F{total} - $F{paid} ) +"DH"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[String.format("%.2f DH", $F{total} - $F{paid} )]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -229,7 +223,9 @@
 			</line>
 			<textField>
 				<reportElement x="47" y="0" width="186" height="16" uuid="485c715a-bbcc-48b3-8612-6c3b86576f57"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[  "  " +$F{order_items_name}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -238,9 +234,9 @@
 				<textFieldExpression><![CDATA[String.format("%.2f",$F{order_items_price})]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="299" y="0" width="78" height="16" uuid="bea28452-278e-4ca2-91a1-4d5bedfd6622"/>
+				<reportElement x="299" y="0" width="82" height="16" uuid="bea28452-278e-4ca2-91a1-4d5bedfd6622"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[String.format("%.2f", $F{order_items_price}*$F{order_items_quantity}) + " DH"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[String.format(" %.2f DH ", $F{totalItem} ) ]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="-1" y="0" width="1" height="18" uuid="b095010c-01cb-4417-a211-fbf36cc4804c"/>

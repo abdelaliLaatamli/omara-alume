@@ -166,10 +166,10 @@
             </AnchorPane>
              <TableView fx:id="tableProductsOfCommand" layoutX="621.0" layoutY="14.0" prefHeight="610.0" prefWidth="552.0">
                  <columns>
-                     <TableColumn fx:id="lableOfCommand" prefWidth="128.0" text="Name" />
-                     <TableColumn fx:id="priceProductOfCommand" prefWidth="85.0" text="Price" />
-                     <TableColumn fx:id="quentityProductOfCommand" prefWidth="88.0" text="Quentity" />
-                     <TableColumn fx:id="priceCommand" prefWidth="99.0" text="Price Command" />
+                     <TableColumn fx:id="lableOfCommand" prefWidth="128.0" text="Label " />
+                     <TableColumn fx:id="priceProductOfCommand" prefWidth="85.0" text="Prix" />
+                     <TableColumn fx:id="quentityProductOfCommand" prefWidth="88.0" text="Quantité" />
+                     <TableColumn fx:id="priceCommand" prefWidth="99.0" text="Total" />
                      <TableColumn fx:id="editProductOfCommand" prefWidth="81.0" text="Edit" />
                      <TableColumn fx:id="deleteProductOfCommand" prefWidth="70.0" text="Delete" />
                  </columns>

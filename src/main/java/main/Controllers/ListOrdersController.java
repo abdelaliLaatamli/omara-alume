@@ -83,15 +83,13 @@ public class ListOrdersController implements Initializable {
 
         clientCommand.setCellValueFactory( new PropertyValueFactory<>("client") );
         paymentStatusCommand.setCellValueFactory( new PropertyValueFactory<>("paymentStatus") );
-        paymentsMadesOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( cellData.getValue()
+        paymentsMadesOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , cellData.getValue()
                                                                             .getPaymentsMades()
                                                                             .stream()
                                                                             .map( c -> c.getAmountPaid() )
                                                                             .collect(Collectors.toList())
-                                                                            .stream().reduce( 0f , ( subSum , currentElemnt ) -> subSum + currentElemnt )) );
-        totalPriceOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( this.sumTotal( cellData.getValue() )));
-
-
+                                                                            .stream().reduce( 0f , ( subSum , currentElement ) -> subSum + currentElement ))) );
+        totalPriceOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , this.sumTotal( cellData.getValue() ))));
 
         Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> editCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
@@ -99,10 +97,7 @@ public class ListOrdersController implements Initializable {
                 final TableCell<OrderEntity, Void> cell = new TableCell<OrderEntity, Void>() {
 
                     private final Button btn = new Button("Modifier");
-
                     {
-                        //OrderEntity datass = getTableView().getItems().get(getIndex());
-
                         btn.setOnAction((ActionEvent event) -> {
                             OrderEntity data = getTableView().getItems().get(getIndex());
                             System.out.println("selectedData Edit: " + data.getId());
@@ -122,12 +117,6 @@ public class ListOrdersController implements Initializable {
                             }
 
                         });
-
-
-//                        btn.setDisable( () -> {
-//                            return true;
-//                        } );
-                        //btn.setDisable( true );
 
                     }
 
