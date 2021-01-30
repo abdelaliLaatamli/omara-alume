@@ -247,10 +247,10 @@ public class OrderCreationController implements Initializable {
                 number = 1f;
             }
 
-            glassTotal.setText( number * (
+            glassTotal.setText( String.format( "%.2f DH" , number * (
                     ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
-                            0 : getPrice(glassPrice) // glassPrice.getSelectionModel().getSelectedItem().getPrice()
-            ) + " DH");
+                            0 : getPrice(glassPrice)
+            )));
 
         });
 
@@ -263,10 +263,10 @@ public class OrderCreationController implements Initializable {
                 number = 1f;
             }
 
-            glassTotal.setText( number * (
+            glassTotal.setText( String.format( "%.2f DH" , number * (
                     ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
-                            0 : getPrice(glassPrice) //glassPrice.getSelectionModel().getSelectedItem().getPrice()
-            ) + " DH");
+                            0 : getPrice(glassPrice)
+            )));
 
         } );
     }
@@ -640,10 +640,10 @@ public class OrderCreationController implements Initializable {
                                     nombrePieceGlass.getValueFactory().setValue( data.getNumberItems() );
 
 
-                                    glassTotal.setText( Float.valueOf( data.getQuantity() ) * (
-                                            ( glassPrice.getSelectionModel().getSelectedIndex() == -1 ) ?
-                                                    0 : getPrice(glassPrice) // glassPrice.getSelectionModel().getSelectedItem().getPrice()
-                                    ) + " DH");
+                                    glassTotal.setText( String.format( "%.2f DH" , Float.valueOf( data.getQuantity() ) * (
+                                            ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
+                                                    0 : getPrice(glassPrice)
+                                    )));
 
 
                                     tabPaneAddProducts.getSelectionModel().select(2);
