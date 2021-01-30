@@ -91,7 +91,7 @@ public class ClientController implements Initializable {
         clientCin.setCellValueFactory(new PropertyValueFactory<>("cin"));
         clientAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
         clientCreationDate.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-        //clientCreationDate.setCellValueFactory( cellData -> new ReadOnlyStringWrapper((new SimpleDateFormat("MM-dd-yyyy")).format(cellData.getValue().getCreatedAt()))  );
+//        clientCreationDate.setCellValueFactory( cellData -> new ReadOnlyStringWrapper((new SimpleDateFormat("MM-dd-yyyy")).format(cellData.getValue().getCreatedAt()))  );
 
 
         clientNumberCommand.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper<>(cellDate.getValue().getCommands().size()) );

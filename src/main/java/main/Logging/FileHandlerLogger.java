@@ -1,6 +1,5 @@
 package main.Logging;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.*;
 
@@ -13,7 +12,8 @@ public class FileHandlerLogger {
          Logger logger = Logger.getLogger(className);
 
         try {
-            LogManager.getLogManager().readConfiguration(new FileInputStream("mylogging.properties"));
+            //LogManager.getLogManager().readConfiguration(new FileInputStream("mylogging.properties"));
+            LogManager.getLogManager().readConfiguration(FileHandlerLogger.class.getClassLoader().getResourceAsStream("mylogging.properties"));
         } catch (SecurityException | IOException e1) {
             e1.printStackTrace();
         }

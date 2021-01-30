@@ -21,6 +21,8 @@ import main.Services.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -81,6 +83,16 @@ public class OrderCreationController implements Initializable {
 
     @FXML TabPane tabPaneAddProducts;
 
+    // ------------Table Payement-------------
+
+    @FXML TableView<PaymentsMadeEntity> tableOfPayements;
+    @FXML TableColumn<PaymentsMadeEntity , String> dateOfPayement;
+    @FXML TableColumn<PaymentsMadeEntity , String> modeOfPayement;
+    @FXML TableColumn<PaymentsMadeEntity , String> payementAmout;
+    @FXML TableColumn<PaymentsMadeEntity , Void> editPayement;
+    @FXML TableColumn<PaymentsMadeEntity , Void> deletePayement;
+    ObservableList<PaymentsMadeEntity> observablePaymentsMades = FXCollections.observableArrayList();
+
     // -----------Table Products------------
 
     @FXML TableView<OrderItemsEntity> tableProductsOfCommand;
@@ -94,34 +106,35 @@ public class OrderCreationController implements Initializable {
 
 
     public OrderEntity orderDetails;
-    private PaymentStatus OldPayementStatusBkp ;
-    private float OldTotal ;
+//    private PaymentStatus OldPayementStatusBkp ;
+//    private float OldTotal ;
     private float payedMount ;
 
-
-    private boolean isWorkingPayementCombo = false;
-    private boolean isWorkingPriceTextFiltred = false ;
+//
+//    private boolean isWorkingPayementCombo = false;
+//    private boolean isWorkingPriceTextFiltred = false ;
 
     private OrderItemsEntity editableCommandArticle = null;
 
     public void setData( OrderEntity entity ){
         operationOrder = CurrentCrudOperation.EDIT;
 
-        OldTotal = entity.getArticleOrders().stream()
-                .map( n -> n.getPrice()* n.getQuantity() )
-                .collect( Collectors.toList() )
-                .stream()
-                .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
+//        OldTotal = entity.getArticleOrders().stream()
+//                .map( n -> n.getPrice()* n.getQuantity() )
+//                .collect( Collectors.toList() )
+//                .stream()
+//                .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
 
         payedMount = entity.getPaymentsMades().stream().map( n -> n.getAmountPaid() ).reduce( 0f , (sub , elem) -> sub+elem );
 
         orderReference.setText(  String.format("REF%08d", entity.getId() ) );
 
-        OldPayementStatusBkp = entity.getPaymentStatus();
+//        OldPayementStatusBkp = entity.getPaymentStatus();
 
         orderDetails = entity;
 
         loadDataEdit();
+        loadPayementTable();
     }
 
     @Override
@@ -129,8 +142,11 @@ public class OrderCreationController implements Initializable {
 
         orderDetails = new OrderEntity();
         loadDataAdd();
+        loadPayementTable();
 
     }
+
+
 
     void loadDataAdd(){
 
@@ -202,9 +218,84 @@ public class OrderCreationController implements Initializable {
 
 
         initialiseAluminumTab();
-        initialiseAccessoireTab();
+        initialiseAccessorTab();
         initialiseGlassTab();
 
+    }
+
+    private void loadPayementTable() {
+
+        observablePaymentsMades.clear();
+        observablePaymentsMades.addAll( orderDetails.getPaymentsMades() );
+
+        modeOfPayement.setCellValueFactory( new PropertyValueFactory<>("payementMethod"));
+        payementAmout.setCellValueFactory(  new PropertyValueFactory<>("amountPaid"));
+        dateOfPayement.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(  cellData.getValue().getPaymentDate() ))
+        );
+
+        Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>> editCellFactory = new Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>>() {
+            @Override
+            public TableCell<PaymentsMadeEntity, Void> call(final TableColumn<PaymentsMadeEntity, Void> param) {
+                final TableCell<PaymentsMadeEntity, Void> cell = new TableCell<PaymentsMadeEntity, Void>() {
+
+                    private final Button btn = new Button("Modifier");
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData: " + data.getId());
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+
+        Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>> deleteCellFactory = new Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>>() {
+            @Override
+            public TableCell<PaymentsMadeEntity, Void> call(final TableColumn<PaymentsMadeEntity, Void> param) {
+                final TableCell<PaymentsMadeEntity, Void> cell = new TableCell<PaymentsMadeEntity, Void>() {
+
+                    private final Button btn = new Button("Delete");
+                    {
+
+                        btn.setOnAction((ActionEvent event) -> {
+                            PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData delete: " + data.getId());
+                            //orderDetails.getArticleOrders().remove( data );
+                            // loadDataTable();
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        editPayement.setCellFactory( editCellFactory );
+        deletePayement.setCellFactory(deleteCellFactory );
+
+        tableOfPayements.setItems( this.observablePaymentsMades );
     }
 
     void loadDataEdit(){
@@ -271,7 +362,7 @@ public class OrderCreationController implements Initializable {
         } );
     }
 
-    private void initialiseAccessoireTab() {
+    private void initialiseAccessorTab() {
         accessoireProduct.setItems( FXCollections.observableArrayList(accessoryService.getAllAccessoryProducts()) );
         new AutoCompleteBox(accessoireProduct);
         accessoireProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
@@ -294,7 +385,7 @@ public class OrderCreationController implements Initializable {
 
             accessoireTotal.setText( number * (
                     ( accessoirePrice.getSelectionModel().getSelectedItem() == null) ?
-                            0 : getPrice(accessoirePrice) //accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
+                            0 : getPrice(accessoirePrice)
             ) + " DH");
 
         });
@@ -310,7 +401,7 @@ public class OrderCreationController implements Initializable {
 
             accessoireTotal.setText( number * (
                     ( accessoirePrice.getSelectionModel().getSelectedItem() == null ) ?
-                            0 : getPrice(accessoirePrice) //accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
+                            0 : getPrice(accessoirePrice)
             ) + " DH");
 
         } );
@@ -468,9 +559,9 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void addAccessoireToOrder(MouseEvent mouseEvent) {
+    public void addAccessoryToOrder(MouseEvent mouseEvent) {
 
-        OrderItemsEntity accessoireArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle ;
+        OrderItemsEntity accessoryArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle ;
 
         if( accessoireProduct.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -480,12 +571,12 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        accessoireArticle.setArticle( accessoireProduct.getItems().get( accessoireProduct.getSelectionModel().getSelectedIndex() ) );
-        accessoireArticle.setName( accessoireProduct.getItems().get( accessoireProduct.getSelectionModel().getSelectedIndex() ).getName() + " " + accessoireLabel.getText());
-        accessoireArticle.setPrice( getPrice(accessoirePrice) );
-        accessoireArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
+        accessoryArticle.setArticle( accessoireProduct.getItems().get( accessoireProduct.getSelectionModel().getSelectedIndex() ) );
+        accessoryArticle.setName( accessoireProduct.getItems().get( accessoireProduct.getSelectionModel().getSelectedIndex() ).getName() + " " + accessoireLabel.getText());
+        accessoryArticle.setPrice( getPrice(accessoirePrice) );
+        accessoryArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
 
-        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(accessoireArticle);
+        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(accessoryArticle);
         else editableCommandArticle = null;
 
         this.loadDataTable();
@@ -568,13 +659,9 @@ public class OrderCreationController implements Initializable {
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
         quentityProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( cellData.getValue().getQuantity() * cellData.getValue().getPrice()
-                //String.format("%.2f DH ", cellData.getValue().getQuantity() * cellData.getValue().getPrice() )
+        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( //cellData.getValue().getQuantity() * cellData.getValue().getPrice()
+                String.format("%.2f DH ", cellData.getValue().getQuantity() * cellData.getValue().getPrice() )
         ) );
-//        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper(
-//                Math.round(cellData.getValue().getQuantity() * cellData.getValue().getPrice() * 2) / 2.0f + " DH"
-//        ) );
-
 
 
 
@@ -689,7 +776,6 @@ public class OrderCreationController implements Initializable {
                             orderDetails.getArticleOrders().remove( data );
                             loadDataTable();
                         });
-                        //btn.setDisable();
                     }
 
                     @Override
@@ -760,13 +846,6 @@ public class OrderCreationController implements Initializable {
         boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
                 orderService.addOrder(orderDetails) :
                 orderService.updateOrder(orderDetails);
-//        boolean saved = false ;
-
-//        if( operationOrder == CurrentCrudOperation.ADD ) {
-//            saved = orderService.addOrder(orderDetails);
-//        }else{
-//            saved = orderService.updateOrder(orderDetails);
-//        }
 
         if (saved) {
 
