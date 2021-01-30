@@ -122,12 +122,12 @@ WHERE
 				<reportElement x="-12" y="0" width="102" height="45" uuid="d36db365-a9aa-4105-a1fa-5d9be327d5f5"/>
 				<imageExpression><![CDATA[$P{imageUrl}]]></imageExpression>
 			</image>
-			<textField>
-				<reportElement x="281" y="0" width="100" height="20" uuid="6b297eb1-31db-4496-837d-c684cf379d64"/>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="281" y="0" width="100" height="20" uuid="6f00f891-d11c-4447-8da8-3ea86c3b22f9"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format($F{orders_orderDate})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="257" y="46" width="49" height="20" uuid="25210639-7ee6-4d85-8384-40ea8bf05923"/>
@@ -265,7 +265,7 @@ WHERE
 	<pageFooter>
 		<band height="51" splitType="Stretch">
 			<rectangle radius="5">
-				<reportElement x="0" y="0" width="382" height="50" uuid="90ee5b83-eb5d-4ebc-a158-df0f2dcf62f4"/>
+				<reportElement x="0" y="25" width="382" height="25" uuid="90ee5b83-eb5d-4ebc-a158-df0f2dcf62f4"/>
 			</rectangle>
 			<staticText>
 				<reportElement x="10" y="25" width="362" height="25" uuid="23fe2770-ccde-4716-b3ff-76f614447529"/>
@@ -273,29 +273,6 @@ WHERE
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Hay seffah à coté de café Bruxelles - chouakrich - gzenaya || GSM : 0636353525]]></text>
-			</staticText>
-			<line>
-				<reportElement x="10" y="24" width="362" height="1" uuid="e53619c6-a9e7-49fe-91f5-8457ba10619e"/>
-			</line>
-			<textField>
-				<reportElement x="240" y="4" width="132" height="20" uuid="0ec948e4-cc07-4af4-82e4-ce65b08522a1"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{creditclient} + " DH "]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="10" y="4" width="70" height="20" uuid="bf11bafe-08b0-4b64-b621-7634839c0c25"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[Solde du :]]></text>
-			</staticText>
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement x="79" y="4" width="138" height="20" uuid="1181d775-8ebe-47bf-996a-fa1931f18031"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="216" y="4" width="25" height="20" uuid="55408774-12f6-4d0e-b653-6b16320ad765"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<text><![CDATA[ est :]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
