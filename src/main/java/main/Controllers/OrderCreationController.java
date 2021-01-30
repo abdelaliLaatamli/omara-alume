@@ -66,8 +66,6 @@ public class OrderCreationController implements Initializable {
     @FXML TextField accessoireQuentity ;
     @FXML Label  accessoireTotal ;
 
-
-
     // --------------- GlassTab  -----------------
     @FXML ComboBox<GlassEntity> glassProduct;
     @FXML TextField glassLabel ;
@@ -661,63 +659,20 @@ public class OrderCreationController implements Initializable {
 
                             switch ( data.getArticle().getType() ){
                                 case "AluminumEntity"  :
-
-                                    aluminuimProduct.getSelectionModel().select((AluminumEntity) data.getArticle());
-                                    aluminuimLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
-                                    priceAluminumCombo.getSelectionModel().select( String.valueOf( data.getPrice() ) );
-                                    aluminuimQuentity.setText( data.getQuantity() + "");
-
-
-                                    priceAlumnuimShow.setText( Float.valueOf( data.getQuantity() ) * (
-                                            ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
-                                                    0 : getPrice( priceAluminumCombo)
-                                    ) + " DH");
-
-
-                                    tabPaneAddProducts.getSelectionModel().selectFirst();
-                                    editableCommandArticle = data;
-                                    operation = CurrentCrudOperation.EDIT;
+                                    System.out.println( "AluminumEntity" );
+                                    loadAluminuimEdit(data);
 
                                     break;
 
                                 case "AccessoryEntity" :
                                     System.out.println( "AccessoryEntity" );
-
-                                    accessoireProduct.getSelectionModel().select((AccessoryEntity) data.getArticle());
-                                    accessoireLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
-                                    accessoirePrice.getSelectionModel().select( data.getPrice() + "" );
-                                    accessoireQuentity.setText( data.getQuantity() + "" );
-
-                                    accessoireTotal.setText( Float.valueOf( data.getQuantity() ) * (
-                                            ( accessoirePrice.getSelectionModel().getSelectedItem() == null ) ?
-                                                    0 :  getPrice( accessoirePrice) // accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
-                                    ) + " DH");
-
-                                    tabPaneAddProducts.getSelectionModel().select(1);
-                                    editableCommandArticle = data;
-                                    operation = CurrentCrudOperation.EDIT;
+                                    loadAccessoryEdit(data);
 
                                     break;
 
                                 case "GlassEntity"     :
                                     System.out.println( "GlassEntity" );
-
-                                    glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
-                                    glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
-                                    glassPrice.getSelectionModel().select( data.getPrice()+"" );
-                                    glassQuentity.setText( data.getQuantity() + "" );
-                                    nombrePieceGlass.getValueFactory().setValue( data.getNumberItems() );
-
-
-                                    glassTotal.setText( String.format( "%.2f DH" , Float.valueOf( data.getQuantity() ) * (
-                                            ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
-                                                    0 : getPrice(glassPrice)
-                                    )));
-
-
-                                    tabPaneAddProducts.getSelectionModel().select(2);
-                                    editableCommandArticle = data;
-                                    operation = CurrentCrudOperation.EDIT;
+                                    loadGlassEdit(data);
                                     break;
 
                             }
@@ -778,6 +733,61 @@ public class OrderCreationController implements Initializable {
         tableProductsOfCommand.setItems( FXCollections.observableArrayList(orderDetails.getArticleOrders()) );
         tableProductsOfCommand.setItems( this.observableArticleCommand );
 
+    }
+
+    private void loadGlassEdit(OrderItemsEntity data) {
+
+        glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
+        glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
+        glassPrice.getSelectionModel().select( data.getPrice()+"" );
+        glassQuentity.setText( data.getQuantity() + "" );
+        nombrePieceGlass.getValueFactory().setValue( data.getNumberItems() );
+
+
+        glassTotal.setText( String.format( "%.2f DH" , Float.valueOf( data.getQuantity() ) * (
+                ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
+                        0 : getPrice(glassPrice)
+        )));
+
+
+        tabPaneAddProducts.getSelectionModel().select(2);
+        editableCommandArticle = data;
+        operation = CurrentCrudOperation.EDIT;
+        
+    }
+
+    private void loadAccessoryEdit(OrderItemsEntity data) {
+        accessoireProduct.getSelectionModel().select((AccessoryEntity) data.getArticle());
+        accessoireLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
+        accessoirePrice.getSelectionModel().select( data.getPrice() + "" );
+        accessoireQuentity.setText( data.getQuantity() + "" );
+
+        accessoireTotal.setText( Float.valueOf( data.getQuantity() ) * (
+                ( accessoirePrice.getSelectionModel().getSelectedItem() == null ) ?
+                        0 :  getPrice( accessoirePrice) // accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
+        ) + " DH");
+
+        tabPaneAddProducts.getSelectionModel().select(1);
+        editableCommandArticle = data;
+        operation = CurrentCrudOperation.EDIT;
+    }
+
+    private void loadAluminuimEdit(OrderItemsEntity data) {
+        aluminuimProduct.getSelectionModel().select((AluminumEntity) data.getArticle());
+        aluminuimLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
+        priceAluminumCombo.getSelectionModel().select( String.valueOf( data.getPrice() ) );
+        aluminuimQuentity.setText( data.getQuantity() + "");
+
+
+        priceAlumnuimShow.setText( Float.valueOf( data.getQuantity() ) * (
+                ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
+                        0 : getPrice( priceAluminumCombo)
+        ) + " DH");
+
+
+        tabPaneAddProducts.getSelectionModel().selectFirst();
+        editableCommandArticle = data;
+        operation = CurrentCrudOperation.EDIT;
     }
 
     private Float getTotal(){
