@@ -41,8 +41,7 @@ public class OrderCreationController implements Initializable {
     private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
 
 
-    // @FXML ComboBox<ClientEntity> clientNameForm ;
-    @FXML ComboBox<Object> clientNameForm ;
+    @FXML ComboBox<ClientEntity> clientNameForm ;
     @FXML Label totalPriceOrder;
     @FXML Label amountPaidOrder;
     @FXML Label amountRemainedOrder;
@@ -50,8 +49,6 @@ public class OrderCreationController implements Initializable {
     @FXML TextField amountToPayText ;
     @FXML ToggleGroup payementMethodGroup;
     @FXML Label orderReference;
-
-
 
 
     // ---------- Aluminum Tab -------------
@@ -106,30 +103,17 @@ public class OrderCreationController implements Initializable {
 
 
     public OrderEntity orderDetails;
-//    private PaymentStatus OldPayementStatusBkp ;
-//    private float OldTotal ;
-    private float payedMount ;
 
-//
-//    private boolean isWorkingPayementCombo = false;
-//    private boolean isWorkingPriceTextFiltred = false ;
+    private float payedMount ;
 
     private OrderItemsEntity editableCommandArticle = null;
 
     public void setData( OrderEntity entity ){
         operationOrder = CurrentCrudOperation.EDIT;
 
-//        OldTotal = entity.getArticleOrders().stream()
-//                .map( n -> n.getPrice()* n.getQuantity() )
-//                .collect( Collectors.toList() )
-//                .stream()
-//                .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
-
         payedMount = entity.getPaymentsMades().stream().map( n -> n.getAmountPaid() ).reduce( 0f , (sub , elem) -> sub+elem );
 
         orderReference.setText(  String.format("REF%08d", entity.getId() ) );
-
-//        OldPayementStatusBkp = entity.getPaymentStatus();
 
         orderDetails = entity;
 
@@ -211,7 +195,6 @@ public class OrderCreationController implements Initializable {
                         comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
                         amountToPayText.setText( totalOrder - totalPaid  + "" );
                 }
-
             }
 
         } );
@@ -299,9 +282,8 @@ public class OrderCreationController implements Initializable {
     }
 
     void loadDataEdit(){
-
-
-        clientNameForm.getSelectionModel().select( orderDetails.getClient() );
+        ClientEntity clientEntity = clientNameForm.getItems().stream().filter( e -> e.getId() == orderDetails.getClient().getId() ).findFirst().get();
+        clientNameForm.getSelectionModel().select( clientEntity );
         clientNameForm.setDisable(true);
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
@@ -659,7 +641,7 @@ public class OrderCreationController implements Initializable {
         lableOfCommand.setCellValueFactory(new PropertyValueFactory<>("name"));
         priceProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("price"));
         quentityProductOfCommand.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper( //cellData.getValue().getQuantity() * cellData.getValue().getPrice()
+        priceCommand.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper(
                 String.format("%.2f DH ", cellData.getValue().getQuantity() * cellData.getValue().getPrice() )
         ) );
 
@@ -738,8 +720,6 @@ public class OrderCreationController implements Initializable {
                                     operation = CurrentCrudOperation.EDIT;
                                     break;
 
-                                default:
-                                    System.out.println(" there no type of avalaibele types ");
                             }
 
 
@@ -823,9 +803,7 @@ public class OrderCreationController implements Initializable {
         PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
                                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
-        ClientEntity clientEntity = getSelectedClientEntity(clientNameForm);
-
-        if( clientEntity == null  ){
+        if( clientNameForm.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur D'enregistrement");
             alert.setHeaderText("veuillez choisir un client");
@@ -833,7 +811,7 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        orderDetails.setClient( clientEntity );
+        orderDetails.setClient( clientNameForm.getSelectionModel().getSelectedItem() );
         orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
 
         PaymentsMadeEntity paymentsMadeEntity = new PaymentsMadeEntity();
@@ -861,30 +839,8 @@ public class OrderCreationController implements Initializable {
             alert.showAndWait();
         }
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListOrdersView.fxml"));
-        main.JavaFxApplication.mainStage.setScene(new Scene(root));
-        main.JavaFxApplication.mainStage.setTitle(" List Commands -- Aluminium et verre");
-        main.JavaFxApplication.mainStage.show();
+        this.goBack(null);
 
     }
 
-    private ClientEntity getSelectedClientEntity(ComboBox clientBox) {
-        ClientEntity clientEntity = null;
-        if( operationOrder == CurrentCrudOperation.ADD ){
-            if( clientBox.getSelectionModel().getSelectedItem() == null ) return null ;
-
-            if( clientBox.getSelectionModel().getSelectedItem() instanceof String ){
-                List<ClientEntity> clients = clientBox.getItems() ;
-                return clients.stream()
-                        .filter( e -> e.getName().contains( clientNameForm.getSelectionModel().getSelectedItem().toString() ) )
-                        .findFirst().orElse(null);
-            }else {
-                clientEntity = (ClientEntity) clientNameForm.getSelectionModel().getSelectedItem();
-            }
-
-        }else{
-            clientEntity = (ClientEntity) clientBox.getSelectionModel().getSelectedItem() ;
-        }
-        return clientEntity;
-    }
 }
