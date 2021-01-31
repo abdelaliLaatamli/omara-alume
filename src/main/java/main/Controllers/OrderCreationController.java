@@ -167,17 +167,16 @@ public class OrderCreationController implements Initializable {
                 number = 0f;
             }
 
-
-            if( number > 0 && number < totalOrder - totalPaid ){
+            if( number > 0 && number < totalOrder - totalPaid  && operationPayement == CurrentCrudOperation.ADD ){
                 comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
                 savePayement.setDisable( false );
-            } else if(totalOrder - totalPaid == 0){
+            } else if(totalOrder - totalPaid == 0 && operationPayement == CurrentCrudOperation.ADD){
                 savePayement.setDisable( true );
-            } else if( number >= totalOrder - totalPaid ){
+            } else if( number >= totalOrder - totalPaid  && operationPayement == CurrentCrudOperation.ADD ){
                 comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
                 amountToPayText.setText( totalOrder - totalPaid  + "" );
                 savePayement.setDisable( false );
-            }else {
+            }else if(operationPayement == CurrentCrudOperation.ADD){
                 comboPaymentStatus.getSelectionModel().select( PaymentStatus.CRÉDIT );
                 savePayement.setDisable( true );
             }
