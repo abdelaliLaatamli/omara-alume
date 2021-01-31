@@ -192,7 +192,7 @@ public class OrderCreationController implements Initializable {
     }
 
     private void loadPayementTable() {
-
+        
         observablePaymentsMades.clear();
         observablePaymentsMades.addAll( orderDetails.getPaymentsMades() );
 

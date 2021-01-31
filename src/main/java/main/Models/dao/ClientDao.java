@@ -17,12 +17,11 @@ public class ClientDao {
      * @param entity
      * @return
      */
-    public ClientEntity save(ClientEntity entity) {
+    public ClientEntity saveClient(ClientEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
-
 
             // save the student object
             session.save(entity);
@@ -32,9 +31,28 @@ public class ClientDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            return null ;
         }
         return entity;
+    }
+
+    public boolean save(ClientEntity entity) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+
+            // save the student object
+            session.save(entity);
+            // commit transaction
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return false ;
+        }
+        return true;
     }
 
     /**
@@ -68,16 +86,15 @@ public class ClientDao {
             transaction = session.beginTransaction();
             // save the student object
 
-
             session.update(entity);
             // commit transaction
             transaction.commit();
 
         } catch (Exception e) {
+
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
             return false;
         }
         return true;

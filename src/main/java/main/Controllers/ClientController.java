@@ -16,63 +16,43 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.dao.RepositoryDao;
 import main.Models.entities.ClientEntity;
+import main.Models.utils.CurrentCrudOperation;
+import main.Services.ClientServices;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class ClientController implements Initializable {
 
-    RepositoryDao<ClientEntity> clientsDao ;
+    ClientServices clientServices  = new ClientServices();
 
-    @FXML
-    TableView<ClientEntity> listClients ;
-
-    @FXML
-    TableColumn<ClientEntity, String> clientName ;
-
-    @FXML
-    TableColumn<ClientEntity , String> clientTele ;
-
-    @FXML
-    TableColumn<ClientEntity , String> clientCin ;
-
-    @FXML
-    TableColumn<ClientEntity , String> clientAddress ;
-
-    @FXML
-    TableColumn<ClientEntity , Instant> clientCreationDate ;
-
-    @FXML
-    TableColumn<ClientEntity , Integer> clientNumberCommand ;
-
-    @FXML
-    TableColumn clientEdit;
+    @FXML TableView<ClientEntity> listClients ;
+    @FXML TableColumn<ClientEntity, String> clientName ;
+    @FXML TableColumn<ClientEntity , String> clientTele ;
+    @FXML TableColumn<ClientEntity , String> clientCin ;
+    @FXML TableColumn<ClientEntity , String> clientAddress ;
+    @FXML TableColumn<ClientEntity , Instant> clientCreationDate ;
+    @FXML TableColumn<ClientEntity , Integer> clientNumberCommand ;
+    @FXML TableColumn clientEdit;
 
     ObservableList<ClientEntity> observableClients = FXCollections.observableArrayList();
 
-    @FXML
-    TextField idClientForm ;
+    @FXML TextField idClientForm ;
+    @FXML TextField nameClientForm;
+    @FXML TextField teleClientForm;
+    @FXML TextField cinClientForm ;
+    @FXML TextField addressClientForm;
 
-    @FXML
-    TextField nameClientForm;
-
-    @FXML
-    TextField teleClientForm;
-
-    @FXML
-    TextField cinClientForm ;
-
-    @FXML
-    TextField addressClientForm;
-
+    private CurrentCrudOperation currentCrudOperation = CurrentCrudOperation.ADD ;
+    private ClientEntity editableClientEntity = null ;
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        clientsDao = new RepositoryDao<ClientEntity>();
 
         this.loadData();
 
@@ -82,17 +62,19 @@ public class ClientController implements Initializable {
 
     private void loadData(){
 
-        List<ClientEntity> clients =  clientsDao.getAll("ClientEntity") ;
+        List<ClientEntity> clients = clientServices.getAll();
 
+        observableClients.clear();
         observableClients.addAll( clients );
 
         clientName.setCellValueFactory(new PropertyValueFactory<>("name"));
         clientTele.setCellValueFactory(new PropertyValueFactory<>("tele"));
         clientCin.setCellValueFactory(new PropertyValueFactory<>("cin"));
         clientAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
-        clientCreationDate.setCellValueFactory(new PropertyValueFactory<>("createdAt"));
-//        clientCreationDate.setCellValueFactory( cellData -> new ReadOnlyStringWrapper((new SimpleDateFormat("MM-dd-yyyy")).format(cellData.getValue().getCreatedAt()))  );
 
+        clientCreationDate.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getCreatedAt())
+        ));
 
         clientNumberCommand.setCellValueFactory(cellDate -> new ReadOnlyObjectWrapper<>(cellDate.getValue().getCommands().size()) );
 
@@ -113,6 +95,10 @@ public class ClientController implements Initializable {
                             cinClientForm.setText( data.getCin() );
                             teleClientForm.setText( data.getTele() );
                             addressClientForm.setText( data.getAddress() );
+
+                            editableClientEntity = data ;
+                            currentCrudOperation = CurrentCrudOperation.EDIT ;
+
 
                         });
                     }
@@ -148,51 +134,41 @@ public class ClientController implements Initializable {
 
     public void saveClientForm(MouseEvent mouseEvent) {
 
-        ClientEntity client = new ClientEntity();
-        ClientEntity newClient = null ;
-
+        ClientEntity client = ( currentCrudOperation == CurrentCrudOperation.EDIT ) ? editableClientEntity : new ClientEntity();
 
         client.setName( nameClientForm.getText() );
         client.setCin( cinClientForm.getText() );
         client.setTele( teleClientForm.getText() );
         client.setAddress( addressClientForm.getText() );
 
+        boolean saved = ( currentCrudOperation == CurrentCrudOperation.ADD ) ?
+                clientServices.addClient( client ) :
+                clientServices.updateClient( client );
 
-        if( idClientForm.getText() == null || idClientForm.getText().equals("") ){
+        if (saved) {
 
-            System.out.println( "add" );
-            newClient = clientsDao.save( client , "main.Models.entities.ClientEntity"  );
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'enregistrement en Client réussi");
+            alert.setHeaderText("le Client est bien enregistrer");
+            alert.showAndWait();
 
         }else{
-
-            System.out.println("edit");
-            client.setId( Integer.valueOf( idClientForm.getText() ) );
-            clientsDao.update( client  );
-            newClient = client ;
-
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'enregistrement");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
         }
 
+        idClientForm.setText( "" );
+        nameClientForm.setText( "" );
+        cinClientForm.setText( "" );
+        teleClientForm.setText( "" );
+        addressClientForm.setText( "" );
 
+        editableClientEntity = null ;
+        currentCrudOperation = CurrentCrudOperation.ADD ;
 
-        if( newClient == null ){
-            System.out.println("null");
-        }else {
-            System.out.println("Saved");
-
-            idClientForm.setText( "" );
-            nameClientForm.setText( "" );
-            cinClientForm.setText( "" );
-            teleClientForm.setText( "" );
-            addressClientForm.setText( "" );
-
-            this.listClients.getItems().clear();
-            this.listClients.refresh();
-            this.loadData();
-
-        }
-
-
-
+        this.loadData();
 
     }
 }

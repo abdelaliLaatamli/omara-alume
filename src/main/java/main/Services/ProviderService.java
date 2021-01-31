@@ -21,9 +21,9 @@ public class ProviderService {
 
     public boolean add(ProviderEntity entity){
 
-        ProviderEntity newClient = providerDao.save( entity);
+        boolean saved = providerDao.addProvider( entity);
 
-        return newClient != null ;
+        return saved ;
     }
 
 

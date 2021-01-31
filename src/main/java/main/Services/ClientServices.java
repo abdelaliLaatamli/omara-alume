@@ -22,9 +22,13 @@ public class ClientServices {
 
     public boolean addClient(ClientEntity entity){
 
-        ClientEntity newClient = clientDao.save( entity);
+//        ClientEntity newClient = clientDao.saveClient( entity);
+//
+//        return newClient != null ;
 
-        return newClient != null ;
+        boolean saved = clientDao.save( entity);
+
+        return saved ;
     }
 
 
@@ -35,7 +39,7 @@ public class ClientServices {
         return updatedCleint ;
     }
 
-    public boolean updateProduct( ClientEntity entity ){
+    public boolean updateClient( ClientEntity entity ){
 
         boolean isSaved = clientDao.update( entity );
 

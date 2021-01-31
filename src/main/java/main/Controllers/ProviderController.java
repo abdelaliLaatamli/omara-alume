@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
+import main.Models.utils.CurrentCrudOperation;
 import main.Services.ProviderService;
 
 import java.io.IOException;
@@ -42,6 +43,9 @@ public class ProviderController implements Initializable {
     @FXML TextField pTeleForm;
     @FXML TextField pIdentifyForm;
     @FXML TextField pAddressForm;
+
+    private ProviderEntity editableProviderEntity = null ;
+    private CurrentCrudOperation currentCrudOperation = CurrentCrudOperation.ADD ;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -84,6 +88,9 @@ public class ProviderController implements Initializable {
                             pTeleForm.setText( data.getTele() );
                             pAddressForm.setText( data.getAddress() );
 
+                            currentCrudOperation = CurrentCrudOperation.EDIT ;
+                            editableProviderEntity = data ;
+
 
                         });
                     }
@@ -122,21 +129,14 @@ public class ProviderController implements Initializable {
 
     public void saveProvider(MouseEvent mouseEvent) {
 
-        ProviderEntity provider = new ProviderEntity();
+        ProviderEntity provider = (currentCrudOperation == CurrentCrudOperation.ADD) ? new ProviderEntity() : editableProviderEntity;
 
         provider.setName( pNameForm.getText() );
         provider.setIdentify( pIdentifyForm.getText() );
         provider.setTele( pTeleForm.getText() );
         provider.setAddress( pAddressForm.getText() );
 
-        boolean saved = false;
-        if( pIDForm.getText() == null || pIDForm.getText().equals("") ){
-            saved = providerService.add( provider );
-        }else{
-            provider.setId( Integer.valueOf( pIDForm.getText() ) );
-            saved = providerService.update( provider  );
-        }
-
+        boolean saved = (currentCrudOperation == CurrentCrudOperation.ADD) ? providerService.add(provider) : providerService.update(provider);
 
         if (saved) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -150,12 +150,16 @@ public class ProviderController implements Initializable {
             alert.showAndWait();
         }
 
-            pIDForm.setText( "" );
-            pNameForm.setText( "" );
-            pTeleForm.setText( "" );
-            pIdentifyForm.setText( "" );
-            pAddressForm.setText( "" );
-            this.loadDataTable();
+        pIDForm.setText( "" );
+        pNameForm.setText( "" );
+        pTeleForm.setText( "" );
+        pIdentifyForm.setText( "" );
+        pAddressForm.setText( "" );
+        this.loadDataTable();
+
+        editableProviderEntity = null ;
+        currentCrudOperation = CurrentCrudOperation.ADD ;
+
 
     }
 

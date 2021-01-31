@@ -71,9 +71,10 @@ public class ListOrdersController implements Initializable {
 
     public void loadData(){
 
-        List<OrderEntity> commands = orderService.getAllCommands();
+        List<OrderEntity> orders = orderService.getAllCommands();
+
         observableCommand.clear();
-        observableCommand.addAll( commands );
+        observableCommand.addAll( orders );
 
         referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%08d", cellData.getValue().getId())  ));
         dateCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
