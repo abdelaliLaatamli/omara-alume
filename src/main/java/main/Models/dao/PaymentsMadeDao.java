@@ -12,7 +12,7 @@ public class PaymentsMadeDao {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public void getAll() {
+    public void deleteAllNull() {
 
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -27,7 +27,6 @@ public class PaymentsMadeDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            //e.printStackTrace();
         }
     }
 

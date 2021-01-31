@@ -1,6 +1,7 @@
 package main.Services;
 
 import main.Models.dao.OrderDao;
+import main.Models.dao.PaymentsMadeDao;
 import main.Models.entities.OrderEntity;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 public class OrderService {
 
     private OrderDao orderDao = new OrderDao();
+    //private Pay orderDao = new OrderDao();
 
     public List<OrderEntity> getAllCommands(){
 
@@ -35,7 +37,7 @@ public class OrderService {
     public boolean updateOrder(OrderEntity command ){
 
         boolean isSaved = orderDao.update( command );
-
+        (new PaymentsMadeDao()).deleteAllNull();;
         return isSaved ;
     }
 

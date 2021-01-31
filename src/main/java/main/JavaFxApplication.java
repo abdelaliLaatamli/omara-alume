@@ -7,15 +7,11 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import main.Models.dao.PaymentsMadeDao;
-import main.Models.entities.PaymentsMadeEntity;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
 
 
 public class JavaFxApplication extends Application {
@@ -42,15 +38,15 @@ public class JavaFxApplication extends Application {
 
     public static void main(String[] args) throws IOException {
 
+        JavaFxApplication.deleteNullPayements();
         JavaFxApplication.saveDb();
-        JavaFxApplication.testOO();
         launch();
     }
 
-    private static void testOO(){
-        PaymentsMadeDao paymentsMadeDao = new PaymentsMadeDao();
+    private static void deleteNullPayements(){
 
-        paymentsMadeDao.getAll();
+        PaymentsMadeDao paymentsMadeDao = new PaymentsMadeDao();
+        paymentsMadeDao.deleteAllNull();
 
     }
 
@@ -85,11 +81,9 @@ public class JavaFxApplication extends Application {
 
         if ( f.exists() && f.isDirectory() ) {
             JavaFxApplication.saveDbFile(filePath +"/"+ month , date );
-            //System.out.println("existe");
         }else{
             if (f.mkdir()){
                 JavaFxApplication.saveDbFile(filePath +"/"+ month , date );
-                //System.out.println("created");
             }
         }
     }
