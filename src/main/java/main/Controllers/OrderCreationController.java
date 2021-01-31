@@ -39,7 +39,7 @@ public class OrderCreationController implements Initializable {
 
     private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
     private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
-
+    private CurrentCrudOperation operationPayement = CurrentCrudOperation.ADD;
 
     @FXML ComboBox<ClientEntity> clientNameForm ;
     @FXML Label totalPriceOrder;
@@ -47,8 +47,13 @@ public class OrderCreationController implements Initializable {
     @FXML Label amountRemainedOrder;
     @FXML ComboBox<PaymentStatus> comboPaymentStatus;
     @FXML TextField amountToPayText ;
-    @FXML ToggleGroup payementMethodGroup;
+
+    @FXML ToggleGroup paymentMethodGroup;
+    @FXML RadioButton especeToggleButton;
+    @FXML RadioButton chequeToggleButton;
+
     @FXML Label orderReference;
+    @FXML Button savePayement ;
 
 
     // ---------- Aluminum Tab -------------
@@ -99,12 +104,11 @@ public class OrderCreationController implements Initializable {
     @FXML TableColumn<OrderItemsEntity, Void> deleteProductOfCommand ;
     ObservableList<OrderItemsEntity> observableArticleCommand = FXCollections.observableArrayList();
 
-
     public OrderEntity orderDetails;
-
     private float payedMount ;
+    private OrderItemsEntity editableOrderArticle = null;
+    private PaymentsMadeEntity editablePayementMade = null ;
 
-    private OrderItemsEntity editableCommandArticle = null;
 
     public void setData( OrderEntity entity ){
         operationOrder = CurrentCrudOperation.EDIT;
@@ -137,43 +141,12 @@ public class OrderCreationController implements Initializable {
 
         new AutoCompleteBox(clientNameForm);
 
-
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().selectFirst();
 
-        comboPaymentStatus.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-
-            amountToPayText.setEditable( (int) newValue == 1 );
-
-            switch ( (int) newValue ){
-                case 0 :
-                case 1 :
-                    amountToPayText.setText( 0 + "" );
-                    break;
-
-                case 2 :
-
-                    float totalPaid = orderDetails
-                                            .getPaymentsMades()
-                                            .stream()
-                                            .map( e -> e.getAmountPaid() )
-                                            .reduce( 0f , ( subTotal , element ) -> subTotal + element );
-
-                    float totalOrder = orderDetails
-                                            .getArticleOrders()
-                                            .stream()
-                                            .map( e -> e.getPrice() * e.getQuantity() )
-                                            .reduce( 0f , ( subTotal , element ) -> subTotal + element );
-
-                    amountToPayText.setText( ( totalOrder  - totalPaid )  + "" );
-                    break;
-            }
-
-
-        });
-
 
         amountToPayText.textProperty().addListener( (observable, oldValue, newValue) -> {
+
 
             float totalPaid = orderDetails
                     .getPaymentsMades()
@@ -187,13 +160,28 @@ public class OrderCreationController implements Initializable {
                     .map( e -> e.getPrice() * e.getQuantity() )
                     .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-            if( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PARTRANCHES ){
-
-                if( Float.valueOf( newValue ) >= ( totalOrder  - totalPaid ) ){
-                        comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
-                        amountToPayText.setText( totalOrder - totalPaid  + "" );
-                }
+            float number = 0f;
+            try{
+                number = Float.parseFloat( newValue ) ;
+            }catch (Exception e) {
+                number = 0f;
             }
+
+
+            if( number > 0 && number < totalOrder - totalPaid ){
+                comboPaymentStatus.getSelectionModel().select( PaymentStatus.PARTRANCHES );
+                savePayement.setDisable( false );
+            } else if(totalOrder - totalPaid == 0){
+                savePayement.setDisable( true );
+            } else if( number >= totalOrder - totalPaid ){
+                comboPaymentStatus.getSelectionModel().select( PaymentStatus.PAYÉ );
+                amountToPayText.setText( totalOrder - totalPaid  + "" );
+                savePayement.setDisable( false );
+            }else {
+                comboPaymentStatus.getSelectionModel().select( PaymentStatus.CRÉDIT );
+                savePayement.setDisable( true );
+            }
+
 
         } );
 
@@ -224,7 +212,11 @@ public class OrderCreationController implements Initializable {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData: " + data.getId());
+                            amountToPayText.setText(String.valueOf(data.getAmountPaid()));
+                            paymentMethodGroup.selectToggle( ( data.getPayementMethod() == PayementMethod.CHEQUE ) ? chequeToggleButton: especeToggleButton );
+                            savePayement.setDisable( false );
+                            editablePayementMade = data ;
+                            operationPayement = CurrentCrudOperation.EDIT;
                         });
                     }
 
@@ -253,9 +245,10 @@ public class OrderCreationController implements Initializable {
 
                         btn.setOnAction((ActionEvent event) -> {
                             PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData delete: " + data.getId());
-                            //orderDetails.getArticleOrders().remove( data );
-                            // loadDataTable();
+                            orderDetails.getPaymentsMades().remove( data );
+                            loadPayementTable();
+                            loadPayementLabelsValues();
+
                         });
                     }
 
@@ -468,7 +461,7 @@ public class OrderCreationController implements Initializable {
     public void addAlumnuimToOrder(MouseEvent mouseEvent) {
 
 
-            OrderItemsEntity alumenuimProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle;
+            OrderItemsEntity alumenuimProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
             if( aluminuimProduct.getSelectionModel().getSelectedIndex() == -1 ){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -485,7 +478,7 @@ public class OrderCreationController implements Initializable {
             alumenuimProduct.setQuantity( Float.valueOf( aluminuimQuentity.getText() ) );
 
         if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add( alumenuimProduct );
-        else editableCommandArticle = null;
+        else editableOrderArticle = null;
 
         this.loadDataTable();
 
@@ -541,7 +534,7 @@ public class OrderCreationController implements Initializable {
 
     public void addAccessoryToOrder(MouseEvent mouseEvent) {
 
-        OrderItemsEntity accessoryArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle ;
+        OrderItemsEntity accessoryArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
         if( accessoireProduct.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -557,7 +550,7 @@ public class OrderCreationController implements Initializable {
         accessoryArticle.setQuantity(Float.valueOf(accessoireQuentity.getText()));
 
         if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(accessoryArticle);
-        else editableCommandArticle = null;
+        else editableOrderArticle = null;
 
         this.loadDataTable();
 
@@ -572,7 +565,7 @@ public class OrderCreationController implements Initializable {
 
     public void addGlassInOrder(MouseEvent mouseEvent) {
 
-        OrderItemsEntity glassArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableCommandArticle;
+        OrderItemsEntity glassArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
         if( glassProduct.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -589,7 +582,7 @@ public class OrderCreationController implements Initializable {
         glassArticle.setNumberItems( nombrePieceGlass.getValue() );
 
         if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(glassArticle);
-        else editableCommandArticle = null;
+        else editableOrderArticle = null;
 
         this.loadDataTable();
 
@@ -605,33 +598,8 @@ public class OrderCreationController implements Initializable {
 
     void loadDataTable(){
 
-        totalPriceOrder.setText( "00,00 DH" );
-        totalPriceOrder.setText( String.format("%.2f DH", getTotal() ) );
+        loadPayementLabelsValues();
 
-        amountPaidOrder.setText("00,00 DH");
-        amountPaidOrder.setText( String.format("%.2f DH", calculAmountPaid() ) );
-
-        amountRemainedOrder.setText("00,00 DH");
-        amountRemainedOrder.setText( String.format("%.2f DH ", getTotal() - calculAmountPaid() ) );
-
-
-        if( comboPaymentStatus.getSelectionModel().getSelectedItem() == PaymentStatus.PAYÉ ){
-
-            float totalPaid = orderDetails
-                    .getPaymentsMades()
-                    .stream()
-                    .map( e -> e.getAmountPaid() )
-                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
-
-            float totalOrder = orderDetails
-                    .getArticleOrders()
-                    .stream()
-                    .map( e -> e.getPrice() * e.getQuantity() )
-                    .reduce( 0f , ( subTotal , element ) -> subTotal + element );
-
-            amountToPayText.setText( totalOrder - totalPaid  + "" );
-
-        }
 
         observableArticleCommand.clear();
         observableArticleCommand.addAll( orderDetails.getArticleOrders() );
@@ -735,6 +703,17 @@ public class OrderCreationController implements Initializable {
 
     }
 
+    private void loadPayementLabelsValues() {
+        totalPriceOrder.setText( "00,00 DH" );
+        totalPriceOrder.setText( String.format("%.2f DH", getTotal() ) );
+
+        amountPaidOrder.setText("00,00 DH");
+        amountPaidOrder.setText( String.format("%.2f DH", calculAmountPaid() ) );
+
+        amountRemainedOrder.setText("00,00 DH");
+        amountRemainedOrder.setText( String.format("%.2f DH ", getTotal() - calculAmountPaid() ) );
+    }
+
     private void loadGlassEdit(OrderItemsEntity data) {
 
         glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
@@ -751,9 +730,9 @@ public class OrderCreationController implements Initializable {
 
 
         tabPaneAddProducts.getSelectionModel().select(2);
-        editableCommandArticle = data;
+        editableOrderArticle = data;
         operation = CurrentCrudOperation.EDIT;
-        
+
     }
 
     private void loadAccessoryEdit(OrderItemsEntity data) {
@@ -768,7 +747,7 @@ public class OrderCreationController implements Initializable {
         ) + " DH");
 
         tabPaneAddProducts.getSelectionModel().select(1);
-        editableCommandArticle = data;
+        editableOrderArticle = data;
         operation = CurrentCrudOperation.EDIT;
     }
 
@@ -786,7 +765,7 @@ public class OrderCreationController implements Initializable {
 
 
         tabPaneAddProducts.getSelectionModel().selectFirst();
-        editableCommandArticle = data;
+        editableOrderArticle = data;
         operation = CurrentCrudOperation.EDIT;
     }
 
@@ -810,8 +789,6 @@ public class OrderCreationController implements Initializable {
 
     public void saveOrderEvent(MouseEvent mouseEvent) throws IOException {
 
-        PayementMethod payementMethod = ((RadioButton) payementMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
-                                        PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
         if( clientNameForm.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -821,15 +798,8 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        orderDetails.setClient( clientNameForm.getSelectionModel().getSelectedItem() );
+        orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
         orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
-
-        PaymentsMadeEntity paymentsMadeEntity = new PaymentsMadeEntity();
-
-        paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
-        paymentsMadeEntity.setPayementMethod(payementMethod);
-
-        orderDetails.getPaymentsMades().add( paymentsMadeEntity );
 
         boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
                 orderService.addOrder(orderDetails) :
@@ -853,4 +823,29 @@ public class OrderCreationController implements Initializable {
 
     }
 
+    public void addPayementMade(MouseEvent mouseEvent) {
+
+        PayementMethod payementMethod = ((RadioButton) paymentMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
+                        PayementMethod.ESPECE : PayementMethod.CHEQUE ;
+
+        PaymentsMadeEntity paymentsMadeEntity = (operationPayement == CurrentCrudOperation.ADD ) ? new PaymentsMadeEntity() : editablePayementMade;
+
+        System.out.println(amountToPayText.getText());
+        System.out.println(Float.valueOf( amountToPayText.getText()));
+
+        paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
+        paymentsMadeEntity.setPayementMethod( payementMethod );
+
+        if(operationPayement == CurrentCrudOperation.ADD ) orderDetails.getPaymentsMades().add( paymentsMadeEntity );
+        else editablePayementMade = null;
+
+        this.loadDataTable();
+
+        loadPayementTable();
+        loadPayementLabelsValues();
+        amountToPayText.setText("0");
+        paymentMethodGroup.selectToggle(especeToggleButton);
+        operationPayement = CurrentCrudOperation.ADD;
+
+    }
 }

@@ -128,10 +128,7 @@
 
 
                   <Label layoutX="14.0" layoutY="81.0" prefHeight="17.0" prefWidth="139.0" text="Payement :" />
-                  <ComboBox fx:id="comboPaymentStatus" layoutX="164.0" layoutY="77.0" prefHeight="25.0" prefWidth="210.0" />
-
-                  <Label layoutX="14.0" layoutY="147.0" prefHeight="17.0" prefWidth="139.0" text="Le montant payé :" />
-                  <TextField fx:id="amountToPayText" editable="false" layoutX="164.0" layoutY="143.0" prefHeight="25.0" prefWidth="210.0" text="0.0" />
+                  <ComboBox fx:id="comboPaymentStatus" disable="true" layoutX="164.0" layoutY="77.0" prefHeight="25.0" prefWidth="210.0" />
 
                   <Button layoutX="426.0" layoutY="549.0" mnemonicParsing="false" onMouseClicked="#saveOrderEvent" prefHeight="25.0" prefWidth="150.0" text="Enregistrer Command" />
 
@@ -156,11 +153,23 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <RadioButton layoutX="164.0" layoutY="206.0" mnemonicParsing="false" selected="true" text="Espéce">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="payementMethodGroup" />
-                     </toggleGroup></RadioButton>
-                  <RadioButton layoutX="312.0" layoutY="206.0" mnemonicParsing="false" text="Chéque" toggleGroup="$payementMethodGroup" />
+                  <Pane layoutX="14.0" layoutY="131.0" prefHeight="141.0" prefWidth="435.0" style="-fx-background-color: #ff5;">
+                     <children>
+                        <AnchorPane prefHeight="141.0" prefWidth="435.0">
+                           <children>
+            
+                              <Label layoutX="25.0" layoutY="26.0" prefHeight="17.0" prefWidth="139.0" text="Le montant payé :" />
+                              <TextField fx:id="amountToPayText" layoutX="199.0" layoutY="22.0" prefHeight="25.0" prefWidth="210.0" text="0.0" />
+                              <RadioButton fx:id="especeToggleButton" layoutX="25.0" layoutY="88.0" mnemonicParsing="false" selected="true" text="Espéce">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="paymentMethodGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="chequeToggleButton" layoutX="133.0" layoutY="88.0" mnemonicParsing="false" text="Chéque" toggleGroup="$paymentMethodGroup" />
+                              <Button fx:id="savePayement" onMouseClicked="#addPayementMade" disable="true" layoutX="270.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="139.0" text="Enregistrer Paiement" />
+                           </children>
+                        </AnchorPane>
+                     </children></Pane>
 
                </children>
             </AnchorPane>

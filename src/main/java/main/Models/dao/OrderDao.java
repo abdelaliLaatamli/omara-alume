@@ -110,17 +110,20 @@ public class OrderDao {
             transaction = session.beginTransaction();
             // save the student object
 
-            Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
+            Set<PaymentsMadeEntity> savedPayments = new HashSet<>();
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
-
                 if (paymentsMadeEntity.getAmountPaid() != 0) {
                     if( paymentsMadeEntity.getId() == 0 )
                         session.save(paymentsMadeEntity);
-                    savedPayement.add(paymentsMadeEntity);
+                    savedPayments.add(paymentsMadeEntity);
                 }
             }
-            float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
-            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
+
+//            session.createQuery("delete from PaymentsMadeEntity as p where p.order = null").executeUpdate();
+//
+
+            float sumMount = savedPayments.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
+            if( sumMount == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
 
             Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
@@ -132,12 +135,11 @@ public class OrderDao {
                 savedArticleCommands.add(orderItemsEntity);
             }
 
-            entity.setPaymentsMades( savedPayement );
+            entity.setPaymentsMades( savedPayments );
             entity.setArticleOrders( savedArticleCommands );
 
 
             session.update(entity);
-            // commit transaction
             transaction.commit();
 
         } catch (Exception e) {

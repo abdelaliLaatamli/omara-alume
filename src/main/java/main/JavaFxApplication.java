@@ -6,11 +6,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import main.Models.dao.PaymentsMadeDao;
+import main.Models.entities.PaymentsMadeEntity;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
@@ -39,16 +42,16 @@ public class JavaFxApplication extends Application {
 
     public static void main(String[] args) throws IOException {
 
-//        logger.severe("severe message");
-//        logger.warning("warning message");
-//        logger.info("info message");
-//        logger.config("config message");
-//        logger.fine("fine message");
-//        logger.finer("finer message");
-//        logger.finest("finest message");
-
         JavaFxApplication.saveDb();
+        JavaFxApplication.testOO();
         launch();
+    }
+
+    private static void testOO(){
+        PaymentsMadeDao paymentsMadeDao = new PaymentsMadeDao();
+
+        paymentsMadeDao.getAll();
+
     }
 
     private  static void saveDb() throws IOException {
@@ -82,11 +85,11 @@ public class JavaFxApplication extends Application {
 
         if ( f.exists() && f.isDirectory() ) {
             JavaFxApplication.saveDbFile(filePath +"/"+ month , date );
-            System.out.println("existe");
+            //System.out.println("existe");
         }else{
             if (f.mkdir()){
                 JavaFxApplication.saveDbFile(filePath +"/"+ month , date );
-                System.out.println("created");
+                //System.out.println("created");
             }
         }
     }
