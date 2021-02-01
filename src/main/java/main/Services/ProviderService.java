@@ -29,9 +29,9 @@ public class ProviderService {
 
     public ProviderEntity save( ProviderEntity entity ){
 
-        ProviderEntity updatedCleint = providerDao.updateEntity( entity );
+        ProviderEntity updatedClient = providerDao.updateEntity( entity );
 
-        return updatedCleint ;
+        return updatedClient ;
     }
 
     public boolean update( ProviderEntity entity ){
