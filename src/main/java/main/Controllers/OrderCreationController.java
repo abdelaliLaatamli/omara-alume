@@ -799,30 +799,28 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        this.savePricesClient();
+        orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
+        orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
 
-//        orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
-//        orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
-//
-//        boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
-//                orderService.addOrder(orderDetails) :
-//                orderService.updateOrder(orderDetails);
-//
-//        if (saved) {
-//
-//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-//            alert.setTitle("l'enregistrement en Command réussi");
-//            alert.setHeaderText("le Command est bien enregistrer");
-//            alert.showAndWait();
-//
-//        }else{
-//            Alert alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Error D'enregistrement");
-//            alert.setHeaderText("Oups, il y a eu une erreur!");
-//            alert.showAndWait();
-//        }
-//
-//        this.goBack(null);
+        boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
+                orderService.addOrder(orderDetails) :
+                orderService.updateOrder(orderDetails);
+
+        if (saved) {
+            this.savePricesClient();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("l'enregistrement en Command réussi");
+            alert.setHeaderText("le Command est bien enregistrer");
+            alert.showAndWait();
+
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error D'enregistrement");
+            alert.setHeaderText("Oups, il y a eu une erreur!");
+            alert.showAndWait();
+        }
+
+        this.goBack(null);
 
     }
 
@@ -856,9 +854,6 @@ public class OrderCreationController implements Initializable {
                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
 
         PaymentsMadeEntity paymentsMadeEntity = (operationPayement == CurrentCrudOperation.ADD ) ? new PaymentsMadeEntity() : editablePayementMade;
-
-//        System.out.println(amountToPayText.getText());
-//        System.out.println(Float.valueOf( amountToPayText.getText()));
 
         paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
         paymentsMadeEntity.setPayementMethod( payementMethod );
