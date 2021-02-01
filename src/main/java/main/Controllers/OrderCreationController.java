@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -36,6 +37,7 @@ public class OrderCreationController implements Initializable {
     private final AccessoryService accessoryService = new AccessoryService();
     private final AluminumService aluminumService = new AluminumService();
     private final GlassService glassService = new GlassService();
+    private final PriceService priceService = new PriceService();
 
     private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
     private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
@@ -797,28 +799,54 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
-        orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
+        this.savePricesClient();
 
-        boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
-                orderService.addOrder(orderDetails) :
-                orderService.updateOrder(orderDetails);
+//        orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
+//        orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
+//
+//        boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
+//                orderService.addOrder(orderDetails) :
+//                orderService.updateOrder(orderDetails);
+//
+//        if (saved) {
+//
+//            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setTitle("l'enregistrement en Command réussi");
+//            alert.setHeaderText("le Command est bien enregistrer");
+//            alert.showAndWait();
+//
+//        }else{
+//            Alert alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Error D'enregistrement");
+//            alert.setHeaderText("Oups, il y a eu une erreur!");
+//            alert.showAndWait();
+//        }
+//
+//        this.goBack(null);
 
-        if (saved) {
+    }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("l'enregistrement en Command réussi");
-            alert.setHeaderText("le Command est bien enregistrer");
-            alert.showAndWait();
+    private void savePricesClient(){
 
-        }else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error D'enregistrement");
-            alert.setHeaderText("Oups, il y a eu une erreur!");
-            alert.showAndWait();
+        orderDetails.getArticleOrders();
+
+        List<PriceEntity> newPrices = new ArrayList<>();
+        for( OrderItemsEntity articleOrder : orderDetails.getArticleOrders()){
+            float priceChoosed = articleOrder.getPrice();
+            for (PriceEntity price : articleOrder.getArticle().getPrices()) {
+                //if( priceChoosed != price.getPrice() && price.getClient().getId() != orderDetails.getClient().getId() ){
+                if(   priceChoosed != price.getPrice() ){
+                    PriceEntity newPrice = new PriceEntity();
+                    newPrice.setName( "px" + articleOrder.getArticle().getPrices().size() );
+                    newPrice.setPrice( priceChoosed );
+                    newPrice.setArticle( articleOrder.getArticle() );
+                    newPrice.setClient( orderDetails.getClient() );
+                    newPrices.add( newPrice );
+                }
+            }
         }
 
-        this.goBack(null);
+        priceService.addPrices( newPrices );
 
     }
 
@@ -829,8 +857,8 @@ public class OrderCreationController implements Initializable {
 
         PaymentsMadeEntity paymentsMadeEntity = (operationPayement == CurrentCrudOperation.ADD ) ? new PaymentsMadeEntity() : editablePayementMade;
 
-        System.out.println(amountToPayText.getText());
-        System.out.println(Float.valueOf( amountToPayText.getText()));
+//        System.out.println(amountToPayText.getText());
+//        System.out.println(Float.valueOf( amountToPayText.getText()));
 
         paymentsMadeEntity.setAmountPaid( Float.valueOf( amountToPayText.getText()) );
         paymentsMadeEntity.setPayementMethod( payementMethod );

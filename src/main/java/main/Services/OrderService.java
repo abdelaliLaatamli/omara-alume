@@ -11,19 +11,19 @@ public class OrderService {
     private OrderDao orderDao = new OrderDao();
     //private Pay orderDao = new OrderDao();
 
-    public List<OrderEntity> getAllCommands(){
+    public List<OrderEntity> getAllOrders(){
 
-        List<OrderEntity> listCommands = orderDao.getAll();
+        List<OrderEntity> listOrders = orderDao.getAll();
 
-        return listCommands;
+        return listOrders;
 
     }
 
-    public boolean addOrder(OrderEntity command ){
+    public boolean addOrder(OrderEntity order ){
 
-        OrderEntity newAlum = orderDao.save( command );
+        OrderEntity newOrder = orderDao.save( order );
 
-        return newAlum != null ;
+        return newOrder != null ;
     }
 
 

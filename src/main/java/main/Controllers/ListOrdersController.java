@@ -15,17 +15,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.OrderEntity;
-import main.Models.entities.OrderItemsEntity;
 import main.Models.utils.DBConnection;
 import main.Services.OrderService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -71,7 +65,7 @@ public class ListOrdersController implements Initializable {
 
     public void loadData(){
 
-        List<OrderEntity> orders = orderService.getAllCommands();
+        List<OrderEntity> orders = orderService.getAllOrders();
 
         observableCommand.clear();
         observableCommand.addAll( orders );
