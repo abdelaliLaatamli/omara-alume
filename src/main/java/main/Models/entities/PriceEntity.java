@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
+
 import java.util.Set;
 
 @AllArgsConstructor
@@ -15,7 +17,7 @@ import java.util.Set;
 
 
 @Entity(name ="prices")
-public class PriceEntity {
+public class PriceEntity implements Comparable<PriceEntity> {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
@@ -33,13 +35,14 @@ public class PriceEntity {
     @ManyToOne
     protected ArticleEntity article;
 
-//    @OneToMany
-//    @JoinColumn(name = "price_id")
-//    protected Set<OrderItemsEntity> articleCommands ;
 
     @Override
     public String toString(){
         return this.name + " - " + this.price + "DH" ;
     }
 
+    @Override
+    public int compareTo(@NotNull PriceEntity o) {
+        return ( id > o.id ) ? 1 : -1 ;
+    }
 }

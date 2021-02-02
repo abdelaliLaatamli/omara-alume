@@ -24,6 +24,7 @@ import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -142,6 +143,12 @@ public class OrderCreationController implements Initializable {
         clientNameForm.setItems( FXCollections.observableArrayList( clients ) );
 
         new AutoCompleteBox(clientNameForm);
+
+        clientNameForm.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
+            productChoosen( aluminuimProduct  , priceAluminumCombo );
+            productChoosen( accessoireProduct , accessoirePrice );
+            productChoosen( glassProduct      , glassPrice );
+        } );
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().selectFirst();
@@ -294,26 +301,7 @@ public class OrderCreationController implements Initializable {
         new AutoCompleteBox(glassProduct);
 
         glassProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-
-            glassPrice.getItems().clear();
-            if( (int) newValue != -1 ){
-                ClientEntity clientChosen = ( clientNameForm.getSelectionModel().getSelectedIndex() != -1 ) ?
-                        clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) : null ;
-
-                List<PriceEntity> listPrices = glassProduct
-                        .getSelectionModel()
-                        .getSelectedItem()
-                        .getPrices()
-                        .stream()
-                        .filter(e -> e.getClient() == null ||
-                                ( clientChosen != null && clientChosen.getId() == e.getClient().getId() )
-                        ).collect(Collectors.toList());
-
-                glassPrice.setItems( FXCollections.observableArrayList( listPrices ) );
-                glassPrice.getSelectionModel().selectFirst();
-
-            }
-
+            productChoosen( glassProduct , glassPrice );
         });
 
         glassPrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
@@ -353,25 +341,7 @@ public class OrderCreationController implements Initializable {
         accessoireProduct.setItems( FXCollections.observableArrayList(accessoryService.getAllAccessoryProducts()) );
         new AutoCompleteBox(accessoireProduct);
         accessoireProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-            accessoirePrice.getItems().clear();
-            if( (int) newValue != -1 ){
-                ClientEntity clientChosen = ( clientNameForm.getSelectionModel().getSelectedIndex() != -1 ) ?
-                        clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) : null ;
-
-                List<PriceEntity> listPrices = accessoireProduct
-                        .getSelectionModel()
-                        .getSelectedItem()
-                        .getPrices()
-                        .stream()
-                        .filter(e -> e.getClient() == null ||
-                                ( clientChosen != null && clientChosen.getId() == e.getClient().getId() )
-                        ).collect(Collectors.toList());
-
-                accessoirePrice.setItems( FXCollections.observableArrayList( listPrices ) );
-                accessoirePrice.getSelectionModel().selectFirst();
-
-            }
-
+            productChoosen( accessoireProduct , accessoirePrice );
         });
 
         accessoirePrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
@@ -412,25 +382,7 @@ public class OrderCreationController implements Initializable {
         aluminuimProduct.setItems( FXCollections.observableArrayList( aluminumService.getAllAlumunuimProducts() ) );
         new AutoCompleteBox(aluminuimProduct);
         aluminuimProduct.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-            priceAluminumCombo.getItems().clear();
-            //check if Is Select item or null
-            if( (int) newValue != -1 ){
-                ClientEntity clientChosen = ( clientNameForm.getSelectionModel().getSelectedIndex() != -1 ) ?
-                                                clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) : null ;
-
-                List<PriceEntity> listPrices = aluminuimProduct
-                                                    .getSelectionModel()
-                                                    .getSelectedItem()
-                                                    .getPrices()
-                                                    .stream()
-                                                    .filter(e -> e.getClient() == null ||
-                                                            ( clientChosen != null && clientChosen.getId() == e.getClient().getId() )
-                                                    ).collect(Collectors.toList());
-
-                priceAluminumCombo.setItems( FXCollections.observableArrayList( listPrices ) );
-                priceAluminumCombo.getSelectionModel().selectFirst();
-            }
-
+            productChoosen( aluminuimProduct , priceAluminumCombo );
         });
 
         priceAluminumCombo.valueProperty().addListener( (options, oldValue, newValue) -> {
@@ -465,6 +417,30 @@ public class OrderCreationController implements Initializable {
             );
             priceAlumnuimShow.setText( total + " DH");
         } );
+    }
+
+    private void productChoosen(ComboBox productCombo , ComboBox priceCombo) {
+        priceCombo.getItems().clear();
+        if( productCombo.getSelectionModel().getSelectedIndex() != -1 ){
+            ClientEntity clientChosen = ( clientNameForm.getSelectionModel().getSelectedIndex() != -1 ) ?
+                                            clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) : null ;
+
+            List<PriceEntity> listPrices = ( (ArticleEntity) productCombo
+                                                    .getItems()
+                                                    .get( productCombo
+                                                            .getSelectionModel()
+                                                            .getSelectedIndex() )  )
+                                                .getPrices()
+                                                .stream()
+                                                .filter(e -> e.getClient() == null ||
+                                                        ( clientChosen != null && clientChosen.getId() == e.getClient().getId() )
+                                                ).collect(Collectors.toList());
+
+            Collections.sort( listPrices );
+
+            priceCombo.setItems( FXCollections.observableArrayList( listPrices ) );
+            priceCombo.getSelectionModel().selectFirst();
+        }
     }
 
 
@@ -837,7 +813,6 @@ public class OrderCreationController implements Initializable {
         }
 
         orderDetails.setClient( clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) );
-//        this.savePricesClient();
         orderDetails.setPaymentStatus( comboPaymentStatus.getSelectionModel().getSelectedItem() );
 
         boolean saved =( operationOrder == CurrentCrudOperation.ADD ) ?
@@ -884,7 +859,6 @@ public class OrderCreationController implements Initializable {
 
             if( !alreadyUsed ){
                 PriceEntity newPrice = new PriceEntity();
-                //newPrice.setName( "px" + articleOrder.getArticle().getPrices().size() );
                 newPrice.setName( "px" + priceItems.size() );
                 newPrice.setPrice( priceChosen );
                 newPrice.setArticle( articleOrder.getArticle() );
