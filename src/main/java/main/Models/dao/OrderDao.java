@@ -108,7 +108,6 @@ public class OrderDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
-            // save the student object
 
             Set<PaymentsMadeEntity> savedPayments = new HashSet<>();
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
@@ -118,9 +117,6 @@ public class OrderDao {
                     savedPayments.add(paymentsMadeEntity);
                 }
             }
-
-//            session.createQuery("delete from PaymentsMadeEntity as p where p.order = null").executeUpdate();
-//
 
             float sumMount = savedPayments.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
             if( sumMount == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
@@ -220,7 +216,7 @@ public class OrderDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfEntities = session.createQuery("from main.Models.entities.OrderEntity C WHERE C.isCanceled = 0").getResultList();
+            listOfEntities = session.createQuery("from main.Models.entities.OrderEntity OE WHERE OE.isCanceled = 0  ORDER BY OE.orderDate DESC").getResultList();
 
             // commit transaction
             transaction.commit();

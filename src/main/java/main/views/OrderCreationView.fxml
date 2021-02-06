@@ -166,7 +166,7 @@
                                  </toggleGroup>
                               </RadioButton>
                               <RadioButton fx:id="chequeToggleButton" layoutX="133.0" layoutY="88.0" mnemonicParsing="false" text="Chéque" toggleGroup="$paymentMethodGroup" />
-                              <Button fx:id="savePayement" onMouseClicked="#addPayementMade" disable="true" layoutX="270.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="139.0" text="Enregistrer Paiement" />
+                              <Button fx:id="savePayement" onMouseClicked="#addPaymentMade" disable="true" layoutX="270.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="139.0" text="Enregistrer Paiement" />
                            </children>
                         </AnchorPane>
                      </children></Pane>

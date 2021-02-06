@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import main.Models.dao.PaymentsMadeDao;
+import main.Models.dao.StockItemsDao;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -38,15 +39,18 @@ public class JavaFxApplication extends Application {
 
     public static void main(String[] args) throws IOException {
 
-        JavaFxApplication.deleteNullPayements();
+        JavaFxApplication.deleteNullLines();
         JavaFxApplication.saveDb();
         launch();
     }
 
-    private static void deleteNullPayements(){
+    private static void deleteNullLines(){
 
         PaymentsMadeDao paymentsMadeDao = new PaymentsMadeDao();
         paymentsMadeDao.deleteAllNull();
+
+        StockItemsDao stockItemsDao = new StockItemsDao();
+        stockItemsDao.deleteAllNull();
 
     }
 

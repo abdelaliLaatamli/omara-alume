@@ -77,11 +77,12 @@ public class StockDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
-            // save the student object
+
             Set<StockItemsEntity> savedStockItems = new HashSet<>();
 
             for ( StockItemsEntity stockItemsEntity : entity.getStockItems() ){
-                session.save( stockItemsEntity );
+                if( stockItemsEntity.getId() ==0 )
+                    session.save( stockItemsEntity );
                 savedStockItems.add( stockItemsEntity );
             }
 

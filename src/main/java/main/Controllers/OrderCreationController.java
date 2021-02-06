@@ -255,7 +255,7 @@ public class OrderCreationController implements Initializable {
                             PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
                             orderDetails.getPaymentsMades().remove( data );
                             loadPayementTable();
-                            loadPayementLabelsValues();
+                            loadPaymentLabelsValues();
 
                         });
                     }
@@ -281,9 +281,12 @@ public class OrderCreationController implements Initializable {
     }
 
     void loadDataEdit(){
-        ClientEntity clientEntity = clientNameForm.getItems().stream().filter( e -> e.getId() == orderDetails.getClient().getId() ).findFirst().get();
-        clientNameForm.getSelectionModel().select( clientEntity );
-        clientNameForm.setDisable(true);
+
+        if( orderDetails.getClient() != null ) {
+            ClientEntity clientEntity = clientNameForm.getItems().stream().filter(e -> e.getId() == orderDetails.getClient().getId()).findFirst().get();
+            clientNameForm.getSelectionModel().select(clientEntity);
+            clientNameForm.setDisable(true);
+        }
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
         comboPaymentStatus.getSelectionModel().select( orderDetails.getPaymentStatus() );
@@ -613,7 +616,7 @@ public class OrderCreationController implements Initializable {
 
     void loadDataTable(){
 
-        loadPayementLabelsValues();
+        loadPaymentLabelsValues();
 
 
         observableArticleCommand.clear();
@@ -718,7 +721,7 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    private void loadPayementLabelsValues() {
+    private void loadPaymentLabelsValues() {
         totalPriceOrder.setText( "00,00 DH" );
         totalPriceOrder.setText( String.format("%.2f DH", getTotal() ) );
 
@@ -758,7 +761,7 @@ public class OrderCreationController implements Initializable {
 
         accessoireTotal.setText( Float.valueOf( data.getQuantity() ) * (
                 ( accessoirePrice.getSelectionModel().getSelectedItem() == null ) ?
-                        0 :  getPrice( accessoirePrice) // accessoirePrice.getSelectionModel().getSelectedItem().getPrice()
+                        0 :  getPrice( accessoirePrice)
         ) + " DH");
 
         tabPaneAddProducts.getSelectionModel().select(1);
@@ -868,13 +871,11 @@ public class OrderCreationController implements Initializable {
 
         }
 
-//        System.out.println( newPrices );
-//        System.out.println( newPrices.size() );
         priceService.addPrices( newPrices );
 
     }
 
-    public void addPayementMade(MouseEvent mouseEvent) {
+    public void addPaymentMade(MouseEvent mouseEvent) {
 
         PayementMethod payementMethod = ((RadioButton) paymentMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
@@ -890,7 +891,7 @@ public class OrderCreationController implements Initializable {
         this.loadDataTable();
 
         loadPayementTable();
-        loadPayementLabelsValues();
+        loadPaymentLabelsValues();
         amountToPayText.setText("0");
         paymentMethodGroup.selectToggle(especeToggleButton);
         operationPayement = CurrentCrudOperation.ADD;

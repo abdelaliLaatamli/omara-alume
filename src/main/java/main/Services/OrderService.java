@@ -37,7 +37,7 @@ public class OrderService {
     public boolean updateOrder(OrderEntity command ){
 
         boolean isSaved = orderDao.update( command );
-        (new PaymentsMadeDao()).deleteAllNull();;
+        new PaymentsMadeDao().deleteAllNull();
         return isSaved ;
     }
 

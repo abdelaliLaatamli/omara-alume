@@ -1,6 +1,8 @@
 package main.Services;
 
+import main.Models.dao.PaymentsMadeDao;
 import main.Models.dao.StockDao;
+import main.Models.dao.StockItemsDao;
 import main.Models.entities.StockEntity;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class StockService {
     public boolean update( StockEntity entity ){
 
         boolean isSaved = stockDao.update( entity );
-
+        new StockItemsDao().deleteAllNull();
         return isSaved ;
     }
 
