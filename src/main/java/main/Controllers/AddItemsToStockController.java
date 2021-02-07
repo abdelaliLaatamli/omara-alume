@@ -264,7 +264,7 @@ public class AddItemsToStockController implements Initializable {
             alert.setHeaderText("l'ordre Stock est bien enregistrer");
             alert.showAndWait();
 
-            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockView.fxml"));
+            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
             main.JavaFxApplication.mainStage.setScene(new Scene(root));
             main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
             main.JavaFxApplication.mainStage.show();
@@ -282,10 +282,11 @@ public class AddItemsToStockController implements Initializable {
 
     public void goBack(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockView.fxml"));
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
+
     }
 
 

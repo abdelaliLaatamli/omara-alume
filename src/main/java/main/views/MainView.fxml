@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.MainContoller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.MainController">
    <children>
       <VBox layoutX="150.0" layoutY="100.0" prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: #1d355780; -fx-border-radius: 5px;">
          <children>
@@ -12,7 +12,7 @@
                <children>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayCommandsPage" prefHeight="88.0" prefWidth="126.0" text="Commands">
+                        <Button layoutX="87.0" layoutY="81.0" mnemonicParsing="false" onMouseClicked="#displayOrdersPage" prefHeight="88.0" prefWidth="126.0" text="Commands">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>
@@ -66,7 +66,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Button onMouseClicked="#goToFournisseurView" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Fournisseur">
+                        <Button onMouseClicked="#goToProvidersView" layoutX="87.0" layoutY="81.0" mnemonicParsing="false" prefHeight="88.0" prefWidth="126.0" text="Fournisseur">
                            <font>
                               <Font name="Cambria Bold" size="17.0" />
                            </font>

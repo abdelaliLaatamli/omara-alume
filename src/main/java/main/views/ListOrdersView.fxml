@@ -22,16 +22,16 @@
 
             </children>
         </HBox>
-      <TableView fx:id="listCommandTable" layoutX="13.0" layoutY="63.0" prefHeight="630.0" prefWidth="1173.0">
+      <TableView fx:id="listOrderTable" layoutX="13.0" layoutY="63.0" prefHeight="630.0" prefWidth="1173.0">
         <columns>
-            <TableColumn fx:id="referenceCommand" prefWidth="160.0" text="Reference Command" />
-            <TableColumn fx:id="clientCommand" prefWidth="202.0" text="Client" />
-            <TableColumn fx:id="paymentStatusCommand" minWidth="4.0" prefWidth="126.0" text="Payment Status" />
-            <TableColumn fx:id="paymentsMadesOfCommand" prefWidth="114.0" text="Montant Payé" />
-            <TableColumn fx:id="totalPriceOfCommand" prefWidth="100.0" text="Total " />
-            <TableColumn fx:id="dateCommand" minWidth="4.0" prefWidth="99.0" text="Date Command" />
-            <TableColumn fx:id="editCommand" prefWidth="96.0" text="Edit Command" />
-            <TableColumn fx:id="lockCommand" prefWidth="101.0" text="verrouiller" />
+            <TableColumn fx:id="referenceOrder" prefWidth="160.0" text="Reference Command" />
+            <TableColumn fx:id="clientOrder" prefWidth="202.0" text="Client" />
+            <TableColumn fx:id="paymentStatusOrder" minWidth="4.0" prefWidth="126.0" text="Payment Status" />
+            <TableColumn fx:id="paymentsMadesOfOrder" prefWidth="114.0" text="Montant Payé" />
+            <TableColumn fx:id="totalPriceOfOrder" prefWidth="100.0" text="Total " />
+            <TableColumn fx:id="dateOrder" minWidth="4.0" prefWidth="99.0" text="Date Command" />
+            <TableColumn fx:id="editOrder" prefWidth="96.0" text="Edit Command" />
+            <TableColumn fx:id="lockOrder" prefWidth="101.0" text="verrouiller" />
             <TableColumn fx:id="cancelOrder" prefWidth="87.0" text="Annuler" />
             <TableColumn fx:id="printOrder" prefWidth="87.0" text="Imprimer" />
         </columns>

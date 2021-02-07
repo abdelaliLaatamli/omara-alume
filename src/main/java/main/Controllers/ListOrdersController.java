@@ -40,19 +40,19 @@ public class ListOrdersController implements Initializable {
 
     OrderService orderService = new OrderService();
 
-    @FXML TableView<OrderEntity> listCommandTable;
-    @FXML TableColumn<OrderEntity, String > referenceCommand;
-    @FXML TableColumn<OrderEntity, String > dateCommand;
-    @FXML TableColumn<OrderEntity, String > clientCommand;
-    @FXML TableColumn<OrderEntity, String > paymentStatusCommand ;
-    @FXML TableColumn<OrderEntity, String > paymentsMadesOfCommand;
-    @FXML TableColumn<OrderEntity, String > totalPriceOfCommand;
-    @FXML TableColumn<OrderEntity, Void > editCommand ;
-    @FXML TableColumn<OrderEntity, Void > lockCommand;
+    @FXML TableView<OrderEntity> listOrderTable;
+    @FXML TableColumn<OrderEntity, String > referenceOrder;
+    @FXML TableColumn<OrderEntity, String > dateOrder;
+    @FXML TableColumn<OrderEntity, String > clientOrder;
+    @FXML TableColumn<OrderEntity, String > paymentStatusOrder;
+    @FXML TableColumn<OrderEntity, String > paymentsMadesOfOrder;
+    @FXML TableColumn<OrderEntity, String > totalPriceOfOrder;
+    @FXML TableColumn<OrderEntity, Void > editOrder;
+    @FXML TableColumn<OrderEntity, Void > lockOrder;
     @FXML TableColumn<OrderEntity, Void > cancelOrder;
     @FXML TableColumn<OrderEntity, Void > printOrder;
 
-    ObservableList<OrderEntity> observableCommand = FXCollections.observableArrayList();
+    ObservableList<OrderEntity> observableOrder = FXCollections.observableArrayList();
 
     public ListOrdersController() throws JRException {
     }
@@ -67,24 +67,24 @@ public class ListOrdersController implements Initializable {
 
         List<OrderEntity> orders = orderService.getAllOrders();
 
-        observableCommand.clear();
-        observableCommand.addAll( orders );
+        observableOrder.clear();
+        observableOrder.addAll( orders );
 
-        referenceCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format("REF%08d", cellData.getValue().getId())  ));
-        dateCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+        referenceOrder.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("REF%08d", cellData.getValue().getId())  ));
+        dateOrder.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getOrderDate())
         ));
 
 
-        clientCommand.setCellValueFactory( new PropertyValueFactory<>("client") );
-        paymentStatusCommand.setCellValueFactory( new PropertyValueFactory<>("paymentStatus") );
-        paymentsMadesOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , cellData.getValue()
+        clientOrder.setCellValueFactory( new PropertyValueFactory<>("client") );
+        paymentStatusOrder.setCellValueFactory( new PropertyValueFactory<>("paymentStatus") );
+        paymentsMadesOfOrder.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , cellData.getValue()
                                                                             .getPaymentsMades()
                                                                             .stream()
                                                                             .map( c -> c.getAmountPaid() )
                                                                             .collect(Collectors.toList())
                                                                             .stream().reduce( 0f , ( subSum , currentElement ) -> subSum + currentElement ))) );
-        totalPriceOfCommand.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , this.sumTotal( cellData.getValue() ))));
+        totalPriceOfOrder.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f DH" , this.sumTotal( cellData.getValue() ))));
 
         Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>> editCellFactory = new Callback<TableColumn<OrderEntity, Void>, TableCell<OrderEntity, Void>>() {
             @Override
@@ -160,14 +160,14 @@ public class ListOrdersController implements Initializable {
                                                 .map( e -> e.getPrice() * e.getQuantity() )
                                                 .reduce(0f , (subTotal , currentElement) -> subTotal + currentElement );
 
-                                float amoutPaid = order
+                                float amountPaid = order
                                                     .getPaymentsMades()
                                                     .stream()
                                                     .map( e -> e.getAmountPaid() )
                                                     .reduce( 0f , (subTotal , currentElement) -> subTotal + currentElement  );
 
 
-                                if( total - amoutPaid == 0 )
+                                if( total - amountPaid == 0 )
                                     lockOrder( order );
                                 else{
                                     Alert alertNon = new Alert(Alert.AlertType.ERROR);
@@ -271,11 +271,11 @@ public class ListOrdersController implements Initializable {
             }
         };
 
-        editCommand.setCellFactory( editCellFactory );
-        lockCommand.setCellFactory(lockCellFactory );
+        editOrder.setCellFactory( editCellFactory );
+        lockOrder.setCellFactory(lockCellFactory );
         cancelOrder.setCellFactory(cancelCellFactory );
         printOrder.setCellFactory( printCellFactory );
-        listCommandTable.setItems( observableCommand );
+        listOrderTable.setItems(observableOrder);
 
 
     }

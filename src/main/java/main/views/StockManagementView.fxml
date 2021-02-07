@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.StockManagementController">
+
+    <children>
+        <HBox layoutX="14.0" layoutY="5.0" prefHeight="40.0" prefWidth="319.0">
+            <children>
+                <Button mnemonicParsing="false" onMouseClicked="#goBack" prefHeight="40.0" text="&lt;&lt;">
+                    <font>
+                        <Font name="Segoe UI Bold" size="15.0" />
+                    </font>
+                </Button>
+                <Button mnemonicParsing="false" onMouseClicked="#goToStockView" prefHeight="40.0" text="Ajouter Produits en stock">
+                    <font>
+                        <Font name="Segoe UI Bold" size="18.0" />
+                    </font>
+                </Button>
+
+            </children>
+        </HBox>
+      <TabPane layoutX="8.0" layoutY="50.0" prefHeight="645.0" prefWidth="1184.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Inventaire">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                     <children>
+                        <TableView fx:id="tableOfInventory" layoutX="7.0" layoutY="44.0" prefHeight="565.0" prefWidth="570.0">
+                          <columns>
+                              <TableColumn fx:id="nameOfProductColumn" prefWidth="156.0" text="Nom du produit" />
+                              <TableColumn fx:id="stockStatusColumn" prefWidth="117.0" text="Etat de stock" />
+                              <TableColumn fx:id="numberItemsInStockColumn" prefWidth="97.0" text="Stock" />
+                              <TableColumn fx:id="typeOfProductColumn" prefWidth="113.0" text="Genre de produit" />
+                              <TableColumn fx:id="showDetailsColumn" prefWidth="86.0" text="Details" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="247.0" layoutY="14.0" prefHeight="17.0" prefWidth="110.0" text="Recherche par nom :" />
+                        <TextField layoutX="357.0" layoutY="10.0" prefHeight="25.0" prefWidth="220.0" />
+                        <TableView layoutX="592.0" layoutY="44.0" prefHeight="563.0" prefWidth="585.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="Movement " />
+                            <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                        </TableView>
+                        <Label layoutX="14.0" layoutY="14.0" text="produit Type :" />
+                        <ChoiceBox layoutX="91.0" layoutY="10.0" prefWidth="150.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Les Entrée">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+
+
+    </children>
+
+</AnchorPane>

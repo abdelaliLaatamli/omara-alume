@@ -7,7 +7,7 @@ import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
-public class MainContoller {
+public class MainController {
 
     public void displayClientsPage(MouseEvent mouseEvent) throws IOException {
 
@@ -26,7 +26,7 @@ public class MainContoller {
         main.JavaFxApplication.mainStage.show();
     }
 
-    public void displayCommandsPage(MouseEvent mouseEvent) throws IOException {
+    public void displayOrdersPage(MouseEvent mouseEvent) throws IOException {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListOrdersView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
@@ -46,14 +46,19 @@ public class MainContoller {
 
     public void displayStockView(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockView.fxml"));
+//        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
+//        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+//        main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
+//        main.JavaFxApplication.mainStage.show();
+
+        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockManagementView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
 
     }
 
-    public void goToFournisseurView(MouseEvent mouseEvent) throws IOException {
+    public void goToProvidersView(MouseEvent mouseEvent) throws IOException {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ProviderView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));

@@ -1,9 +1,9 @@
 package main.Services;
 
-import main.Models.dao.PaymentsMadeDao;
 import main.Models.dao.StockDao;
 import main.Models.dao.StockItemsDao;
 import main.Models.entities.StockEntity;
+import main.Models.entities.queryContainers.StockItemStatus;
 
 import java.util.List;
 
@@ -46,5 +46,11 @@ public class StockService {
         StockEntity entities = stockDao.get( id );
 
         return entities;
+    }
+
+    public List<StockItemStatus> getStockProductStatus() {
+
+        List<StockItemStatus> listStockItemStatuses = stockDao.getStockProductStatus();
+        return listStockItemStatuses ;
     }
 }
