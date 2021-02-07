@@ -54,8 +54,6 @@ public class ListOrdersController implements Initializable {
 
     ObservableList<OrderEntity> observableOrder = FXCollections.observableArrayList();
 
-    public ListOrdersController() throws JRException {
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

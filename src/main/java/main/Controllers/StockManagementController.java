@@ -21,8 +21,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class StockManagementController implements Initializable {
 
@@ -50,26 +53,60 @@ public class StockManagementController implements Initializable {
 
     ObservableList<MovementArticle> observableMovement = FXCollections.observableArrayList();
 
-
+    List<StockItemStatus> listStockItemStatus = new ArrayList<StockItemStatus>();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        listStockItemStatus = stockService.getStockProductStatus();
         loadFieldPrograming();
-        loadDataAndFill();
+        loadDataAndFill( listStockItemStatus );
     }
 
     private void loadFieldPrograming() {
         productTypeSearch.setItems( FXCollections.observableArrayList( StockSearchProduct.values() ) );
         productTypeSearch.getSelectionModel().selectFirst();
+
+        productTypeSearch.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+
+            switch ( newValue ){
+                case ALL:
+                    loadDataAndFill( listStockItemStatus );
+                    searchProductByName.setText("");
+                    break;
+                case ALUMINIUM:
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("AluminumEntity") ).collect(Collectors.toList()) );
+                    searchProductByName.setText("");
+                    break;
+                case ACCESSOIRE:
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("AccessoryEntity") ).collect(Collectors.toList()) );
+                    searchProductByName.setText("");
+                    break;
+                case VERRE:
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("GlassEntity") ).collect(Collectors.toList()) );
+                    searchProductByName.setText("");
+                    break;
+            }
+
+        } );
+
+        searchProductByName.textProperty().addListener((options, oldValue, newValue) -> {
+            System.out.println(newValue);
+
+//            loadDataAndFill(
+//                    tableOfInventory.getItems().stream().
+//                            filter( e -> e.getArticle().getName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ) ).collect(Collectors.toList())
+//            );
+
+
+        });
+
     }
 
-    private void loadDataAndFill() {
-
-        List<StockItemStatus> listStockItemStatus =  stockService.getStockProductStatus();
+    private void loadDataAndFill( List<StockItemStatus> filteredListStockItemStatus) {
 
         observableStock.clear();
-        observableStock.addAll( listStockItemStatus );
+        observableStock.addAll( filteredListStockItemStatus );
 
         nameOfProductColumn.setCellValueFactory( new PropertyValueFactory<>("article") );
         stockStatusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
@@ -78,11 +115,6 @@ public class StockManagementController implements Initializable {
                 String.format("%.2f", cellData.getValue().getInProducts() - cellData.getValue().getOutProducts() )  )
         );
         typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( getTypeOfProduct(cellData.getValue().getArticle().getType())  ) );
-
-//        stockStatusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getInProducts())  ) );
-//        numberItemsInStockColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getOutProducts())  )  );
-//        typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( getTypeOfProduct(cellData.getValue().getArticle().getType())  ) );
-
 
         Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>> showDetailsCellFactory = new Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>>() {
             @Override
