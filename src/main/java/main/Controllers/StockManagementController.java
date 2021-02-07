@@ -72,9 +72,16 @@ public class StockManagementController implements Initializable {
         observableStock.addAll( listStockItemStatus );
 
         nameOfProductColumn.setCellValueFactory( new PropertyValueFactory<>("article") );
-        stockStatusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getInProducts())  ) );
-        numberItemsInStockColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getOutProducts())  )  );
+        stockStatusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                ( cellData.getValue().getInProducts() - cellData.getValue().getOutProducts() > 0 ) ? "Article en stock" : "Article épuisé" ) );
+        numberItemsInStockColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                String.format("%.2f", cellData.getValue().getInProducts() - cellData.getValue().getOutProducts() )  )
+        );
         typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( getTypeOfProduct(cellData.getValue().getArticle().getType())  ) );
+
+//        stockStatusColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getInProducts())  ) );
+//        numberItemsInStockColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format("%.2f", cellData.getValue().getOutProducts())  )  );
+//        typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( getTypeOfProduct(cellData.getValue().getArticle().getType())  ) );
 
 
         Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>> showDetailsCellFactory = new Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>>() {
