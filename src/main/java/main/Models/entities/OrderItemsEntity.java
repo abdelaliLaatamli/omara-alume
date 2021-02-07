@@ -38,8 +38,6 @@ public class OrderItemsEntity {
     @ManyToOne
     protected ArticleEntity article ;
 
-//    @ManyToOne
-//    protected PriceEntity priceOfArticle ;
 
 }
 

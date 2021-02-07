@@ -9,17 +9,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
+import main.Models.enums.StockSearchProduct;
 import main.Services.StockService;
 import java.io.IOException;
 import java.net.URL;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,13 +35,33 @@ public class StockManagementController implements Initializable {
     @FXML TableColumn<StockItemStatus , String> typeOfProductColumn ;
     @FXML TableColumn<StockItemStatus , Void> showDetailsColumn ;
 
-
     ObservableList<StockItemStatus> observableStock = FXCollections.observableArrayList();
+
+    @FXML ComboBox<StockSearchProduct> productTypeSearch;
+    @FXML TextField searchProductByName;
+
+
+    @FXML TableView<MovementArticle> tableMovement;
+    @FXML TableColumn<MovementArticle , String> dateMovementColumn;
+    @FXML TableColumn<MovementArticle , String> typeMovementColumn;
+    @FXML TableColumn<MovementArticle , String> referenceMovementColumn;
+    @FXML TableColumn<MovementArticle , String> quantityMovementColumn;
+    @FXML TableColumn<MovementArticle , String> priceUnitColumn;
+
+    ObservableList<MovementArticle> observableMovement = FXCollections.observableArrayList();
+
+
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        loadFieldPrograming();
         loadDataAndFill();
+    }
+
+    private void loadFieldPrograming() {
+        productTypeSearch.setItems( FXCollections.observableArrayList( StockSearchProduct.values() ) );
+        productTypeSearch.getSelectionModel().selectFirst();
     }
 
     private void loadDataAndFill() {
@@ -65,9 +86,9 @@ public class StockManagementController implements Initializable {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            StockItemStatus order = getTableView().getItems().get(getIndex());
-                            System.out.println("selectedData Annuler : " + order.getArticle());
-
+                            StockItemStatus stockItemStatus = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData Details : " + stockItemStatus.getArticle());
+                            loadMovementTable( stockItemStatus );
                         });
                     }
 
@@ -89,6 +110,31 @@ public class StockManagementController implements Initializable {
         showDetailsColumn.setCellFactory( showDetailsCellFactory );
         tableOfInventory.setItems( observableStock );
 
+
+    }
+
+    private void loadMovementTable( StockItemStatus stockItemStatus ) {
+        List<MovementArticle> movementArticles = stockService.getMovementProductInStock(stockItemStatus.getArticle().getId());
+
+        observableMovement.clear();
+        observableMovement.addAll( movementArticles );
+
+        dateMovementColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDate())
+        ));
+
+        typeMovementColumn.setCellValueFactory( new PropertyValueFactory<>("type") );
+
+        referenceMovementColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getType().equals( "sortie" ) ?
+                        String.format("REF%08d", Integer.valueOf( cellData.getValue().getReference() ) ) :
+                        cellData.getValue().getReference() )
+        );
+
+        quantityMovementColumn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+        priceUnitColumn.setCellValueFactory( new PropertyValueFactory<>("price") );
+
+        tableMovement.setItems( observableMovement );
 
     }
 

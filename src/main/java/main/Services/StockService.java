@@ -3,6 +3,7 @@ package main.Services;
 import main.Models.dao.StockDao;
 import main.Models.dao.StockItemsDao;
 import main.Models.entities.StockEntity;
+import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
 
 import java.util.List;
@@ -52,5 +53,10 @@ public class StockService {
 
         List<StockItemStatus> listStockItemStatuses = stockDao.getStockProductStatus();
         return listStockItemStatuses ;
+    }
+
+    public List<MovementArticle> getMovementProductInStock(int articleId) {
+        List<MovementArticle> movementArticles = stockDao.getMovementProductInStock(articleId);
+        return movementArticles ;
     }
 }
