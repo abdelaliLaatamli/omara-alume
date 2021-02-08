@@ -91,7 +91,6 @@ public class StockManagementController implements Initializable {
         } );
 
         searchProductByName.textProperty().addListener((options, oldValue, newValue) -> {
-            System.out.println(newValue);
 
             List<StockItemStatus> filteredListStockItemStatus = listStockItemStatus.stream().
                     filter( e -> e.getArticle()
@@ -104,10 +103,7 @@ public class StockManagementController implements Initializable {
                                     )
                     ).collect(Collectors.toList());
 
-            // System.out.println(  filteredListStockItemStatus.size() );
-
             loadDataAndFill( filteredListStockItemStatus );
-
 
         });
 
@@ -184,17 +180,6 @@ public class StockManagementController implements Initializable {
         priceUnitColumn.setCellValueFactory( new PropertyValueFactory<>("price") );
 
         tableMovement.setItems( observableMovement );
-
-    }
-
-    private String getTypeOfProduct(String type) {
-        switch ( type ){
-            case "AluminumEntity" : return "Aluminium" ;
-            case "AccessoryEntity": return "Accessoire" ;
-            case "GlassEntity"    : return "Verre" ;
-            default: return "autre" ;
-        }
-
 
     }
 
