@@ -75,15 +75,15 @@ public class StockManagementController implements Initializable {
                     searchProductByName.setText("");
                     break;
                 case ALUMINIUM:
-                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("AluminumEntity") ).collect(Collectors.toList()) );
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType() == StockSearchProduct.ALUMINIUM ).collect(Collectors.toList()) );
                     searchProductByName.setText("");
                     break;
                 case ACCESSOIRE:
-                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("AccessoryEntity") ).collect(Collectors.toList()) );
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType() == StockSearchProduct.ACCESSOIRE ).collect(Collectors.toList()) );
                     searchProductByName.setText("");
                     break;
                 case VERRE:
-                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType().equals("GlassEntity") ).collect(Collectors.toList()) );
+                    loadDataAndFill( listStockItemStatus.stream().filter( e -> e.getArticle().getType() == StockSearchProduct.VERRE  ).collect(Collectors.toList()) );
                     searchProductByName.setText("");
                     break;
             }
@@ -93,10 +93,20 @@ public class StockManagementController implements Initializable {
         searchProductByName.textProperty().addListener((options, oldValue, newValue) -> {
             System.out.println(newValue);
 
-//            loadDataAndFill(
-//                    tableOfInventory.getItems().stream().
-//                            filter( e -> e.getArticle().getName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ) ).collect(Collectors.toList())
-//            );
+            List<StockItemStatus> filteredListStockItemStatus = listStockItemStatus.stream().
+                    filter( e -> e.getArticle()
+                                    .getName()
+                                    .toLowerCase(Locale.ROOT)
+                                    .contains( newValue.toLowerCase(Locale.ROOT) )
+                                    && (
+                                            productTypeSearch.getSelectionModel().getSelectedItem() == StockSearchProduct.ALL ||
+                                             e.getArticle().getType() == productTypeSearch.getSelectionModel().getSelectedItem()
+                                    )
+                    ).collect(Collectors.toList());
+
+            // System.out.println(  filteredListStockItemStatus.size() );
+
+            loadDataAndFill( filteredListStockItemStatus );
 
 
         });
@@ -114,7 +124,7 @@ public class StockManagementController implements Initializable {
         numberItemsInStockColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 String.format("%.2f", cellData.getValue().getInProducts() - cellData.getValue().getOutProducts() )  )
         );
-        typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( getTypeOfProduct(cellData.getValue().getArticle().getType())  ) );
+        typeOfProductColumn.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( cellData.getValue().getArticle().getType() ) );
 
         Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>> showDetailsCellFactory = new Callback<TableColumn<StockItemStatus, Void>, TableCell<StockItemStatus, Void>>() {
             @Override

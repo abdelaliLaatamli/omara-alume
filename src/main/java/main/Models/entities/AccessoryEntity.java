@@ -3,6 +3,8 @@ package main.Models.entities;
 import lombok.Getter;
 import lombok.Setter;
 import main.Models.enums.AccessoryColor;
+import main.Models.enums.ProductsType;
+import main.Models.enums.StockSearchProduct;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -20,7 +22,7 @@ public class AccessoryEntity extends ArticleEntity {
     protected AccessoryColor color ;
 
     @Override
-    public String getType() {
-        return "AccessoryEntity";
+    public StockSearchProduct getType() {
+        return StockSearchProduct.ACCESSOIRE;
     }
 }

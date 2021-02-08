@@ -133,15 +133,15 @@ public class AddItemsToStockController implements Initializable {
                             StockItemsEntity data = getTableView().getItems().get(getIndex());
 
                             switch (data.getArticle().getType()){
-                                case "AluminumEntity"  :
+                                case ALUMINIUM :
                                     sProduitType.getSelectionModel().select(0);
                                     break;
 
-                                case "AccessoryEntity" :
+                                case ACCESSOIRE :
                                     sProduitType.getSelectionModel().select(1);
                                     break;
 
-                                case "GlassEntity"     :
+                                case VERRE:
                                     sProduitType.getSelectionModel().select(2);
                                     break;
 

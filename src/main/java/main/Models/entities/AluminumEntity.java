@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import main.Models.enums.AluminumColor;
 import main.Models.enums.MadeBy;
+import main.Models.enums.ProductsType;
+import main.Models.enums.StockSearchProduct;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -30,8 +32,8 @@ public class AluminumEntity extends ArticleEntity {
 
 
     @Override
-    public String getType() {
-        return "AluminumEntity";
+    public StockSearchProduct getType() {
+        return StockSearchProduct.ALUMINIUM;
     }
 
 

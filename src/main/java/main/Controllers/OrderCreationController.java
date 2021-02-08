@@ -644,19 +644,19 @@ public class OrderCreationController implements Initializable {
 
 
                             switch ( data.getArticle().getType() ){
-                                case "AluminumEntity"  :
+                                case ALUMINIUM:
                                     System.out.println( "AluminumEntity" );
                                     loadAluminuimEdit(data);
 
                                     break;
 
-                                case "AccessoryEntity" :
+                                case ACCESSOIRE:
                                     System.out.println( "AccessoryEntity" );
                                     loadAccessoryEdit(data);
 
                                     break;
 
-                                case "GlassEntity"     :
+                                case VERRE:
                                     System.out.println( "GlassEntity" );
                                     loadGlassEdit(data);
                                     break;

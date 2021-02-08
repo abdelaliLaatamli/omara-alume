@@ -3,6 +3,8 @@ package main.Models.entities;
 import lombok.Getter;
 import lombok.Setter;
 import main.Models.enums.GlassColor;
+import main.Models.enums.ProductsType;
+import main.Models.enums.StockSearchProduct;
 import main.Models.enums.ThicknessType;
 
 import javax.persistence.Column;
@@ -16,10 +18,6 @@ import javax.persistence.Entity;
 @DiscriminatorValue("gls")
 public class GlassEntity extends ArticleEntity {
 
-//    @Column
-//    protected String type ;
-
-    // سماكة / كثافة
     @Column
     protected ThicknessType thicknessType ;
 
@@ -27,7 +25,7 @@ public class GlassEntity extends ArticleEntity {
     protected GlassColor color;
 
     @Override
-    public String getType() {
-        return "GlassEntity";
+    public StockSearchProduct getType() {
+        return StockSearchProduct.VERRE;
     }
 }

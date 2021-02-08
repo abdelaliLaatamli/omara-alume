@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import main.Models.enums.StockSearchProduct;
+
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
@@ -44,7 +46,7 @@ public abstract class ArticleEntity {
         return this.name;
     }
 
-    public abstract String getType();
+    public abstract StockSearchProduct getType();
 
 
 }
