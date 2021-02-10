@@ -3,6 +3,7 @@ package main.Services;
 import main.Models.dao.StockDao;
 import main.Models.dao.StockItemsDao;
 import main.Models.entities.StockEntity;
+import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
 
@@ -58,5 +59,10 @@ public class StockService {
     public List<MovementArticle> getMovementProductInStock(int articleId) {
         List<MovementArticle> movementArticles = stockDao.getMovementProductInStock(articleId);
         return movementArticles ;
+    }
+
+    public MoneyStatus getMoneyStatus(){
+        MoneyStatus moneyStatus = stockDao.getMoneyStatus();
+        return moneyStatus ;
     }
 }

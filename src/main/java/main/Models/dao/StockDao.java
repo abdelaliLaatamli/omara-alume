@@ -3,6 +3,7 @@ package main.Models.dao;
 import main.Models.entities.ArticleEntity;
 import main.Models.entities.StockEntity;
 import main.Models.entities.StockItemsEntity;
+import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
 import main.Models.utils.HibernateUtil;
@@ -266,6 +267,50 @@ public class StockDao {
                 transaction.rollback();
             }
             return new ArrayList<MovementArticle>() ;
+        }
+    }
+
+
+    public MoneyStatus getMoneyStatus() {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            Object[] row = (Object[]) session.createSQLQuery(
+                    "select " +
+                            "    ( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id ) as vende_month , \n" +
+                            "    ( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , \n" +
+                            "    ( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi WHERE oi.order_id=o.id ) as global_vende ,\n" +
+                            "    ( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si WHERE si.stock_Id=s.Id ) as global_achat ,\n" +
+                            "    ( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , (select vende_month - paid_month ) as creadit_month ,\n" +
+                            "    ( SELECT round( ifnull( sum(`amountPaid`) , 0 ) , 2 ) FROM `payements_made` WHERE `order_id` is not null ) as global_paid ,\n" +
+                            "    ( select global_vende - global_paid ) global_creadit").list().get(0);
+
+            MoneyStatus moneyStatus = new MoneyStatus();
+
+            moneyStatus.setSalesOfMonth( (double) row[0] );
+            moneyStatus.setPurchaseOfMonth( (double) row[1] );
+            moneyStatus.setSalesGlobal( (double) row[2] );
+            moneyStatus.setPurchaseGlobal( (double) row[3] );
+            moneyStatus.setPaymentsOfMonth( (double) row[4] );
+            moneyStatus.setCreditOfMonth( (double) row[5] );
+            moneyStatus.setPaymentsGlobal( (double) row[6] );
+            moneyStatus.setCreditGlobal( (double) row[7] );
+
+
+            // commit transaction
+            transaction.commit();
+
+            return  moneyStatus ;
+
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return null ;
         }
     }
 }
