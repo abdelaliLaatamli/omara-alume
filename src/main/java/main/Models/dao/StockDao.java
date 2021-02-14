@@ -280,14 +280,21 @@ public class StockDao {
             // get an user object
 
             Object[] row = (Object[]) session.createSQLQuery(
-                    "select " +
-                            "    ( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id ) as vende_month , \n" +
-                            "    ( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , \n" +
-                            "    ( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi WHERE oi.order_id=o.id ) as global_vende ,\n" +
-                            "    ( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si WHERE si.stock_Id=s.Id ) as global_achat ,\n" +
-                            "    ( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , (select vende_month - paid_month ) as creadit_month ,\n" +
-                            "    ( SELECT round( ifnull( sum(`amountPaid`) , 0 ) , 2 ) FROM `payements_made` WHERE `order_id` is not null ) as global_paid ,\n" +
-                            "    ( select global_vende - global_paid ) global_creadit").list().get(0);
+                    "select "+
+                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
+                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id ) as vende_month , " +
+                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
+                            "    WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , " +
+                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
+                            "    WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) ) as global_vende , " +
+                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
+                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat , " +
+                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o " +
+                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , " +
+                            "(select vende_month - paid_month ) as creadit_month , " +
+                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm " +
+                            "    WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
+                            "( select global_vende - global_paid ) global_creadit").list().get(0);
 
             MoneyStatus moneyStatus = new MoneyStatus();
 

@@ -22,13 +22,17 @@ public class AccountingController implements Initializable {
     StockService stockService = new StockService();
 
     @FXML Label currentMonthLbl;
+    @FXML Label currentYearLbl ;
 
     @FXML Label totalVenteLbl;
     @FXML Label totalAchatLbl;
     @FXML Label totalMonthPayementLbl;
     @FXML Label totalCreaditPayementLabel;
+
     @FXML Label globalPayementLbl;
     @FXML Label globalCreaditPayementLbl;
+    @FXML Label globalSellinglbl;
+    @FXML Label globalBuyinglbl;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -38,11 +42,14 @@ public class AccountingController implements Initializable {
         totalAchatLbl.setText( moneyStatus.getPurchaseOfMonth() + " DH ");
         totalMonthPayementLbl.setText( moneyStatus.getPaymentsOfMonth() + " DH " );
         totalCreaditPayementLabel.setText( moneyStatus.getCreditOfMonth() + " DH " );
+
         globalPayementLbl.setText( moneyStatus.getPaymentsGlobal() + " DH " );
         globalCreaditPayementLbl.setText( moneyStatus.getCreditGlobal() + " DH " );
+        globalSellinglbl.setText( moneyStatus.getSalesGlobal() + " DH ");
+        globalBuyinglbl.setText( moneyStatus.getPurchaseGlobal() + " DH " );
 
         currentMonthLbl.setText(  DateTimeFormatter.ofPattern( "MM/yyyy" ).withZone(ZoneId.systemDefault()).format(  Instant.now() )) ;
-
+        currentYearLbl.setText(  DateTimeFormatter.ofPattern( "yyyy" ).withZone(ZoneId.systemDefault()).format(  Instant.now() )) ;
     }
 
 
