@@ -6,6 +6,7 @@ import main.Models.entities.StockEntity;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
+import main.Models.entities.queryContainers.TurnoverByMonth;
 
 import java.util.List;
 
@@ -64,5 +65,10 @@ public class StockService {
     public MoneyStatus getMoneyStatus(){
         MoneyStatus moneyStatus = stockDao.getMoneyStatus();
         return moneyStatus ;
+    }
+
+    public List<TurnoverByMonth> getTurnoverByMonth() {
+        List<TurnoverByMonth> getTurnoverByMonth = stockDao.getTurnoverByMonth();
+        return getTurnoverByMonth ;
     }
 }

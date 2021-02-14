@@ -6,6 +6,7 @@ import main.Models.entities.StockItemsEntity;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemStatus;
+import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -318,6 +319,50 @@ public class StockDao {
                 transaction.rollback();
             }
             return null ;
+        }
+    }
+
+
+    public List<TurnoverByMonth> getTurnoverByMonth() {
+
+        String [] months = {
+                "January", "February", "March",
+                "April","May","June",
+                "July", "August", "September",
+                "October",  "November", "December"
+        };
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            List<Object[]> rows = session.createSQLQuery(
+                    "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth " +
+                            "from order_items as oi , orders as o WHERE oi.order_id=o.id GROUP BY month(o.orderDate)")
+                    .list();
+
+
+            List<TurnoverByMonth> listTurnoverByMonth = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                TurnoverByMonth turnoverByMonth = new TurnoverByMonth();
+                int number = (Integer) row[0] ;
+                turnoverByMonth.setMonth( months[number-1] );
+                turnoverByMonth.setTurnover( (Double) row[1] );
+                listTurnoverByMonth.add( turnoverByMonth ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listTurnoverByMonth;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<TurnoverByMonth>() ;
         }
     }
 }
