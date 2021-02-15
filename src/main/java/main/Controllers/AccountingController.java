@@ -52,16 +52,22 @@ public class AccountingController implements Initializable {
 
         List<TurnoverByMonth> turnoverByMonths = stockService.getTurnoverByMonth();
 
-        XYChart.Series series = new XYChart.Series();
-        series.setName("Chiffre d'affaire par mois");
+        XYChart.Series seriesTurnover = new XYChart.Series();
+        seriesTurnover.setName("Chiffre d'affaire par mois");
+
+        XYChart.Series seriesSharges = new XYChart.Series();
+        seriesSharges.setName("Les Charrges par mois");
+
         chartY.setLabel("Montant en DH");
         chartX.setLabel("les Mois");
 
         for( TurnoverByMonth turnoverByMonth : turnoverByMonths ){
-            series.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getTurnover()) );
+            seriesTurnover.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getTurnover()) );
+            seriesSharges.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getCharge()) );
         }
 
-        turnoverChart.getData().addAll(series);
+        turnoverChart.getData().addAll(seriesTurnover , seriesSharges);
+//        turnoverChart.getData().addAll(seriesSharges);
 
     }
 

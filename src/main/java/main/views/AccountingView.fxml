@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AccountingController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AccountingController">
 
     <children>
 
@@ -26,36 +26,50 @@
                      <children>
                         <Pane layoutX="15.0" layoutY="301.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5px;">
                            <children>
-                              <Label layoutX="14.0" layoutY="21.0" text="Total Annuel :" />
-                              <Label layoutX="14.0" layoutY="54.0" prefHeight="17.0" prefWidth="100.0" text="Global Payé :" />
-                              <Label fx:id="currentYearLbl" layoutX="100.0" layoutY="20.0" prefHeight="17.0" prefWidth="150.0" text="Label">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font></Label>
-                              <Label fx:id="globalPayementLbl" layoutX="134.0" layoutY="54.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
-                              <Label layoutX="14.0" layoutY="102.0" prefHeight="17.0" prefWidth="100.0" text="Global Creadit :" />
-                              <Label fx:id="globalCreaditPayementLbl" layoutX="129.0" layoutY="102.0" prefHeight="17.0" prefWidth="160.0" text="Label" />
-                              <Label layoutX="13.0" layoutY="150.0" text="Global Vente :" />
-                              <Label fx:id="globalSellinglbl" layoutX="129.0" layoutY="150.0" prefWidth="160.0" text="Label" />
-                              <Label layoutX="13.0" layoutY="202.0" text="Global Achat :" />
-                              <Label fx:id="globalBuyinglbl" layoutX="129.0" layoutY="202.0" prefWidth="160.0" text="Label" />
-                           </children></Pane>
-                        <Pane layoutX="15.0" layoutY="25.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5;">
-                           <children>
-                              <Label layoutX="13.0" layoutY="15.0" text="Total mensuel :" />
-                              <Label fx:id="currentMonthLbl" layoutX="129.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Label">
+
+                              <Label layoutX="13.0" layoutY="15.0" text="Total Annuel :" />
+                              <Label fx:id="currentYearLbl" layoutX="130.0" layoutY="14.0"  prefHeight="17.0" prefWidth="150.0" text="Label">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="12.0" layoutY="56.0" text="Total Vente :" />
-                              <Label fx:id="totalVenteLbl" layoutX="129.0" layoutY="56.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
-                              <Label layoutX="12.0" layoutY="103.0" text="Total Achat :" />
-                              <Label fx:id="totalAchatLbl" layoutX="129.0" layoutY="103.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
-                              <Label layoutX="14.0" layoutY="150.0" prefHeight="17.0" prefWidth="90.0" text="Total Payé :" />
-                              <Label fx:id="totalMonthPayementLbl" layoutX="129.0" layoutY="150.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
-                              <Label layoutX="14.0" layoutY="196.0" prefHeight="17.0" prefWidth="90.0" text="Total Creadit : " />
-                              <Label fx:id="totalCreaditPayementLabel" layoutX="129.0" layoutY="196.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
+                               <Label layoutX="15.0" layoutY="55.0" prefHeight="17.0" prefWidth="100.0" text="Global Payé :" />
+                              <Label fx:id="globalPayementLbl" layoutX="130.0" layoutY="55.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="100.0" prefHeight="17.0" prefWidth="100.0" text="Global Creadit :" />
+                              <Label fx:id="globalCreaditPayementLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="160.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="150.0" text="Global Vente :" />
+                              <Label fx:id="globalSellinglbl" layoutX="130.0" layoutY="150.0" prefWidth="160.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="200.0" text="Global Achat :" />
+                              <Label fx:id="globalBuyinglbl" layoutX="130.0" layoutY="200.0" prefWidth="160.0" text="Label" />
+
+                           </children>
+                        </Pane>
+                        <Pane layoutX="15.0" layoutY="25.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5;">
+                           <children>
+
+                              <Label layoutX="13.0" layoutY="15.0" text="Total mensuel :" />
+                              <Label fx:id="currentMonthLbl" layoutX="130.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Label">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+
+                              <Label layoutX="15.0" layoutY="55.0" text="Total Vente :" />
+                              <Label fx:id="totalVenteLbl" layoutX="130.0" layoutY="55.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="100.0" text="Total Achat :" />
+                              <Label fx:id="totalAchatLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="150.0" prefHeight="17.0" prefWidth="90.0" text="Total Payé :" />
+                              <Label fx:id="totalMonthPayementLbl" layoutX="130.0" layoutY="150.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
+                              <Label layoutX="15.0" layoutY="200.0" prefHeight="17.0" prefWidth="90.0" text="Total Creadit : " />
+                              <Label fx:id="totalCreaditPayementLabel" layoutX="130.0" layoutY="200.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+
                            </children>
                         </Pane>
                         <LineChart fx:id="turnoverChart" layoutX="394.0" layoutY="25.0" prefHeight="400.0" prefWidth="761.0" style="-fx-border-radius: 10;" title="Progression Du chiffre d'affaire">
@@ -70,11 +84,25 @@
                   </AnchorPane>
             </content>
           </Tab>
+
+            <Tab text="Les Entre">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+                </content>
+            </Tab>
+
+            <Tab text="Les sortée">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+                </content>
+            </Tab>
           <Tab text="Statistiques">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
             </content>
           </Tab>
+
+
         </tabs>
       </TabPane>
 

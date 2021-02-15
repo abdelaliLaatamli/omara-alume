@@ -13,5 +13,6 @@ public class TurnoverByMonth {
 
     private String month;
     private double turnover ;
+    private double charge ;
 
 }

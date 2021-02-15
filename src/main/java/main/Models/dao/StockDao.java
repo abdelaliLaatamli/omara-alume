@@ -325,11 +325,19 @@ public class StockDao {
 
     public List<TurnoverByMonth> getTurnoverByMonth() {
 
+//        String [] months = {
+//                "January", "February", "March",
+//                "April","May","June",
+//                "July", "August", "September",
+//                "October",  "November", "December"
+//        };
+
+
         String [] months = {
-                "January", "February", "March",
-                "April","May","June",
-                "July", "August", "September",
-                "October",  "November", "December"
+                "Janvier", "Février", "Mars",
+                "Avril","Mai","Juin",
+                "Juillet", "Août", "Septembre",
+                "Octobre",  "Novembre", "Décembre"
         };
 
         Transaction transaction = null;
@@ -337,10 +345,17 @@ public class StockDao {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
+//
+//            List<Object[]> rows = session.createSQLQuery(
+//                    "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth " +
+//                            "from order_items as oi , orders as o WHERE oi.order_id=o.id GROUP BY month(o.orderDate)")
+//                    .list();
 
             List<Object[]> rows = session.createSQLQuery(
-                    "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth " +
-                            "from order_items as oi , orders as o WHERE oi.order_id=o.id GROUP BY month(o.orderDate)")
+                    "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth , " +
+                            " (SELECT round( ifnull( sum( st.priceOfBuy * st.quantity ) , 0 ) , 2 )   FROM stock_items as st , stock as s WHERE st.stock_Id=s.Id and " +
+                            " EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM o.orderDate )) as charge_month" +
+                            " from order_items as oi , orders as o WHERE oi.order_id=o.id GROUP BY month(o.orderDate)")
                     .list();
 
 
@@ -351,6 +366,7 @@ public class StockDao {
                 int number = (Integer) row[0] ;
                 turnoverByMonth.setMonth( months[number-1] );
                 turnoverByMonth.setTurnover( (Double) row[1] );
+                turnoverByMonth.setCharge( (Double) row[2] );
                 listTurnoverByMonth.add( turnoverByMonth ) ;
             }
 
