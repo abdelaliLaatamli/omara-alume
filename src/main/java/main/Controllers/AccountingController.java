@@ -10,7 +10,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Services.StockService;
@@ -41,7 +43,7 @@ public class AccountingController implements Initializable {
     @FXML Label globalBuyinglbl;
 
 
-    @FXML LineChart turnoverChart ;
+    @FXML LineChart<CategoryAxis , NumberAxis> turnoverChart ;
     @FXML CategoryAxis chartX ;
     @FXML NumberAxis chartY;
 
@@ -55,19 +57,37 @@ public class AccountingController implements Initializable {
         XYChart.Series seriesTurnover = new XYChart.Series();
         seriesTurnover.setName("Chiffre d'affaire par mois");
 
-        XYChart.Series seriesSharges = new XYChart.Series();
-        seriesSharges.setName("Les Charrges par mois");
+        XYChart.Series seriesCharges = new XYChart.Series();
+        seriesCharges.setName("Les Charges par mois");
 
         chartY.setLabel("Montant en DH");
         chartX.setLabel("les Mois");
 
         for( TurnoverByMonth turnoverByMonth : turnoverByMonths ){
+
             seriesTurnover.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getTurnover()) );
-            seriesSharges.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getCharge()) );
+            seriesCharges.getData().add(new XYChart.Data( turnoverByMonth.getMonth() , turnoverByMonth.getCharge()) );
+
         }
 
-        turnoverChart.getData().addAll(seriesTurnover , seriesSharges);
-//        turnoverChart.getData().addAll(seriesSharges);
+
+
+        turnoverChart.getData().addAll(seriesTurnover , seriesCharges);
+
+
+        for (Object entry : seriesTurnover.getData()) {
+            XYChart.Data item = ( XYChart.Data)entry;
+            Tooltip t = new Tooltip(  "Chiffre d'affaire De "  + item.getXValue().toString() + " : " +  item.getYValue().toString() + " DH ");
+            t.setFont( new Font(16) );
+            Tooltip.install(item.getNode(), t );
+        }
+
+        for (Object entry : seriesCharges.getData()) {
+            XYChart.Data item = ( XYChart.Data)entry;
+            Tooltip t = new Tooltip(  "Les Charges De "  + item.getXValue().toString() + " : " +  item.getYValue().toString() + " DH ");
+            t.setFont( new Font(16) );
+            Tooltip.install(item.getNode(), t );
+        }
 
     }
 
