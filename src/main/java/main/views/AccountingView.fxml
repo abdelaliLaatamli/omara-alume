@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AccountingController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AccountingController">
 
     <children>
 
@@ -90,15 +90,18 @@
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;">
                      <children>
-                        <TableView layoutX="14.0" layoutY="57.0" prefHeight="536.0" prefWidth="530.0">
+                        <TableView fx:id="tableEntreeArticle" layoutX="14.0" layoutY="57.0" prefHeight="536.0" prefWidth="573.0">
                           <columns>
-                            <TableColumn prefWidth="105.0" text="C1" />
-                            <TableColumn prefWidth="107.0" text="C2" />
-                              <TableColumn prefWidth="106.0" text="Column X" />
-                              <TableColumn prefWidth="108.0" text="Column X" />
-                              <TableColumn prefWidth="103.0" text="Column X" />
+                              <TableColumn fx:id="procutNameClmn" prefWidth="105.0" text="Produit" />
+                              <TableColumn fx:id="priceOfBuyingClmn" text="prix d'achat" />
+                              <TableColumn fx:id="productQuentityClmn" prefWidth="74.0" text="Quentité" />
+                              <TableColumn fx:id="dateOfImporteClmn" prefWidth="108.0" text="Date Importation" />
+                              <TableColumn fx:id="lblCommandClmn" prefWidth="109.0" text="Label Command" />
+                              <TableColumn fx:id="providerClmn" prefWidth="96.0" text="Fournisseur" />
                           </columns>
                         </TableView>
+                        <Label layoutX="14.0" layoutY="26.0" text="Mois :" />
+                        <ComboBox fx:id="comboChooseMonth" layoutX="56.0" layoutY="22.0" prefHeight="25.0" prefWidth="150.0" />
                      </children></AnchorPane>
                 </content>
             </Tab>

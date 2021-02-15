@@ -1,5 +1,8 @@
 package main.Controllers;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -9,13 +12,15 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+import main.Models.entities.OrderEntity;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.ProductEnter;
 import main.Models.entities.queryContainers.TurnoverByMonth;
+import main.Models.enums.MonthsOfYear;
 import main.Services.StockService;
 
 import java.io.IOException;
@@ -24,9 +29,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AccountingController implements Initializable {
 
@@ -50,6 +55,21 @@ public class AccountingController implements Initializable {
     @FXML CategoryAxis chartX ;
     @FXML NumberAxis chartY;
 
+
+//    ----------------------- TAB Entree -----------------------------------
+
+    @FXML ComboBox <MonthsOfYear> comboChooseMonth;
+
+    @FXML TableView<ProductEnter> tableEntreeArticle ;
+    @FXML TableColumn<ProductEnter ,String> procutNameClmn;
+    @FXML TableColumn<ProductEnter ,String> priceOfBuyingClmn;
+    @FXML TableColumn<ProductEnter ,String> productQuentityClmn;
+    @FXML TableColumn<ProductEnter ,String> dateOfImporteClmn;
+    @FXML TableColumn<ProductEnter ,String> lblCommandClmn ;
+    @FXML TableColumn<ProductEnter ,String> providerClmn;
+
+    ObservableList<ProductEnter> observableProductEnter = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -57,10 +77,51 @@ public class AccountingController implements Initializable {
 
         rempplaireChart();
 
-        List<ProductEnter> productsEnter = stockService.getProductsEnter( LocalDate.now().getMonthValue() );
+        fillTableEntrees( LocalDate.now().getMonthValue() );
 
-        System.out.println( productsEnter.size() );
+        Map<Integer, MonthsOfYear> months = Stream.of(new Object[][] {
+                { 1 , MonthsOfYear.JANUARY },
+                { 2 , MonthsOfYear.FEBRUARY },
+                { 3 , MonthsOfYear.MARCH },
+                { 4 , MonthsOfYear.APRIL },
+                { 5 , MonthsOfYear.MAY },
+                { 6 , MonthsOfYear.JUNE },
+                { 7 , MonthsOfYear.JULY },
+                { 8 , MonthsOfYear.AUGUST },
+                { 9 , MonthsOfYear.SEPTEMBER },
+                { 10 , MonthsOfYear.OCTOBER },
+                { 11 , MonthsOfYear.NOVEMBER },
+                { 12 , MonthsOfYear.DECEMBER }
+        }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (MonthsOfYear) data[1]));
 
+        comboChooseMonth.setItems( FXCollections.observableArrayList( MonthsOfYear.values() ) );
+        comboChooseMonth.getSelectionModel().select( months.get( LocalDate.now().getMonthValue() ) );
+        comboChooseMonth.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+            // System.out.println( newValue.getValue() );
+            fillTableEntrees( newValue.getValue() );
+        } );
+
+    }
+
+    private void fillTableEntrees( int month  ) {
+
+        List<ProductEnter> productsEnter = stockService.getProductsEnter( month );
+
+        observableProductEnter.clear();
+        observableProductEnter.addAll( productsEnter );
+
+        procutNameClmn.setCellValueFactory( new PropertyValueFactory<>("productName") );
+        priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
+        productQuentityClmn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+        dateOfImporteClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
+        ));
+        lblCommandClmn.setCellValueFactory( new PropertyValueFactory<>("factureLabel") );
+
+        providerClmn.setCellValueFactory( new PropertyValueFactory<>("articleName") );
+
+
+        tableEntreeArticle.setItems(observableProductEnter);
     }
 
     private void rempplaireChart() {

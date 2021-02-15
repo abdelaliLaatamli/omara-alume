@@ -350,42 +350,26 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-//            List<Object[]> rows = session.createSQLQuery(
-//                    " SELECT " +
-//                            "    round( si.priceOfBuy , 2 ) as priceOfBuy , " +
-//                            "    round( si.quantity , 2 ) as quantity  , " +
-//                            "    s.importedAt as date_importation , " +
-//                            "    s.name as facture_label ,  " +
-//                            "    p.name as product_name " +
-//                            " FROM  " +
-//                            "    stock_items as si , " +
-//                            "    stock as s , " +
-//                            "    providers as p " +
-//                            " WHERE " +
-//                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = 2 and " +
-//                            "    si.stock_Id=s.Id and " +
-//                            "    s.provider_id = p.id "
-//                            )
-//                    .list();
-
             List<Object[]> rows = session.createSQLQuery(
                     " SELECT " +
-                            "    a.name as product_name ," +
+                            "    a.name as product_name , " +
                             "    round( si.priceOfBuy , 2 ) as priceOfBuy , " +
                             "    round( si.quantity , 2 ) as quantity  , " +
                             "    s.importedAt as date_importation , " +
                             "    s.name as facture_label ,  " +
-                            "    p.name as product_name " +
+                            "    p.name as provider_name " +
                             " FROM  " +
                             "    stock_items as si , " +
                             "    stock as s , " +
                             "    providers as p , " +
                             "    articles as a " +
                             " WHERE " +
-                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = 2 and " +
+                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = :month and " +
                             "    si.stock_Id=s.Id and " +
                             "    s.provider_id = p.id and " +
-                            "    si.article_id=a.id")
+                            "    si.article_id=a.id "
+                            )
+                    .setParameter( "month" , month )
                     .list();
 
 
