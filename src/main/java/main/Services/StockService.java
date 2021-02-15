@@ -3,10 +3,7 @@ package main.Services;
 import main.Models.dao.StockDao;
 import main.Models.dao.StockItemsDao;
 import main.Models.entities.StockEntity;
-import main.Models.entities.queryContainers.MoneyStatus;
-import main.Models.entities.queryContainers.MovementArticle;
-import main.Models.entities.queryContainers.StockItemStatus;
-import main.Models.entities.queryContainers.TurnoverByMonth;
+import main.Models.entities.queryContainers.*;
 
 import java.util.List;
 
@@ -70,5 +67,10 @@ public class StockService {
     public List<TurnoverByMonth> getTurnoverByMonth() {
         List<TurnoverByMonth> getTurnoverByMonth = stockDao.getTurnoverByMonth();
         return getTurnoverByMonth ;
+    }
+
+    public List<ProductEnter> getProductsEnter(int month){
+        List<ProductEnter> listProductEnter =  stockDao.getProductsEnter(month);
+        return listProductEnter;
     }
 }

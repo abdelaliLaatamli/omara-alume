@@ -88,7 +88,18 @@
 
             <Tab text="Les Entre">
                 <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                     <children>
+                        <TableView layoutX="14.0" layoutY="57.0" prefHeight="536.0" prefWidth="530.0">
+                          <columns>
+                            <TableColumn prefWidth="105.0" text="C1" />
+                            <TableColumn prefWidth="107.0" text="C2" />
+                              <TableColumn prefWidth="106.0" text="Column X" />
+                              <TableColumn prefWidth="108.0" text="Column X" />
+                              <TableColumn prefWidth="103.0" text="Column X" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
                 </content>
             </Tab>
 

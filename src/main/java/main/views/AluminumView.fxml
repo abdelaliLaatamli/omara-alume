@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AluminumController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.AluminumController">
 
     <children>
         <HBox layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="150.0">
@@ -24,9 +24,9 @@
 
         <TableView fx:id="tableViewOfAlumProducts" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
             <columns>
-                <TableColumn fx:id="productName" prefWidth="254.0" text="Nom de produit" />
-                <TableColumn fx:id="productColor" prefWidth="137.0" text="Color" />
-                <TableColumn fx:id="productCountryManufacture" prefWidth="97.0" text="Faite par" />
+                <TableColumn fx:id="productName" prefWidth="233.0" text="Nom de produit" />
+                <TableColumn fx:id="productColor" prefWidth="125.0" text="Color" />
+                <TableColumn fx:id="productCountryManufacture" prefWidth="130.0" text="Fabriqué en(Made in)" />
                 <TableColumn fx:id="productCreationDate" minWidth="0.0" prefWidth="121.0" text="Date de Creation" />
                 <TableColumn fx:id="productSellingPrice" prefWidth="110.0" text="Prix de vente" />
                 <TableColumn fx:id="productEdit" prefWidth="110.0" text="Edit Product" />

@@ -14,14 +14,17 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import main.Models.entities.queryContainers.MoneyStatus;
+import main.Models.entities.queryContainers.ProductEnter;
 import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Services.StockService;
 
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -52,6 +55,15 @@ public class AccountingController implements Initializable {
 
         loadAccountingLabels();
 
+        rempplaireChart();
+
+        List<ProductEnter> productsEnter = stockService.getProductsEnter( LocalDate.now().getMonthValue() );
+
+        System.out.println( productsEnter.size() );
+
+    }
+
+    private void rempplaireChart() {
         List<TurnoverByMonth> turnoverByMonths = stockService.getTurnoverByMonth();
 
         XYChart.Series seriesTurnover = new XYChart.Series();
@@ -71,7 +83,6 @@ public class AccountingController implements Initializable {
         }
 
 
-
         turnoverChart.getData().addAll(seriesTurnover , seriesCharges);
 
 
@@ -88,7 +99,6 @@ public class AccountingController implements Initializable {
             t.setFont( new Font(16) );
             Tooltip.install(item.getNode(), t );
         }
-
     }
 
     private void loadAccountingLabels() {

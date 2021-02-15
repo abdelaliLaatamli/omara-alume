@@ -3,16 +3,12 @@ package main.Models.dao;
 import main.Models.entities.ArticleEntity;
 import main.Models.entities.StockEntity;
 import main.Models.entities.StockItemsEntity;
-import main.Models.entities.queryContainers.MoneyStatus;
-import main.Models.entities.queryContainers.MovementArticle;
-import main.Models.entities.queryContainers.StockItemStatus;
-import main.Models.entities.queryContainers.TurnoverByMonth;
+import main.Models.entities.queryContainers.*;
 import main.Models.utils.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,12 +16,6 @@ import java.util.Set;
 
 public class StockDao {
 
-
-    /**
-     * Save User
-     * @param entity
-     * @return
-     */
     public StockEntity save(StockEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -55,11 +45,7 @@ public class StockDao {
         return entity;
     }
 
-    /**
-     * Update User
-     * @param entity
-     * @return
-     */
+
     public StockEntity updateEntity(StockEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -109,10 +95,6 @@ public class StockDao {
         return true;
     }
 
-    /**
-     * Delete User
-     * @param id
-     */
     public void delete(int id) {
 
         Transaction transaction = null;
@@ -137,11 +119,6 @@ public class StockDao {
         }
     }
 
-    /**
-     * Get User By ID
-     * @param id
-     * @return
-     */
     public StockEntity get(int id) {
 
         Transaction transaction = null;
@@ -162,11 +139,7 @@ public class StockDao {
         return entity;
     }
 
-    /**
-     * Get all Users
-     * @return
-     */
-    @SuppressWarnings("unchecked")
+
     public List< StockEntity > getAll() {
 
         Transaction transaction = null;
@@ -325,14 +298,6 @@ public class StockDao {
 
     public List<TurnoverByMonth> getTurnoverByMonth() {
 
-//        String [] months = {
-//                "January", "February", "March",
-//                "April","May","June",
-//                "July", "August", "September",
-//                "October",  "November", "December"
-//        };
-
-
         String [] months = {
                 "Janvier", "Février", "Mars",
                 "Avril","Mai","Juin",
@@ -345,11 +310,6 @@ public class StockDao {
             // start a transaction
             transaction = session.beginTransaction();
             // get an user object
-//
-//            List<Object[]> rows = session.createSQLQuery(
-//                    "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth " +
-//                            "from order_items as oi , orders as o WHERE oi.order_id=o.id GROUP BY month(o.orderDate)")
-//                    .list();
 
             List<Object[]> rows = session.createSQLQuery(
                     "SELECT month(o.orderDate) month_ofYear , round( sum(oi.price*oi.quantity) , 2 ) as chiffremonth , " +
@@ -378,7 +338,79 @@ public class StockDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            return new ArrayList<TurnoverByMonth>() ;
+            return new ArrayList<>() ;
+        }
+    }
+
+    public List<ProductEnter> getProductsEnter(int month) {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+//            List<Object[]> rows = session.createSQLQuery(
+//                    " SELECT " +
+//                            "    round( si.priceOfBuy , 2 ) as priceOfBuy , " +
+//                            "    round( si.quantity , 2 ) as quantity  , " +
+//                            "    s.importedAt as date_importation , " +
+//                            "    s.name as facture_label ,  " +
+//                            "    p.name as product_name " +
+//                            " FROM  " +
+//                            "    stock_items as si , " +
+//                            "    stock as s , " +
+//                            "    providers as p " +
+//                            " WHERE " +
+//                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = 2 and " +
+//                            "    si.stock_Id=s.Id and " +
+//                            "    s.provider_id = p.id "
+//                            )
+//                    .list();
+
+            List<Object[]> rows = session.createSQLQuery(
+                    " SELECT " +
+                            "    a.name as product_name ," +
+                            "    round( si.priceOfBuy , 2 ) as priceOfBuy , " +
+                            "    round( si.quantity , 2 ) as quantity  , " +
+                            "    s.importedAt as date_importation , " +
+                            "    s.name as facture_label ,  " +
+                            "    p.name as product_name " +
+                            " FROM  " +
+                            "    stock_items as si , " +
+                            "    stock as s , " +
+                            "    providers as p , " +
+                            "    articles as a " +
+                            " WHERE " +
+                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = 2 and " +
+                            "    si.stock_Id=s.Id and " +
+                            "    s.provider_id = p.id and " +
+                            "    si.article_id=a.id")
+                    .list();
+
+
+            List<ProductEnter> listProductEnter = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                ProductEnter productEnter = new ProductEnter();
+                productEnter.setProductName( (String) row[0] );
+                productEnter.setPriceOfBuy( (double) row[1] );
+                productEnter.setQuantity( (double) row[2] );
+                productEnter.setDateImportation( ((Timestamp) row[3]).toInstant() );
+                productEnter.setFactureLabel( (String) row[4]);
+                productEnter.setArticleName( (String) row[5]);
+                listProductEnter.add( productEnter ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listProductEnter;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<>() ;
         }
     }
 }
