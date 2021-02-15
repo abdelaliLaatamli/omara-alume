@@ -18,3 +18,4 @@
 - [Guide To Design Database For Inventory Management System In MySQL](https://mysql.tutorials24x7.com/blog/guide-to-design-database-for-inventory-management-system-in-mysql)
 - add senglton to logger file 
 - [Gestion stock facturation devis](https://www.developpez.net/forums/attachments/p302966d1502731376/general-developpement/alm/methodes/merise/gestion-stock-facturation-devis/11.png/)
+- [ JavaFX StackedAreaChart ](http://tutorials.jenkov.com/javafx/stackedareachart.html)
