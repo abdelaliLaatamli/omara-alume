@@ -117,8 +117,9 @@ public class AccountingController implements Initializable {
         searchByNameTextField.textProperty().addListener( (options, oldValue, newValue) -> {
 
             List<ProductEnter> filteredProductsEnter = productsEnter.stream()
-                                .filter( e -> e.getArticleName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ))
+                                .filter( e -> e.getArticle().getName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ))
                                 .collect(Collectors.toList());
+
             fillTableEntrees( filteredProductsEnter );
 
         });
@@ -129,7 +130,11 @@ public class AccountingController implements Initializable {
         observableProductEnter.clear();
         observableProductEnter.addAll( listProductsEnter );
 
-        procutNameClmn.setCellValueFactory( new PropertyValueFactory<>("articleName") );
+        procutNameClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getArticle().getName()
+        ));
+
+
         priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
         productQuentityClmn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
 

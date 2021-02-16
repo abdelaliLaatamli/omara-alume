@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import main.Models.entities.ArticleEntity;
 
 import java.time.Instant;
 
@@ -13,7 +14,7 @@ import java.time.Instant;
 @Getter
 public class ProductEnter {
 
-    private String articleName;
+    private ArticleEntity article;
     private double priceOfBuy;
     private double quantity ;
     private Instant dateImportation;

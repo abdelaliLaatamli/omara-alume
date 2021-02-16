@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -170,7 +171,6 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            //" from main.Models.entities.ArticleEntity A WHERE A.id=:id")
             List<Object[]> rows = session.createQuery("SELECT A , " +
                     "(SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM main.Models.entities.StockItemsEntity as ST WHERE ST.article=A) as inProducts ," +
                     "(SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM main.Models.entities.OrderItemsEntity IO WHERE IO.article=A and IO.order IS NOT NULL) as outProducts " +
@@ -350,37 +350,36 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            List<Object[]> rows = session.createSQLQuery(
+            List<Object[]> rows = session.createQuery(
                     " SELECT " +
-                            "    a.name as product_name , " +
-                            "    round( si.priceOfBuy , 2 ) as priceOfBuy , " +
-                            "    round( si.quantity , 2 ) as quantity  , " +
-                            "    s.importedAt as date_importation , " +
-                            "    s.name as facture_label ,  " +
-                            "    p.name as provider_name " +
+                            "    A , " +
+                            "    round( SI.priceOfBuy , 2 ) as priceOfBuy , " +
+                            "    round( SI.quantity , 2 ) as quantity  , " +
+                            "    S.importedAt , " +
+                            "    S.name ,  " +
+                            "    P.name " +
                             " FROM  " +
-                            "    stock_items as si , " +
-                            "    stock as s , " +
-                            "    providers as p , " +
-                            "    articles as a " +
+                            "    main.Models.entities.StockItemsEntity as SI , " +
+                            "    main.Models.entities.StockEntity as S , " +
+                            "    main.Models.entities.ProviderEntity as P , " +
+                            "    main.Models.entities.ArticleEntity as A " +
                             " WHERE " +
-                            "    year(s.importedAt) = year(now()) and month(s.importedAt) = :month and " +
-                            "    si.stock_Id=s.Id and " +
-                            "    s.provider_id = p.id and " +
-                            "    si.article_id=a.id "
-                            )
+                            "    year(S.importedAt) = year(now()) and month(S.importedAt) = :month and " +
+                            "    SI.stock=S and " +
+                            "    S.provider = P and " +
+                            "    SI.article=A " )
                     .setParameter( "month" , month )
-                    .list();
+                    .getResultList();
 
 
             List<ProductEnter> listProductEnter = new ArrayList<>();
 
             for (Object[] row : rows) {
                 ProductEnter productEnter = new ProductEnter();
-                productEnter.setArticleName( (String) row[0] );
-                productEnter.setPriceOfBuy( (double) row[1] );
-                productEnter.setQuantity( (double) row[2] );
-                productEnter.setDateImportation( ((Timestamp) row[3]).toInstant() );
+                productEnter.setArticle( (ArticleEntity) row[0] );
+                productEnter.setPriceOfBuy( (float) row[1] );
+                productEnter.setQuantity( (float) row[2] );
+                productEnter.setDateImportation( (Instant) row[3] );
                 productEnter.setFactureLabel( (String) row[4]);
                 productEnter.setProviderName( (String) row[5]);
                 listProductEnter.add( productEnter ) ;
