@@ -377,12 +377,12 @@ public class StockDao {
 
             for (Object[] row : rows) {
                 ProductEnter productEnter = new ProductEnter();
-                productEnter.setProductName( (String) row[0] );
+                productEnter.setArticleName( (String) row[0] );
                 productEnter.setPriceOfBuy( (double) row[1] );
                 productEnter.setQuantity( (double) row[2] );
                 productEnter.setDateImportation( ((Timestamp) row[3]).toInstant() );
                 productEnter.setFactureLabel( (String) row[4]);
-                productEnter.setArticleName( (String) row[5]);
+                productEnter.setProviderName( (String) row[5]);
                 listProductEnter.add( productEnter ) ;
             }
 

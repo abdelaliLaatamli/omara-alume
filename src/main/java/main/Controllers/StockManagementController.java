@@ -53,7 +53,7 @@ public class StockManagementController implements Initializable {
 
     ObservableList<MovementArticle> observableMovement = FXCollections.observableArrayList();
 
-    List<StockItemStatus> listStockItemStatus = new ArrayList<StockItemStatus>();
+    List<StockItemStatus> listStockItemStatus = new ArrayList<>();
 
 
     @Override

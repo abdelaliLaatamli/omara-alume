@@ -19,8 +19,10 @@ import javafx.scene.text.Font;
 import main.Models.entities.OrderEntity;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.ProductEnter;
+import main.Models.entities.queryContainers.StockItemStatus;
 import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Models.enums.MonthsOfYear;
+import main.Models.enums.StockSearchProduct;
 import main.Services.StockService;
 
 import java.io.IOException;
@@ -59,6 +61,7 @@ public class AccountingController implements Initializable {
 //    ----------------------- TAB Entree -----------------------------------
 
     @FXML ComboBox <MonthsOfYear> comboChooseMonth;
+    @FXML TextField searchByNameTextField;
 
     @FXML TableView<ProductEnter> tableEntreeArticle ;
     @FXML TableColumn<ProductEnter ,String> procutNameClmn;
@@ -70,14 +73,22 @@ public class AccountingController implements Initializable {
 
     ObservableList<ProductEnter> observableProductEnter = FXCollections.observableArrayList();
 
+    List<ProductEnter> productsEnter = new ArrayList<>();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         loadAccountingLabels();
-
         rempplaireChart();
 
-        fillTableEntrees( LocalDate.now().getMonthValue() );
+        fillEntreeTab();
+
+    }
+
+    private void fillEntreeTab() {
+        productsEnter = stockService.getProductsEnter( LocalDate.now().getMonthValue() );
+
+        fillTableEntrees( productsEnter );
 
         Map<Integer, MonthsOfYear> months = Stream.of(new Object[][] {
                 { 1 , MonthsOfYear.JANUARY },
@@ -97,28 +108,38 @@ public class AccountingController implements Initializable {
         comboChooseMonth.setItems( FXCollections.observableArrayList( MonthsOfYear.values() ) );
         comboChooseMonth.getSelectionModel().select( months.get( LocalDate.now().getMonthValue() ) );
         comboChooseMonth.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
-            // System.out.println( newValue.getValue() );
-            fillTableEntrees( newValue.getValue() );
+
+            productsEnter = stockService.getProductsEnter( newValue.getValue() );
+            fillTableEntrees( productsEnter );
+
         } );
 
+        searchByNameTextField.textProperty().addListener( (options, oldValue, newValue) -> {
+
+            List<ProductEnter> filteredProductsEnter = productsEnter.stream()
+                                .filter( e -> e.getArticleName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ))
+                                .collect(Collectors.toList());
+            fillTableEntrees( filteredProductsEnter );
+
+        });
     }
 
-    private void fillTableEntrees( int month  ) {
-
-        List<ProductEnter> productsEnter = stockService.getProductsEnter( month );
+    private void fillTableEntrees( List<ProductEnter> listProductsEnter    ) {
 
         observableProductEnter.clear();
-        observableProductEnter.addAll( productsEnter );
+        observableProductEnter.addAll( listProductsEnter );
 
-        procutNameClmn.setCellValueFactory( new PropertyValueFactory<>("productName") );
+        procutNameClmn.setCellValueFactory( new PropertyValueFactory<>("articleName") );
         priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
         productQuentityClmn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+
         dateOfImporteClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
         ));
+
         lblCommandClmn.setCellValueFactory( new PropertyValueFactory<>("factureLabel") );
 
-        providerClmn.setCellValueFactory( new PropertyValueFactory<>("articleName") );
+        providerClmn.setCellValueFactory( new PropertyValueFactory<>("providerName") );
 
 
         tableEntreeArticle.setItems(observableProductEnter);

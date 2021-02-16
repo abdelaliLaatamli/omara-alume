@@ -13,11 +13,11 @@ import java.time.Instant;
 @Getter
 public class ProductEnter {
 
-    private String productName;
+    private String articleName;
     private double priceOfBuy;
     private double quantity ;
     private Instant dateImportation;
     private String factureLabel;
-    private String articleName ;
+    private String providerName ;
 
 }
