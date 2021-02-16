@@ -70,6 +70,8 @@ public class AccountingController implements Initializable {
     @FXML TableColumn<ProductEnter ,String> dateOfImporteClmn;
     @FXML TableColumn<ProductEnter ,String> lblCommandClmn ;
     @FXML TableColumn<ProductEnter ,String> providerClmn;
+    @FXML TableColumn<ProductEnter ,String> productTypeClmn;
+
 
     ObservableList<ProductEnter> observableProductEnter = FXCollections.observableArrayList();
 
@@ -134,6 +136,9 @@ public class AccountingController implements Initializable {
                 cellData.getValue().getArticle().getName()
         ));
 
+        productTypeClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getArticle().getType()
+        ));
 
         priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
         productQuentityClmn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
