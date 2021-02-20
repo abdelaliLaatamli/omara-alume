@@ -37,6 +37,9 @@ public class ClientEntity implements Serializable {
     @Column(nullable = true)
     protected String address;
 
+    @Column(nullable = true)
+    protected double oldCredit = 0;
+
     @Column
     protected Instant createdAt = Instant.now() ;
 

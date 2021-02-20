@@ -4,17 +4,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.ClientController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.ClientController">
    <children>
       <TableView fx:id="listClients" layoutX="360.0" layoutY="11.0" prefHeight="679.0" prefWidth="830.0">
         <columns>
           <TableColumn fx:id="clientName" prefWidth="115.0" text="Client" />
-          <TableColumn fx:id="clientTele" prefWidth="110.0" text="Tele" />
+          <TableColumn fx:id="clientTele" prefWidth="110.0" text="Telephone" />
             <TableColumn fx:id="clientCin" prefWidth="89.0" text="CIN" />
-            <TableColumn fx:id="clientAddress" prefWidth="227.0" text="Address" />
-            <TableColumn fx:id="clientCreationDate" minWidth="0.0" prefWidth="108.0" text="Date de Creation  " />
-            <TableColumn fx:id="clientNumberCommand" prefWidth="89.0" text="N° Commands" />
-            <TableColumn fx:id="clientEdit" prefWidth="91.0" text="Edit Client" />
+            <TableColumn fx:id="clientAddress" prefWidth="123.0" text="Address" />
+            <TableColumn fx:id="clientCreationDate" minWidth="0.0" prefWidth="115.0" text="Date de Création" />
+            <TableColumn fx:id="clientNumberCommand" prefWidth="48.0" text="N° C" />
+            <TableColumn prefWidth="79.0" text="ancien crédit" />
+            <TableColumn prefWidth="85.0" text="Credit Total" />
+            <TableColumn fx:id="clientEdit" prefWidth="65.0" text="Modifier" />
         </columns>
       </TableView>
       <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#goToHome" prefHeight="40.0" prefWidth="140.0" text="Accueil">
@@ -25,18 +27,16 @@
       <AnchorPane layoutX="14.0" layoutY="78.0" prefHeight="612.0" prefWidth="340.0" style="-fx-background-color: white;">
          <children>
             <Label layoutX="14.0" layoutY="90.0" prefHeight="17.0" prefWidth="96.0" text="Nom de Client * : " />
-            <TextField layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" fx:id="nameClientForm" />
+            <TextField fx:id="nameClientForm" layoutX="14.0" layoutY="107.0" prefHeight="25.0" prefWidth="310.0" />
             <Label layoutX="14.0" layoutY="152.0" prefHeight="17.0" prefWidth="127.0" text="Tele : " />
-            <TextField layoutX="14.0" layoutY="169.0" prefHeight="25.0" prefWidth="310.0" fx:id="teleClientForm" />
+            <TextField fx:id="teleClientForm" layoutX="14.0" layoutY="169.0" prefHeight="25.0" prefWidth="310.0" />
             <Label layoutX="14.0" layoutY="217.0" prefHeight="17.0" prefWidth="127.0" text="Cin :" />
-            <TextField layoutX="14.0" layoutY="234.0" prefHeight="25.0" prefWidth="310.0" fx:id="cinClientForm" />
+            <TextField fx:id="cinClientForm" layoutX="14.0" layoutY="234.0" prefHeight="25.0" prefWidth="310.0" />
             <Label layoutX="14.0" layoutY="283.0" prefHeight="17.0" prefWidth="127.0" text="Address :" />
-            <TextField layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" fx:id="addressClientForm" />
+            <TextField fx:id="addressClientForm" layoutX="14.0" layoutY="306.0" prefHeight="25.0" prefWidth="310.0" />
             <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="127.0" text="ID :" />
             <TextField fx:id="idClientForm" disable="true" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="310.0" />
-            <Button layoutX="14.0" layoutY="358.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="127.0" text="Enregistrer"
-                onMouseClicked="#saveClientForm"
-            />
+            <Button layoutX="14.0" layoutY="358.0" mnemonicParsing="false" onMouseClicked="#saveClientForm" prefHeight="25.0" prefWidth="127.0" text="Enregistrer" />
          </children>
       </AnchorPane>
    </children>
