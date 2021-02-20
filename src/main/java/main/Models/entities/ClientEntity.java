@@ -50,7 +50,7 @@ public class ClientEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn( name = "client_id")
-    protected Set<OrderEntity> commands;
+    protected Set<OrderEntity> orders;
 
     @Override
     public String toString(){

@@ -5,6 +5,7 @@ import main.Models.dao.ClientDao;
 import main.Models.entities.AluminumEntity;
 import main.Models.entities.ClientEntity;
 import main.Models.entities.PriceEntity;
+import main.Models.entities.queryContainers.ClientCredit;
 
 import java.util.List;
 
@@ -21,10 +22,6 @@ public class ClientServices {
     }
 
     public boolean addClient(ClientEntity entity){
-
-//        ClientEntity newClient = clientDao.saveClient( entity);
-//
-//        return newClient != null ;
 
         boolean saved = clientDao.save( entity);
 
@@ -52,4 +49,14 @@ public class ClientServices {
 
         return client;
     }
+
+
+
+    public List<ClientCredit> getAllWithCredit() {
+
+        List<ClientCredit>  clients = clientDao.getAllWithCredit(  );
+
+        return clients;
+    }
+
 }

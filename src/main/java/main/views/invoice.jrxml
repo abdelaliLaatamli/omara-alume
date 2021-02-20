@@ -30,7 +30,7 @@
     ( SELECT  ifnull( SUM( `payements_made`.`amountPaid`) , 0 ) FROM `payements_made` WHERE `order_id` = orders.`id` and payements_made.payementMethod = 1) as paid_cheque ,
     ( SELECT
 		(SELECT ROUND( ifnull( SUM( `order_items`.`quantity` * `order_items`.`price` ) , 0 ) , 2 ) FROM `order_items` WHERE `order_id` in ( SELECT O.id from orders as O WHERE O.client_id = orders.client_id)) -
-		(SELECT ROUND( ifnull( sum( `payements_made`.`amountPaid` ) , 0 ) , 2 ) FROM `payements_made` WHERE `order_id` in (SELECT O.id from orders as O WHERE O.client_id = orders.client_id) ) ) as creditclient
+		(SELECT ROUND( ifnull( sum( `payements_made`.`amountPaid` ) , 0 ) , 2 ) FROM `payements_made` WHERE `order_id` in (SELECT O.id from orders as O WHERE O.client_id = orders.client_id) ) ) + clients.oldCredit as creditclient
 
 FROM
     `order_items` order_items INNER JOIN `orders` orders ON order_items.`order_id` = orders.`id`
