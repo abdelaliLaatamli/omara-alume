@@ -302,22 +302,78 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
+//            Object[] row = (Object[]) session.createSQLQuery(
+//                    "select "+
+//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
+//                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vende_month , " +
+//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
+//                            "    WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , " +
+//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
+//                            "    WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as global_vende , " +
+//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
+//                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat , " +
+//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o " +
+//                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , " +
+//                            "(select vende_month - paid_month ) as creadit_month , " +
+//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm " +
+//                            "    WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
+//                            "( select global_vende - global_paid ) global_creadit ").list().get(0);
+
+
+//            Object[] row = (Object[]) session.createSQLQuery(
+//                    "select " +
+//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi  " +
+//                            "WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vende_month ,  " +
+//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si  " +
+//                            "WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat ,  " +
+//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
+//                            " WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as global_vende ,  " +
+//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
+//                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat ,  " +
+//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o  " +
+//                            "  WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month ,  " +
+//                            "(select vende_month - paid_month ) as creadit_month , " +
+//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm  " +
+//                            "WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
+//                            "( select global_vende - global_paid ) global_creadit , " +
+//                            "( SELECT  " +
+//                            "    round( sum( oi.quantity * ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE " +
+//                            "   si.article_id=oi.article_id LIMIT 1) , oi.price ) ) , 2 ) " +
+//                            "FROM orders as o , order_items as oi  WHERE  " +
+//                            "EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vente_base_price , " +
+//                            "(SELECT round( sum( oi.quantity * " +
+//                            " ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE si.article_id=oi.article_id LIMIT 1) , 0 ) ) , 2 ) " +
+//                            "FROM orders as o , order_items as oi " +
+//                            "        WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as vente_global_price"
+//            ).list().get(0);
+
             Object[] row = (Object[]) session.createSQLQuery(
-                    "select "+
+                    "select " +
+                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi  " +
+                            "WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vende_month ,  " +
+                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si  " +
+                            "WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat ,  " +
                             "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
-                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id ) as vende_month , " +
+                            " WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as global_vende ,  " +
                             "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
-                            "    WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , " +
-                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
-                            "    WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) ) as global_vende , " +
-                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
-                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat , " +
-                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o " +
-                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , " +
+                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat ,  " +
+                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o  " +
+                            "  WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month ,  " +
                             "(select vende_month - paid_month ) as creadit_month , " +
-                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm " +
-                            "    WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
-                            "( select global_vende - global_paid ) global_creadit").list().get(0);
+                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm  " +
+                            "WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
+                            "( select global_vende - global_paid ) global_creadit , " +
+                            "( SELECT  " +
+                            "    round( sum( oi.quantity * ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE " +
+                            "   si.article_id=oi.article_id LIMIT 1) , oi.price ) ) , 2 ) " +
+                            "FROM orders as o , order_items as oi  WHERE  " +
+                            "EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vente_base_price , " +
+                            "(SELECT round( sum( oi.quantity * " +
+                            " ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE si.article_id=oi.article_id LIMIT 1) , oi.price ) ) , 2 ) " +
+                            "FROM orders as o , order_items as oi " +
+                            "        WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as vente_global_price"
+                    ).list().get(0);
+
 
             MoneyStatus moneyStatus = new MoneyStatus();
 
@@ -329,7 +385,8 @@ public class StockDao {
             moneyStatus.setCreditOfMonth( (double) row[5] );
             moneyStatus.setPaymentsGlobal( (double) row[6] );
             moneyStatus.setCreditGlobal( (double) row[7] );
-
+            moneyStatus.setTotalBuyPriceBase( (double) row[8] );
+            moneyStatus.setTotalBuyGlobalBase( (double) row[9] );
 
             // commit transaction
             transaction.commit();
@@ -402,8 +459,8 @@ public class StockDao {
             List<Object[]> rows = session.createQuery(
                     " SELECT " +
                             "    A , " +
-                            "    round( SI.priceOfBuy , 2 ) as priceOfBuy , " +
-                            "    round( SI.quantity , 2 ) as quantity  , " +
+                            "    round( SI.priceOfBuy , 3 ) as priceOfBuy , " +
+                            "    round( SI.quantity , 3 ) as quantity  , " +
                             "    S.importedAt , " +
                             "    S.name ,  " +
                             "    P.name " +
@@ -426,8 +483,8 @@ public class StockDao {
             for (Object[] row : rows) {
                 ProductEnter productEnter = new ProductEnter();
                 productEnter.setArticle( (ArticleEntity) row[0] );
-                productEnter.setPriceOfBuy( (float) row[1] );
-                productEnter.setQuantity( (float) row[2] );
+                productEnter.setPriceOfBuy( (Float) row[1] );
+                productEnter.setQuantity( (Float) row[2] );
                 productEnter.setDateImportation( (Instant) row[3] );
                 productEnter.setFactureLabel( (String) row[4]);
                 productEnter.setProviderName( (String) row[5]);

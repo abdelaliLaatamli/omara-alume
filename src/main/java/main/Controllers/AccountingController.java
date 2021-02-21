@@ -16,13 +16,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
-import main.Models.entities.OrderEntity;
 import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.ProductEnter;
-import main.Models.entities.queryContainers.StockItemStatus;
 import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Models.enums.MonthsOfYear;
-import main.Models.enums.StockSearchProduct;
 import main.Services.StockService;
 
 import java.io.IOException;
@@ -42,15 +39,17 @@ public class AccountingController implements Initializable {
     @FXML Label currentMonthLbl;
     @FXML Label currentYearLbl ;
 
-    @FXML Label totalVenteLbl;
-    @FXML Label totalAchatLbl;
-    @FXML Label totalMonthPayementLbl;
-    @FXML Label totalCreaditPayementLabel;
+    @FXML Label totalSellingLbl;
+    @FXML Label totalBuyingLbl;
+    @FXML Label totalMonthPaymentLbl;
+    @FXML Label totalCreditPaymentLbl;
+    @FXML Label lblBaseBuyMonth ;
 
-    @FXML Label globalPayementLbl;
-    @FXML Label globalCreaditPayementLbl;
-    @FXML Label globalSellinglbl;
-    @FXML Label globalBuyinglbl;
+    @FXML Label globalPaymentLbl;
+    @FXML Label globalCreditPaymentLbl;
+    @FXML Label globalSellingLbl;
+    @FXML Label globalBuyingLbl;
+    @FXML Label lblBaseBuyYear;
 
 
     @FXML LineChart<CategoryAxis , NumberAxis> turnoverChart ;
@@ -64,13 +63,13 @@ public class AccountingController implements Initializable {
     @FXML TextField searchByNameTextField;
 
     @FXML TableView<ProductEnter> tableEntreeArticle ;
-    @FXML TableColumn<ProductEnter ,String> procutNameClmn;
-    @FXML TableColumn<ProductEnter ,String> priceOfBuyingClmn;
-    @FXML TableColumn<ProductEnter ,String> productQuentityClmn;
-    @FXML TableColumn<ProductEnter ,String> dateOfImporteClmn;
-    @FXML TableColumn<ProductEnter ,String> lblCommandClmn ;
-    @FXML TableColumn<ProductEnter ,String> providerClmn;
-    @FXML TableColumn<ProductEnter ,String> productTypeClmn;
+    @FXML TableColumn<ProductEnter ,String> productNameColumn;
+    @FXML TableColumn<ProductEnter ,String> priceOfBuyingColumn;
+    @FXML TableColumn<ProductEnter ,String> productQuantityColumn;
+    @FXML TableColumn<ProductEnter ,String> dateOfImportColumn;
+    @FXML TableColumn<ProductEnter ,String> lblOrderColumn;
+    @FXML TableColumn<ProductEnter ,String> providerColumn;
+    @FXML TableColumn<ProductEnter ,String> productTypeColumn;
 
 
     ObservableList<ProductEnter> observableProductEnter = FXCollections.observableArrayList();
@@ -132,24 +131,25 @@ public class AccountingController implements Initializable {
         observableProductEnter.clear();
         observableProductEnter.addAll( listProductsEnter );
 
-        procutNameClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+        productNameColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 cellData.getValue().getArticle().getName()
         ));
 
-        productTypeClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+        productTypeColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 cellData.getValue().getArticle().getType()
         ));
 
-        priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
-        productQuentityClmn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+//        priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
+        priceOfBuyingColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.3f" , cellData.getValue().getPriceOfBuy() ) ) );
+        productQuantityColumn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
 
-        dateOfImporteClmn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+        dateOfImportColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
         ));
 
-        lblCommandClmn.setCellValueFactory( new PropertyValueFactory<>("factureLabel") );
+        lblOrderColumn.setCellValueFactory( new PropertyValueFactory<>("factureLabel") );
 
-        providerClmn.setCellValueFactory( new PropertyValueFactory<>("providerName") );
+        providerColumn.setCellValueFactory( new PropertyValueFactory<>("providerName") );
 
 
         tableEntreeArticle.setItems(observableProductEnter);
@@ -195,16 +195,21 @@ public class AccountingController implements Initializable {
 
     private void loadAccountingLabels() {
 
-        MoneyStatus moneyStatus = stockService.getMoneyStatus();
-        totalVenteLbl.setText( moneyStatus.getSalesOfMonth() + " DH " );
-        totalAchatLbl.setText( moneyStatus.getPurchaseOfMonth() + " DH ");
-        totalMonthPayementLbl.setText( moneyStatus.getPaymentsOfMonth() + " DH " );
-        totalCreaditPayementLabel.setText( moneyStatus.getCreditOfMonth() + " DH " );
+//        lblBaseBuyMonth
+//        lblBaseBuyYear
 
-        globalPayementLbl.setText( moneyStatus.getPaymentsGlobal() + " DH " );
-        globalCreaditPayementLbl.setText( moneyStatus.getCreditGlobal() + " DH " );
-        globalSellinglbl.setText( moneyStatus.getSalesGlobal() + " DH ");
-        globalBuyinglbl.setText( moneyStatus.getPurchaseGlobal() + " DH " );
+        MoneyStatus moneyStatus = stockService.getMoneyStatus();
+        totalSellingLbl.setText( moneyStatus.getSalesOfMonth() + " DH " );
+        totalBuyingLbl.setText( moneyStatus.getPurchaseOfMonth() + " DH ");
+        totalMonthPaymentLbl.setText( moneyStatus.getPaymentsOfMonth() + " DH " );
+        totalCreditPaymentLbl.setText( moneyStatus.getCreditOfMonth() + " DH " );
+        lblBaseBuyMonth.setText( moneyStatus.getTotalBuyPriceBase() + " DH "  );
+
+        globalPaymentLbl.setText( moneyStatus.getPaymentsGlobal() + " DH " );
+        globalCreditPaymentLbl.setText( moneyStatus.getCreditGlobal() + " DH " );
+        globalSellingLbl.setText( moneyStatus.getSalesGlobal() + " DH ");
+        globalBuyingLbl.setText( moneyStatus.getPurchaseGlobal() + " DH " );
+        lblBaseBuyYear.setText( moneyStatus.getTotalBuyGlobalBase() + " DH "  );
 
         currentMonthLbl.setText(  DateTimeFormatter.ofPattern( "MM/yyyy" ).withZone(ZoneId.systemDefault()).format(  Instant.now() )) ;
         currentYearLbl.setText(  DateTimeFormatter.ofPattern( "yyyy" ).withZone(ZoneId.systemDefault()).format(  Instant.now() )) ;

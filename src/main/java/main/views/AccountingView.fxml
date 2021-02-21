@@ -24,7 +24,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="1180.0" style="-fx-background-color: #fff;">
                      <children>
-                        <Pane layoutX="15.0" layoutY="301.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5px;">
+                        <Pane layoutX="15.0" layoutY="305.0" prefHeight="280.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5px;">
                            <children>
 
                               <Label layoutX="13.0" layoutY="15.0" text="Total Annuel :" />
@@ -36,20 +36,22 @@
 
 
                                <Label layoutX="15.0" layoutY="55.0" text="Global Vente :" />
-                               <Label fx:id="globalSellinglbl" layoutX="130.0" layoutY="55.0" prefWidth="160.0" text="Label" />
+                               <Label fx:id="globalSellingLbl" layoutX="130.0" layoutY="55.0" prefWidth="160.0" text="Label" />
 
                                <Label layoutX="15.0" layoutY="100.0" prefHeight="17.0" prefWidth="100.0" text="Global Payé :" />
-                              <Label fx:id="globalPayementLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                              <Label fx:id="globalPaymentLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
 
                               <Label layoutX="15.0" layoutY="150.0" prefHeight="17.0" prefWidth="100.0" text="Global Creadit :" />
-                              <Label fx:id="globalCreaditPayementLbl" layoutX="130.0" layoutY="150.0" prefHeight="17.0" prefWidth="160.0" text="Label" />
+                              <Label fx:id="globalCreditPaymentLbl" layoutX="130.0" layoutY="150.0" prefHeight="17.0" prefWidth="160.0" text="Label" />
 
                               <Label layoutX="15.0" layoutY="200.0" text="Global Achat :" />
-                              <Label fx:id="globalBuyinglbl" layoutX="130.0" layoutY="200.0" prefWidth="160.0" text="Label" />
+                              <Label fx:id="globalBuyingLbl" layoutX="130.0" layoutY="200.0" prefWidth="160.0" text="Label" />
+                              <Label layoutX="14.0" layoutY="250.0" prefHeight="17.0" prefWidth="114.0" text="Globale Base Vente :" />
+                              <Label fx:id="lblBaseBuyYear" layoutX="130.0" layoutY="250.0" prefWidth="150.0" text="Label" />
 
                            </children>
                         </Pane>
-                        <Pane layoutX="15.0" layoutY="25.0" prefHeight="250.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5;">
+                        <Pane layoutX="15.0" layoutY="15.0" prefHeight="280.0" prefWidth="350.0" style="-fx-border-color: #111; -fx-border-radius: 5;">
                            <children>
 
                               <Label layoutX="13.0" layoutY="15.0" text="Total mensuel :" />
@@ -60,16 +62,18 @@
                               </Label>
 
                               <Label layoutX="15.0" layoutY="55.0" text="Total Vente :" />
-                              <Label fx:id="totalVenteLbl" layoutX="130.0" layoutY="55.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                              <Label fx:id="totalSellingLbl" layoutX="130.0" layoutY="55.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
 
                               <Label layoutX="15.0" layoutY="100.0" prefHeight="17.0" prefWidth="90.0" text="Total Payé :" />
-                              <Label fx:id="totalMonthPayementLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                              <Label fx:id="totalMonthPaymentLbl" layoutX="130.0" layoutY="100.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
 
                               <Label layoutX="15.0" layoutY="150.0" prefHeight="17.0" prefWidth="90.0" text="Total Creadit : " />
-                              <Label fx:id="totalCreaditPayementLabel" layoutX="130.0" layoutY="150.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                              <Label fx:id="totalCreditPaymentLbl" layoutX="130.0" layoutY="150.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
 
                                <Label layoutX="15.0" layoutY="200.0" text="Total Achat :" />
-                               <Label fx:id="totalAchatLbl" layoutX="130.0" layoutY="200.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                               <Label fx:id="totalBuyingLbl" layoutX="130.0" layoutY="200.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
+                              <Label layoutX="14.0" layoutY="249.0" prefHeight="17.0" prefWidth="98.0" text="Total Base Vente :" />
+                              <Label fx:id="lblBaseBuyMonth" layoutX="130.0" layoutY="249.0" prefHeight="17.0" prefWidth="150.0" text="Label" />
 
                            </children>
                         </Pane>
@@ -92,13 +96,13 @@
                      <children>
                         <TableView fx:id="tableEntreeArticle" layoutX="14.0" layoutY="57.0" prefHeight="536.0" prefWidth="700.0">
                           <columns>
-                              <TableColumn fx:id="procutNameClmn" prefWidth="105.0" text="Produit" />
-                              <TableColumn fx:id="priceOfBuyingClmn" text="prix d'achat" />
-                              <TableColumn fx:id="productQuentityClmn" prefWidth="74.0" text="Quentité" />
-                              <TableColumn fx:id="dateOfImporteClmn" prefWidth="108.0" text="Date Importation" />
-                              <TableColumn fx:id="productTypeClmn" prefWidth="100.0" text="Product Type" />
-                              <TableColumn fx:id="lblCommandClmn" prefWidth="109.0" text="Label Command" />
-                              <TableColumn fx:id="providerClmn" prefWidth="123.0" text="Fournisseur" />
+                              <TableColumn fx:id="productNameColumn" prefWidth="105.0" text="Produit" />
+                              <TableColumn fx:id="priceOfBuyingColumn" text="prix d'achat" />
+                              <TableColumn fx:id="productQuantityColumn" prefWidth="74.0" text="Quentité" />
+                              <TableColumn fx:id="dateOfImportColumn" prefWidth="108.0" text="Date Importation" />
+                              <TableColumn fx:id="productTypeColumn" prefWidth="100.0" text="Product Type" />
+                              <TableColumn fx:id="lblOrderColumn" prefWidth="109.0" text="Label Command" />
+                              <TableColumn fx:id="providerColumn" prefWidth="123.0" text="Fournisseur" />
                           </columns>
                         </TableView>
                         <Label layoutX="14.0" layoutY="26.0" text="Mois :" />

@@ -20,5 +20,7 @@ public class MoneyStatus {
     private double creditOfMonth;
     private double paymentsGlobal;
     private double creditGlobal;
+    private double totalBuyPriceBase;
+    private double totalBuyGlobalBase;
 
 }
