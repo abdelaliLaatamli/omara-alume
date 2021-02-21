@@ -502,4 +502,81 @@ public class StockDao {
             return new ArrayList<>() ;
         }
     }
+
+
+    public List<ProductEnter> getProductsOut(int month) {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+//            List<Object[]> rows = session.createQuery(
+//                    " SELECT " +
+//                            "    A , " +
+//                            "    round( SI.priceOfBuy , 3 ) as priceOfBuy , " +
+//                            "    round( SI.quantity , 3 ) as quantity  , " +
+//                            "    S.importedAt , " +
+//                            "    S.name ,  " +
+//                            "    P.name " +
+//                            " FROM  " +
+//                            "    main.Models.entities.StockItemsEntity as SI , " +
+//                            "    main.Models.entities.StockEntity as S , " +
+//                            "    main.Models.entities.ProviderEntity as P , " +
+//                            "    main.Models.entities.ArticleEntity as A " +
+//                            " WHERE " +
+//                            "    year(S.importedAt) = year(now()) and month(S.importedAt) = :month and " +
+//                            "    SI.stock=S and " +
+//                            "    S.provider = P and " +
+//                            "    SI.article=A " )
+//                    .setParameter( "month" , month )
+//                    .getResultList();
+
+            List<Object[]> rows = session.createQuery(
+                         " SELECT " +
+                            "    A , " +
+                            "    round( OI.price , 2 ) as priceOfBuy , " +
+                            "    round( OI.quantity , 2 ) as quantity  , " +
+                            "    O.orderDate , " +
+                            "    O.id , " +
+                            "    C.name " +
+                            " FROM " +
+                            "     main.Models.entities.OrderItemsEntity as OI , " +
+                            "     main.Models.entities.OrderEntity as O , " +
+                            "     main.Models.entities.ClientEntity as C , " +
+                            "     main.Models.entities.ArticleEntity as A " +
+                            " WHERE  " +
+                            "     year(O.orderDate) = year(now()) and month(O.orderDate) = :month and " +
+                            "     OI.order=O and " +
+                            "     O.client=C and " +
+                            "     OI.article=A " )
+                    .setParameter( "month" , month )
+                    .getResultList();
+
+
+            List<ProductEnter> listProductEnter = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                ProductEnter productEnter = new ProductEnter();
+                productEnter.setArticle( (ArticleEntity) row[0] );
+                productEnter.setPriceOfBuy( (Float) row[1] );
+                productEnter.setQuantity( (Float) row[2] );
+                productEnter.setDateImportation( (Instant) row[3] );
+                productEnter.setFactureLabel( (Integer) row[4] + "");
+                productEnter.setProviderName( (String) row[5]);
+                listProductEnter.add( productEnter ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listProductEnter;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<>() ;
+        }
+    }
 }

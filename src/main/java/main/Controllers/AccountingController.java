@@ -20,6 +20,7 @@ import main.Models.entities.queryContainers.MoneyStatus;
 import main.Models.entities.queryContainers.ProductEnter;
 import main.Models.entities.queryContainers.TurnoverByMonth;
 import main.Models.enums.MonthsOfYear;
+import main.Models.enums.StockSearchProduct;
 import main.Services.StockService;
 
 import java.io.IOException;
@@ -71,47 +72,137 @@ public class AccountingController implements Initializable {
     @FXML TableColumn<ProductEnter ,String> providerColumn;
     @FXML TableColumn<ProductEnter ,String> productTypeColumn;
 
+    @FXML ComboBox<StockSearchProduct> comboSearchByTypeIn;
 
     ObservableList<ProductEnter> observableProductEnter = FXCollections.observableArrayList();
-
     List<ProductEnter> productsEnter = new ArrayList<>();
+
+//    ----------------------- TAB Out -----------------------------------
+
+    @FXML ComboBox <MonthsOfYear> comboChooseMonthOut;
+    @FXML TextField searchByNameTextFieldOut;
+
+    @FXML TableView<ProductEnter> tblOutArticle ;
+    @FXML TableColumn<ProductEnter ,String> productNameColumnOut;
+    @FXML TableColumn<ProductEnter ,String> priceOfSellingColumn;
+    @FXML TableColumn<ProductEnter ,String> productQuantityColumnOut;
+    @FXML TableColumn<ProductEnter ,String> dateOfOrderColumn;
+    @FXML TableColumn<ProductEnter ,String> productTypeColumnOut;
+    @FXML TableColumn<ProductEnter ,String> lblOrderColumnOut;
+    @FXML TableColumn<ProductEnter ,String> clientColumn;
+
+    @FXML ComboBox<StockSearchProduct> comboSearchByTypeOut;
+
+    ObservableList<ProductEnter> observableProductOut = FXCollections.observableArrayList();
+
+    List<ProductEnter> productsOut = new ArrayList<>();
+
+    Map<Integer, MonthsOfYear> months = Stream.of(new Object[][] {
+            { 1 , MonthsOfYear.JANUARY },
+            { 2 , MonthsOfYear.FEBRUARY },
+            { 3 , MonthsOfYear.MARCH },
+            { 4 , MonthsOfYear.APRIL },
+            { 5 , MonthsOfYear.MAY },
+            { 6 , MonthsOfYear.JUNE },
+            { 7 , MonthsOfYear.JULY },
+            { 8 , MonthsOfYear.AUGUST },
+            { 9 , MonthsOfYear.SEPTEMBER },
+            { 10 , MonthsOfYear.OCTOBER },
+            { 11 , MonthsOfYear.NOVEMBER },
+            { 12 , MonthsOfYear.DECEMBER }
+    }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (MonthsOfYear) data[1]));
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
         loadAccountingLabels();
         rempplaireChart();
+        fillInTab();
+        fillOutTab();
 
-        fillEntreeTab();
 
     }
 
-    private void fillEntreeTab() {
+    private void fillOutTab() {
+
+        productsOut = stockService.getProductsOut( LocalDate.now().getMonthValue() );
+
+        fillTableOut(productsOut);
+
+        comboChooseMonthOut.setItems( FXCollections.observableArrayList( MonthsOfYear.values() ) );
+        comboChooseMonthOut.getSelectionModel().select( months.get( LocalDate.now().getMonthValue() ) );
+        comboChooseMonthOut.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+
+            productsOut = stockService.getProductsOut( newValue.getValue() );
+            fillTableOut( productsOut );
+
+        } );
+
+        searchByNameTextFieldOut.textProperty().addListener( (options, oldValue, newValue) -> {
+
+            List<ProductEnter> filteredProductsEnter = productsOut.stream()
+                    .filter( e -> e.getArticle().getName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ))
+                    .collect(Collectors.toList());
+
+            fillTableOut( filteredProductsEnter );
+
+        });
+
+        comboSearchByTypeOut.setItems( FXCollections.observableArrayList( StockSearchProduct.values() ) );
+        comboSearchByTypeOut.getSelectionModel().selectFirst();
+
+        comboSearchByTypeOut.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+
+            List<ProductEnter> filteredProductsEnter = productsOut.stream()
+                    .filter( item -> newValue == StockSearchProduct.ALL || item.getArticle().getType() == newValue )
+                    .collect(Collectors.toList());
+
+            fillTableOut( filteredProductsEnter );
+        });
+
+    }
+
+    private void fillTableOut( List<ProductEnter> listProductsOut ) {
+        observableProductOut.clear();
+        observableProductOut.addAll( listProductsOut );
+
+        productNameColumnOut.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getArticle().getName()
+        ));
+
+        productTypeColumnOut.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getArticle().getType()
+        ));
+
+        priceOfSellingColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f" , cellData.getValue().getPriceOfBuy() ) ) );
+        productQuantityColumnOut.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f" , cellData.getValue().getQuantity() ) ) );
+//        productQuantityColumnOut.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+
+        dateOfOrderColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
+        ));
+
+        lblOrderColumnOut.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                String.format("REF%08d", Integer.valueOf( cellData.getValue().getFactureLabel() ) )
+        ) );
+
+        clientColumn.setCellValueFactory( new PropertyValueFactory<>("providerName") );
+
+        tblOutArticle.setItems(observableProductOut);
+    }
+
+    private void fillInTab() {
+
         productsEnter = stockService.getProductsEnter( LocalDate.now().getMonthValue() );
 
-        fillTableEntrees( productsEnter );
-
-        Map<Integer, MonthsOfYear> months = Stream.of(new Object[][] {
-                { 1 , MonthsOfYear.JANUARY },
-                { 2 , MonthsOfYear.FEBRUARY },
-                { 3 , MonthsOfYear.MARCH },
-                { 4 , MonthsOfYear.APRIL },
-                { 5 , MonthsOfYear.MAY },
-                { 6 , MonthsOfYear.JUNE },
-                { 7 , MonthsOfYear.JULY },
-                { 8 , MonthsOfYear.AUGUST },
-                { 9 , MonthsOfYear.SEPTEMBER },
-                { 10 , MonthsOfYear.OCTOBER },
-                { 11 , MonthsOfYear.NOVEMBER },
-                { 12 , MonthsOfYear.DECEMBER }
-        }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (MonthsOfYear) data[1]));
+        fillTableIn( productsEnter );
 
         comboChooseMonth.setItems( FXCollections.observableArrayList( MonthsOfYear.values() ) );
         comboChooseMonth.getSelectionModel().select( months.get( LocalDate.now().getMonthValue() ) );
         comboChooseMonth.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
 
             productsEnter = stockService.getProductsEnter( newValue.getValue() );
-            fillTableEntrees( productsEnter );
+            fillTableIn( productsEnter );
 
         } );
 
@@ -121,12 +212,25 @@ public class AccountingController implements Initializable {
                                 .filter( e -> e.getArticle().getName().toLowerCase(Locale.ROOT).contains( newValue.toLowerCase(Locale.ROOT) ))
                                 .collect(Collectors.toList());
 
-            fillTableEntrees( filteredProductsEnter );
+            fillTableIn( filteredProductsEnter );
 
         });
+
+        comboSearchByTypeIn.setItems( FXCollections.observableArrayList( StockSearchProduct.values() ) );
+        comboSearchByTypeIn.getSelectionModel().selectFirst();
+
+        comboSearchByTypeIn.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+
+            List<ProductEnter> filteredProductsEnter = productsEnter.stream()
+                    .filter( item -> newValue == StockSearchProduct.ALL || item.getArticle().getType() == newValue )
+                    .collect(Collectors.toList());
+
+            fillTableIn( filteredProductsEnter );
+        });
+
     }
 
-    private void fillTableEntrees( List<ProductEnter> listProductsEnter    ) {
+    private void fillTableIn( List<ProductEnter> listProductsEnter ) {
 
         observableProductEnter.clear();
         observableProductEnter.addAll( listProductsEnter );
@@ -139,9 +243,10 @@ public class AccountingController implements Initializable {
                 cellData.getValue().getArticle().getType()
         ));
 
-//        priceOfBuyingClmn.setCellValueFactory( new PropertyValueFactory<>("priceOfBuy") );
+
         priceOfBuyingColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.3f" , cellData.getValue().getPriceOfBuy() ) ) );
-        productQuantityColumn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
+        productQuantityColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.3f" , cellData.getValue().getQuantity() ) ) );
+//        productQuantityColumn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
 
         dateOfImportColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
@@ -194,9 +299,6 @@ public class AccountingController implements Initializable {
     }
 
     private void loadAccountingLabels() {
-
-//        lblBaseBuyMonth
-//        lblBaseBuyYear
 
         MoneyStatus moneyStatus = stockService.getMoneyStatus();
         totalSellingLbl.setText( moneyStatus.getSalesOfMonth() + " DH " );

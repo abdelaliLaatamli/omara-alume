@@ -78,4 +78,10 @@ public class StockService {
         List<ProductEnter> listProductEnter =  stockDao.getProductsEnter(month);
         return listProductEnter;
     }
+
+    public List<ProductEnter> getProductsOut(int month){
+        List<ProductEnter> listProductEnter =  stockDao.getProductsOut(month);
+        return listProductEnter;
+    }
+
 }
