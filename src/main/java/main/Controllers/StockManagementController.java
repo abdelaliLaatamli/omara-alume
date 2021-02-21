@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.queryContainers.MovementArticle;
+import main.Models.entities.queryContainers.StockItemCalculus;
 import main.Models.entities.queryContainers.StockItemStatus;
 import main.Models.enums.StockSearchProduct;
 import main.Services.StockService;
@@ -56,11 +57,23 @@ public class StockManagementController implements Initializable {
     List<StockItemStatus> listStockItemStatus = new ArrayList<>();
 
 
+    @FXML Label totalPriceInStock ;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         listStockItemStatus = stockService.getStockProductStatus();
         loadFieldPrograming();
         loadDataAndFill( listStockItemStatus );
+
+        List<StockItemCalculus> listStockItemsCalculus = stockService.getStockItemsCalculus();
+        Double dd =  listStockItemsCalculus
+                .stream().filter( e -> ( e.getInProducts().intValue() - e.getOutProducts().intValue() ) > 0  )
+                .map( e -> ( e.getInProducts().intValue() - e.getOutProducts().intValue() ) * e.getPriceOfBuy()  )
+                .reduce( 0d , ( subSum , currentValue ) ->  subSum + currentValue  ) ;
+
+        totalPriceInStock.setText( dd + " DH " );
+
     }
 
     private void loadFieldPrograming() {
@@ -159,6 +172,7 @@ public class StockManagementController implements Initializable {
     }
 
     private void loadMovementTable( StockItemStatus stockItemStatus ) {
+
         List<MovementArticle> movementArticles = stockService.getMovementProductInStock(stockItemStatus.getArticle().getId());
 
         observableMovement.clear();

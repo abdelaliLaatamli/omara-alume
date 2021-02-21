@@ -171,12 +171,19 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
+//            List<Object[]> rows = session.createQuery("SELECT A , " +
+//                    "(SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM main.Models.entities.StockItemsEntity as ST WHERE ST.article=A) as inProducts ," +
+//                    "(SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM main.Models.entities.OrderItemsEntity IO WHERE IO.article=A and IO.order IS NOT NULL) as outProducts " +
+//                    " from main.Models.entities.ArticleEntity A")
+//                    .getResultList();
+
             List<Object[]> rows = session.createQuery("SELECT A , " +
                     "(SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM main.Models.entities.StockItemsEntity as ST WHERE ST.article=A) as inProducts ," +
-                    "(SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM main.Models.entities.OrderItemsEntity IO WHERE IO.article=A and IO.order IS NOT NULL) as outProducts " +
+                    "(SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM main.Models.entities.OrderItemsEntity IO , main.Models.entities.OrderEntity O " +
+                    "       WHERE IO.article=A and IO.order IS NOT NULL  and IO.order= O and O.isCanceled = 0 ) as outProducts " +
                     " from main.Models.entities.ArticleEntity A")
-            //        .setParameter("id",3)
                     .getResultList();
+
 
             List<StockItemStatus> listStockItemStatus = new ArrayList<>();
 
@@ -196,7 +203,49 @@ public class StockDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            return new ArrayList<StockItemStatus>() ;
+            return new ArrayList<>() ;
+        }
+    }
+
+
+    public List<StockItemCalculus> getStockItemsCalculus() {
+//        https://www.journaldev.com/3422/hibernate-native-sql-query-example#hibernate-native-sql-multiple-tables
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            List<Object[]> rows = session.createSQLQuery("SELECT A.id , A.name ," +
+                    "   ROUND( (SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM stock_items as ST WHERE ST.article_id=A.id) , 3 ) as inProducts , " +
+                    "   ROUND( (SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM order_items IO , orders as O " +
+                    "       WHERE IO.article_id=A.id and IO.order_id IS NOT NULL and IO.order_id= O.id and O.isCanceled = 0 ) , 3 ) as outProducts ,  " +
+                    "   ROUND( COALESCE ( (SELECT ST.priceOfBuy FROM stock_items as ST WHERE ST.article_id=A.id LIMIT 1 ) , 0 ) , 3 ) as priceOfBuy " +
+                    "from articles as A")
+                    .list();
+
+
+            List<StockItemCalculus> listStockItemCalculus = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                StockItemCalculus stockItemCalculus = new StockItemCalculus();
+                stockItemCalculus.setArticleID( (Integer) row[0] );
+                stockItemCalculus.setArticleName( (String) row[1] );
+                stockItemCalculus.setInProducts((Double) row[2]);
+                stockItemCalculus.setOutProducts((Double) row[3]);
+                stockItemCalculus.setPriceOfBuy((Double) row[4]);
+                listStockItemCalculus.add( stockItemCalculus ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listStockItemCalculus;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<>() ;
         }
     }
 
@@ -211,7 +260,7 @@ public class StockDao {
             List<Object[]> rows = session.createSQLQuery(
                     "SELECT o.orderDate as movement_date , 'sortie' as type , o.id as reference , oi.quantity , oi.price as price " +
                             " FROM order_items as oi , orders as o " +
-                            " WHERE oi.article_id = :id and oi.order_id is NOT null and oi.order_id=o.id" +
+                            " WHERE oi.article_id = :id and oi.order_id is NOT null and oi.order_id=o.id and o.isCanceled=0" +
                             " UNION " +
                             " SELECT s.importedAt as movement_date , 'entrée' as type , s.name as reference , si.quantity , si.priceOfBuy as price " +
                             " FROM stock_items as si , stock as s WHERE si.article_id = :id and si.stock_Id=s.Id " +

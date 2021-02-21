@@ -54,6 +54,11 @@ public class StockService {
         return listStockItemStatuses ;
     }
 
+    public List<StockItemCalculus> getStockItemsCalculus(){
+        List<StockItemCalculus> listStockItemsCalculus = stockDao.getStockItemsCalculus();
+        return listStockItemsCalculus ;
+    }
+
     public List<MovementArticle> getMovementProductInStock(int articleId) {
         List<MovementArticle> movementArticles = stockDao.getMovementProductInStock(articleId);
         return movementArticles ;

@@ -50,6 +50,14 @@
                         </TableView>
                         <Label layoutX="14.0" layoutY="14.0" text="produit Type :" />
                         <ComboBox fx:id="productTypeSearch" layoutX="91.0" layoutY="10.0" prefWidth="150.0" />
+                        <Label layoutX="796.0" layoutY="14.0" text="Total Articles en stock :">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
+                        <Label fx:id="totalPriceInStock" layoutX="957.0" layoutY="14.0" prefHeight="17.0" prefWidth="220.0" text="Label">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
                      </children>
                   </AnchorPane>
             </content>
