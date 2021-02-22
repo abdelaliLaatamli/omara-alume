@@ -33,12 +33,12 @@ public class HibernateUtil {
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
 
-                settings.put(Environment.DRIVER , DBConnection.dbDRIVER );
-                settings.put(Environment.URL    , DBConnection.dbURL    );
-                settings.put(Environment.USER   , DBConnection.dbUSER   );
-                settings.put(Environment.PASS   , DBConnection.dbPASS   );
+                settings.put(Environment.DRIVER , DBConnection.dbDRIVER  );
+                settings.put(Environment.URL    , DBConnection.dbURL     );
+                settings.put(Environment.USER   , DBConnection.dbUSER    );
+                settings.put(Environment.PASS   , DBConnection.dbPASS    );
 
-                settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
+                settings.put(Environment.DIALECT, DBConnection.dbDIALECT );
 
                 settings.put( Environment.SHOW_SQL , "true" );
 
@@ -73,14 +73,6 @@ public class HibernateUtil {
 
             } catch ( Exception e  ){
                 logger.warning( e.getMessage() );
-                // e.printStackTrace();
-
-                //e.getStackTrace().toString()
-//                logger.warning( e.getMessage() );
-//                //System.out.println("a------------------------------");
-//                logger.log( Level.WARNING , "aaaa" , Arrays.stream(e.getStackTrace())
-//                        .map(s->s.toString())
-//                        .collect(Collectors.joining("\n")) /* e.getStackTrace().toString() */);
             }
 
         }

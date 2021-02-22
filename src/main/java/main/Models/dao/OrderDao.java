@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class OrderDao {
@@ -21,37 +22,23 @@ public class OrderDao {
 
     Logger logger = FileHandlerLogger.getHandlerFile( this.getClass().getName() );
 
-
-    @SneakyThrows
-    public OrderDao() {
-
-    }
-
-
-
-
-    /**
-     * Save User
-     * @param entity
-     * @return
-     */
     public OrderEntity save(OrderEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             // start a transaction
             transaction = session.beginTransaction();
 
-            Set<PaymentsMadeEntity> savedPayement = new HashSet<>();
+            Set<PaymentsMadeEntity> savedPayment = new HashSet<>();
 
             for (PaymentsMadeEntity paymentsMadeEntity: entity.getPaymentsMades() ) {
                 if( paymentsMadeEntity.getAmountPaid() != 0 ){
-                session.save( paymentsMadeEntity );
-                savedPayement.add( paymentsMadeEntity );
+                    session.save( paymentsMadeEntity );
+                    savedPayment.add( paymentsMadeEntity );
                 }
             }
 
-            float sumMout = savedPayement.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
-            if( sumMout == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
+            float sumMount = savedPayment.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
+            if( sumMount == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
 
             Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
 
@@ -60,7 +47,7 @@ public class OrderDao {
                 savedArticleCommands.add(orderItemsEntity);
             }
 
-            entity.setPaymentsMades( savedPayement );
+            entity.setPaymentsMades( savedPayment );
             entity.setArticleOrders( savedArticleCommands );
 
             session.save(entity);
@@ -70,7 +57,7 @@ public class OrderDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.log (Level.SEVERE, e.getMessage() );
         }
         return entity;
     }
@@ -142,7 +129,7 @@ public class OrderDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            e.printStackTrace();
+            logger.log (Level.SEVERE, e.getMessage() );
             return false;
         }
         return true;

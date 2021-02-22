@@ -6,12 +6,6 @@ import org.hibernate.Transaction;
 
 public class PaymentsMadeDao {
 
-
-    /**
-     * Get all Users
-     * @return
-     */
-    @SuppressWarnings("unchecked")
     public void deleteAllNull() {
 
         Transaction transaction = null;
