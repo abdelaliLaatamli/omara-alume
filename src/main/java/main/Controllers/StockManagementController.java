@@ -1,6 +1,7 @@
 package main.Controllers;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,10 +14,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import main.Models.entities.StockEntity;
+import main.Models.entities.StockItemsEntity;
 import main.Models.entities.queryContainers.MovementArticle;
 import main.Models.entities.queryContainers.StockItemCalculus;
 import main.Models.entities.queryContainers.StockItemStatus;
 import main.Models.enums.StockSearchProduct;
+import main.Models.utils.CurrentCrudOperation;
 import main.Services.StockService;
 import java.io.IOException;
 import java.net.URL;
@@ -56,24 +60,188 @@ public class StockManagementController implements Initializable {
 
     List<StockItemStatus> listStockItemStatus = new ArrayList<>();
 
-
     @FXML Label totalPriceInStock ;
+
+//    --------------------- Entree Tab -----------------
+
+    @FXML TableView<StockEntity> tableOfStockOrders;
+    @FXML TableColumn<StockEntity , String> sNameOfStock;
+    @FXML TableColumn<StockEntity , String> sProviderName;
+    @FXML TableColumn<StockEntity , String> sTotalOrder;
+    @FXML TableColumn<StockEntity , String> numberItems;
+    @FXML TableColumn<StockEntity , String> importAt;
+    @FXML TableColumn<StockEntity , Void> editProductOfCommand;
+    @FXML TableColumn<StockEntity , Void> deleteProductOfCommand;
+    @FXML TableColumn<StockEntity , Void> showDetailsOfCommand;
+
+
+    ObservableList<StockEntity> observableList = FXCollections.observableArrayList();
+
+
+    @FXML TableView<StockItemsEntity> tableArticlesOfStockOrder;
+    @FXML TableColumn<StockItemsEntity , String> sProductName;
+    @FXML TableColumn<StockItemsEntity , String> sProductsQuentityColumn;
+    @FXML TableColumn<StockItemsEntity , String> sPriceOfBuyColumn;
+    @FXML TableColumn<StockItemsEntity , String> sTotalArticle;
+
+    ObservableList<StockItemsEntity> observableStockItemsDetails = FXCollections.observableArrayList();
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        FillInventoryTab();
+
+
+        tableOfStockOrders.getItems().clear();
+        observableList.setAll( stockService.getAll() );
+
+        sNameOfStock.setCellValueFactory( new PropertyValueFactory<>("name") );
+        sProviderName.setCellValueFactory( cellData -> new ReadOnlyStringWrapper( cellData.getValue().getProvider().getName() ) );
+        sTotalOrder.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                cellData.getValue().getStockItems().stream().map( c -> c.getPriceOfBuy() * c.getQuantity() ).reduce( 0f , (subTotal , currentItem) -> subTotal + currentItem ) + " DH"
+        ) );
+        numberItems.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper( cellData.getValue().getStockItems().size() ) );
+        importAt.setCellValueFactory( cellData -> new ReadOnlyObjectWrapper(
+                DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getImportedAt())
+        ) );
+
+        Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>> editCellFactory = new Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>>() {
+            @Override
+            public TableCell<StockEntity, Void> call(final TableColumn<StockEntity, Void> param) {
+                final TableCell<StockEntity, Void> cell = new TableCell<StockEntity, Void>() {
+
+                    private final Button btn = new Button("Modifier");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+
+                            StockEntity data = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData Edit: " + data.getId());
+
+                            try {
+
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/main/views/AddItemsToStockView.fxml"));
+                                Parent root = loader.load();
+                                AddItemsToStockController controller = loader.<AddItemsToStockController>getController();
+                                controller.setData(data);
+                                main.JavaFxApplication.mainStage.setScene(new Scene(root));
+                                main.JavaFxApplication.mainStage.setTitle("Edit Order -- Aluminium et verre");
+                                main.JavaFxApplication.mainStage.show();
+
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+
+        Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>> deleteCellFactory = new Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>>() {
+            @Override
+            public TableCell<StockEntity, Void> call(final TableColumn<StockEntity, Void> param) {
+                final TableCell<StockEntity, Void> cell = new TableCell<StockEntity, Void>() {
+
+                    private final Button btn = new Button("Supprimer");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            StockEntity order = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData Delete: " + order.getId());
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>> detailsCellFactory = new Callback<TableColumn<StockEntity, Void>, TableCell<StockEntity, Void>>() {
+            @Override
+            public TableCell<StockEntity, Void> call(final TableColumn<StockEntity, Void> param) {
+                final TableCell<StockEntity, Void> cell = new TableCell<StockEntity, Void>() {
+
+                    private final Button btn = new Button("Details");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            StockEntity order = getTableView().getItems().get(getIndex());
+                            System.out.println("selectedData Details: " + order.getId());
+
+                            observableStockItemsDetails.clear();
+                            observableStockItemsDetails.addAll( order.getStockItems() );
+
+                            sProductName.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(  cellData.getValue().getArticle().getName() ));
+                            sPriceOfBuyColumn.setCellValueFactory(new PropertyValueFactory<>("priceOfBuy"));
+                            sProductsQuentityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+                            sTotalArticle.setCellValueFactory( cellData ->  new ReadOnlyObjectWrapper(  cellData.getValue().getQuantity() * cellData.getValue().getPriceOfBuy() + " DH "  ) );
+
+                            tableArticlesOfStockOrder.setItems( observableStockItemsDetails );
+
+
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+                return cell;
+            }
+        };
+
+        editProductOfCommand.setCellFactory( editCellFactory  );
+        deleteProductOfCommand.setCellFactory(deleteCellFactory);
+        showDetailsOfCommand.setCellFactory(detailsCellFactory);
+
+
+        tableOfStockOrders.setItems( observableList );
+
+
+    }
+
+    private void FillInventoryTab() {
         listStockItemStatus = stockService.getStockProductStatus();
         loadFieldPrograming();
         loadDataAndFill( listStockItemStatus );
 
         List<StockItemCalculus> listStockItemsCalculus = stockService.getStockItemsCalculus();
-        Double dd =  listStockItemsCalculus
+        Double totalPriceStock =  listStockItemsCalculus
                 .stream().filter( e -> ( e.getInProducts().intValue() - e.getOutProducts().intValue() ) > 0  )
                 .map( e -> ( e.getInProducts().intValue() - e.getOutProducts().intValue() ) * e.getPriceOfBuy()  )
                 .reduce( 0d , ( subSum , currentValue ) ->  subSum + currentValue  ) ;
 
-        totalPriceInStock.setText( dd + " DH " );
-
+        totalPriceInStock.setText( totalPriceStock + " DH " );
     }
 
     private void loadFieldPrograming() {

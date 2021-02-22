@@ -150,7 +150,7 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-            listOfEntities = session.createQuery("from main.Models.entities.StockEntity").getResultList();
+            listOfEntities = session.createQuery("from main.Models.entities.StockEntity S ORDER BY S.importedAt DESC").getResultList();
 
             // commit transaction
             transaction.commit();

@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.StockManagementController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.StockManagementController">
 
     <children>
         <HBox layoutX="14.0" layoutY="5.0" prefHeight="40.0" prefWidth="319.0">
@@ -64,7 +64,29 @@
           </Tab>
           <Tab text="Les Entrée">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                     <children>
+                        <TableView fx:id="tableOfStockOrders" layoutX="5.0" layoutY="12.0" prefHeight="600.0" prefWidth="700.0">
+                          <columns>
+                              <TableColumn fx:id="sNameOfStock" prefWidth="100.0" text="Reference" />
+                              <TableColumn fx:id="sProviderName" prefWidth="100.0" text="Fournisseur" />
+                              <TableColumn fx:id="sTotalOrder" prefWidth="100.0" text="Total" />
+                              <TableColumn fx:id="numberItems" prefWidth="74.0" text="N° Articles" />
+                              <TableColumn fx:id="importAt" prefWidth="99.0" text="Import At" />
+                              <TableColumn fx:id="editProductOfCommand" prefWidth="79.0" text="Edit" />
+                              <TableColumn fx:id="deleteProductOfCommand" prefWidth="82.0" text="Delete" />
+                              <TableColumn fx:id="showDetailsOfCommand" prefWidth="64.0" text="Details" />
+                          </columns>
+                        </TableView>
+                        <TableView fx:id="tableArticlesOfStockOrder" layoutX="710.0" layoutY="12.0" prefHeight="600.0" prefWidth="470.0">
+                          <columns>
+                              <TableColumn fx:id="sProductName" prefWidth="158.0" text="Name" />
+                              <TableColumn fx:id="sProductsQuentityColumn" prefWidth="95.0" text="Quentité" />
+                              <TableColumn fx:id="sPriceOfBuyColumn" prefWidth="101.0" text="Price" />
+                              <TableColumn fx:id="sTotalArticle" prefWidth="115.0" text="Total du Produit" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
