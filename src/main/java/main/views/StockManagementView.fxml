@@ -22,7 +22,7 @@
 
             </children>
         </HBox>
-      <TabPane layoutX="8.0" layoutY="50.0" prefHeight="645.0" prefWidth="1184.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabStock" layoutX="8.0" layoutY="50.0" prefHeight="645.0" prefWidth="1184.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Inventaire">
             <content>

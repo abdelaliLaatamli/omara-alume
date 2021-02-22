@@ -12,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.enums.ProductsType;
@@ -264,10 +266,12 @@ public class AddItemsToStockController implements Initializable {
             alert.setHeaderText("l'ordre Stock est bien enregistrer");
             alert.showAndWait();
 
-            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
-            main.JavaFxApplication.mainStage.setScene(new Scene(root));
-            main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
-            main.JavaFxApplication.mainStage.show();
+            goBack(null);
+
+//            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
+//            main.JavaFxApplication.mainStage.setScene(new Scene(root));
+//            main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
+//            main.JavaFxApplication.mainStage.show();
 
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -282,10 +286,52 @@ public class AddItemsToStockController implements Initializable {
 
     public void goBack(MouseEvent mouseEvent) throws IOException {
 
-        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
-        main.JavaFxApplication.mainStage.setScene(new Scene(root));
-        main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
-        main.JavaFxApplication.mainStage.show();
+//        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockManagementView.fxml"));
+//        main.JavaFxApplication.mainStage.setScene(new Scene(root));
+//        main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
+//        main.JavaFxApplication.mainStage.show();
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/main/views/StockManagementView.fxml"));
+            Parent root = loader.load();
+            StockManagementController controller = loader.<StockManagementController>getController();
+            controller.setOpenTab();
+            main.JavaFxApplication.mainStage.setScene(new Scene(root));
+            main.JavaFxApplication.mainStage.setTitle("Edit Order -- Aluminium et verre");
+            main.JavaFxApplication.mainStage.show();
+
+
+        } catch (IOException e) {
+
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Exception Dialog");
+            alert.setHeaderText("Look, an Exception Dialog");
+
+            String exceptionText = e.toString();
+
+            Label label = new Label("The exception stacktrace was:");
+
+            TextArea textArea = new TextArea(exceptionText);
+            textArea.setEditable(false);
+            textArea.setWrapText(true);
+
+            textArea.setMaxWidth(Double.MAX_VALUE);
+            textArea.setMaxHeight(Double.MAX_VALUE);
+            GridPane.setVgrow(textArea, Priority.ALWAYS);
+            GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+            GridPane expContent = new GridPane();
+            expContent.setMaxWidth(Double.MAX_VALUE);
+            expContent.add(label, 0, 0);
+            expContent.add(textArea, 0, 1);
+
+            alert.getDialogPane().setExpandableContent(expContent);
+
+            alert.showAndWait();
+            //e.printStackTrace();
+        }
+
 
     }
 
