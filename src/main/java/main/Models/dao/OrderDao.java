@@ -40,15 +40,15 @@ public class OrderDao {
             float sumMount = savedPayment.stream().map( c -> c.getAmountPaid() ).reduce( 0f , ( subSum , elem ) -> subSum + elem );
             if( sumMount == 0 ) entity.setPaymentStatus( PaymentStatus.CRÉDIT );
 
-            Set<OrderItemsEntity> savedArticleCommands = new HashSet<>();
+            Set<OrderItemsEntity> savedArticleOrders = new HashSet<>();
 
             for ( OrderItemsEntity orderItemsEntity : entity.getArticleOrders() ){
                 session.save(orderItemsEntity);
-                savedArticleCommands.add(orderItemsEntity);
+                savedArticleOrders.add(orderItemsEntity);
             }
 
             entity.setPaymentsMades( savedPayment );
-            entity.setArticleOrders( savedArticleCommands );
+            entity.setArticleOrders( savedArticleOrders );
 
             session.save(entity);
             // commit transaction
@@ -62,13 +62,6 @@ public class OrderDao {
         return entity;
     }
 
-
-
-    /**
-     * Update User
-     * @param entity
-     * @return
-     */
     public OrderEntity updateEntity(OrderEntity entity) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
