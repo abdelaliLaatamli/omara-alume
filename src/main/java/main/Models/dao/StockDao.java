@@ -171,11 +171,6 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-//            List<Object[]> rows = session.createQuery("SELECT A , " +
-//                    "(SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM main.Models.entities.StockItemsEntity as ST WHERE ST.article=A) as inProducts ," +
-//                    "(SELECT COALESCE( sum( IO.quantity ) , 0 ) FROM main.Models.entities.OrderItemsEntity IO WHERE IO.article=A and IO.order IS NOT NULL) as outProducts " +
-//                    " from main.Models.entities.ArticleEntity A")
-//                    .getResultList();
 
             List<Object[]> rows = session.createQuery("SELECT A , " +
                     "(SELECT COALESCE( SUM( ST.quantity ) , 0 )  FROM main.Models.entities.StockItemsEntity as ST WHERE ST.article=A) as inProducts ," +
@@ -302,50 +297,6 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-//            Object[] row = (Object[]) session.createSQLQuery(
-//                    "select "+
-//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
-//                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vende_month , " +
-//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
-//                            "    WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat , " +
-//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
-//                            "    WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as global_vende , " +
-//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
-//                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat , " +
-//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o " +
-//                            "    WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month , " +
-//                            "(select vende_month - paid_month ) as creadit_month , " +
-//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm " +
-//                            "    WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
-//                            "( select global_vende - global_paid ) global_creadit ").list().get(0);
-
-
-//            Object[] row = (Object[]) session.createSQLQuery(
-//                    "select " +
-//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi  " +
-//                            "WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vende_month ,  " +
-//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si  " +
-//                            "WHERE EXTRACT(YEAR_MONTH FROM s.importedAt ) = EXTRACT(YEAR_MONTH FROM Now() ) and si.stock_Id=s.Id ) as total_achat ,  " +
-//                            "( SELECT ROUND( ifnull( sum(oi.quantity*oi.price) , 0 ) , 2 ) FROM orders as o , order_items as oi " +
-//                            " WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as global_vende ,  " +
-//                            "( SELECT ROUND( ifnull( sum( si.priceOfBuy * si.quantity ) , 0 ) , 2) FROM stock as s , stock_items as si " +
-//                            "    WHERE si.stock_Id=s.Id AND year( s.importedAt ) = year( now() ) ) as global_achat ,  " +
-//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm, orders as o  " +
-//                            "  WHERE EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and pm.order_id=o.id ) as paid_month ,  " +
-//                            "(select vende_month - paid_month ) as creadit_month , " +
-//                            "( SELECT round( ifnull( sum(pm.amountPaid) , 0 ) , 2 ) FROM payements_made as pm  " +
-//                            "WHERE year(pm.paymentDate)=year(now()) and `order_id` is not null ) as global_paid , " +
-//                            "( select global_vende - global_paid ) global_creadit , " +
-//                            "( SELECT  " +
-//                            "    round( sum( oi.quantity * ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE " +
-//                            "   si.article_id=oi.article_id LIMIT 1) , oi.price ) ) , 2 ) " +
-//                            "FROM orders as o , order_items as oi  WHERE  " +
-//                            "EXTRACT(YEAR_MONTH FROM o.orderDate ) = EXTRACT(YEAR_MONTH FROM Now() ) and oi.order_id=o.id and o.isCanceled=0 ) as vente_base_price , " +
-//                            "(SELECT round( sum( oi.quantity * " +
-//                            " ifnull( (SELECT si.priceOfBuy from stock_items as si WHERE si.article_id=oi.article_id LIMIT 1) , 0 ) ) , 2 ) " +
-//                            "FROM orders as o , order_items as oi " +
-//                            "        WHERE oi.order_id=o.id and year(o.orderDate) = year( now() ) and o.isCanceled=0 ) as vente_global_price"
-//            ).list().get(0);
 
             Object[] row = (Object[]) session.createSQLQuery(
                     "select " +
@@ -448,6 +399,49 @@ public class StockDao {
         }
     }
 
+    public List<StockArticleItems> getProductsStockStatus(int article_id) {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            List<Object[]> rows = session.createQuery(
+                    " SELECT " +
+                            "    SI , " +
+                            "    S  " +
+                            " FROM  " +
+                            "    main.Models.entities.StockItemsEntity as SI , " +
+                            "    main.Models.entities.StockEntity as S " +
+                            " WHERE " +
+                            "    SI.stock=S and " +
+                            "    SI.article_id= :article_id " )
+                    .setParameter( "article_id" , article_id )
+                    .getResultList();
+
+
+            List<StockArticleItems> listProductEnter = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                StockArticleItems stockArticleItems = new StockArticleItems();
+                stockArticleItems.setStock( (StockEntity) row[0] );
+                stockArticleItems.setStockItems( (StockItemsEntity) row[1] );
+                listProductEnter.add( stockArticleItems ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listProductEnter;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<>() ;
+        }
+    }
+
     public List<ProductEnter> getProductsEnter(int month) {
 
         Transaction transaction = null;
@@ -512,27 +506,6 @@ public class StockDao {
             transaction = session.beginTransaction();
             // get an user object
 
-//            List<Object[]> rows = session.createQuery(
-//                    " SELECT " +
-//                            "    A , " +
-//                            "    round( SI.priceOfBuy , 3 ) as priceOfBuy , " +
-//                            "    round( SI.quantity , 3 ) as quantity  , " +
-//                            "    S.importedAt , " +
-//                            "    S.name ,  " +
-//                            "    P.name " +
-//                            " FROM  " +
-//                            "    main.Models.entities.StockItemsEntity as SI , " +
-//                            "    main.Models.entities.StockEntity as S , " +
-//                            "    main.Models.entities.ProviderEntity as P , " +
-//                            "    main.Models.entities.ArticleEntity as A " +
-//                            " WHERE " +
-//                            "    year(S.importedAt) = year(now()) and month(S.importedAt) = :month and " +
-//                            "    SI.stock=S and " +
-//                            "    S.provider = P and " +
-//                            "    SI.article=A " )
-//                    .setParameter( "month" , month )
-//                    .getResultList();
-
             List<Object[]> rows = session.createQuery(
                          " SELECT " +
                             "    A , " +
@@ -579,4 +552,51 @@ public class StockDao {
             return new ArrayList<>() ;
         }
     }
+
+    public List<ArticleStockStatus> getArticleStockStatus(int articleId) {
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // start a transaction
+            transaction = session.beginTransaction();
+            // get an user object
+
+            List<Object[]> rows = session.createQuery(
+                    " SELECT " +
+                        "   S  ," +
+                        "   SI , " +
+                        "   ( SELECT COALESCE(sum(OI.quantity) , 0 ) FROM main.Models.entities.OrderItemsEntity as OI WHERE " +
+                        "           OI.article=SI.article and OI.stockItemId=SI.id and OI.order is not null ) as salled " +
+                        " from " +
+                        "   main.Models.entities.StockItemsEntity as SI , " +
+                        "   main.Models.entities.StockEntity as S " +
+                        " WHERE " +
+                        "   SI.stock=S and" +
+                        "   SI.article_id=:article_id" )
+                    .setParameter( "article_id" , articleId )
+                    .getResultList();
+
+
+            List<ArticleStockStatus> listArticleStockStatus = new ArrayList<>();
+
+            for (Object[] row : rows) {
+                ArticleStockStatus articleStockStatus = new ArticleStockStatus();
+                    articleStockStatus.setStock( (StockEntity) row[0]  );
+                    articleStockStatus.setStockItems( (StockItemsEntity) row[1]  );
+                    articleStockStatus.setNumberItems( (int) row[2] );
+                listArticleStockStatus.add( articleStockStatus ) ;
+            }
+
+
+            // commit transaction
+            transaction.commit();
+            return listArticleStockStatus;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            return new ArrayList<>() ;
+        }
+    }
+
 }

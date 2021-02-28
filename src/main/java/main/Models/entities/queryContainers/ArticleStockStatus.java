@@ -9,11 +9,12 @@ import main.Models.entities.StockItemsEntity;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
-public class StockArticleItems {
+@Setter
+public class ArticleStockStatus {
 
-    private StockEntity stock;
     private StockItemsEntity stockItems;
+    private StockEntity stock;
+    private int numberItems;
 
 }

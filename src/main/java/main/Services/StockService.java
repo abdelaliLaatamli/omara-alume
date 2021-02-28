@@ -84,4 +84,9 @@ public class StockService {
         return listProductEnter;
     }
 
+    public List<StockArticleItems> getProductsStockStatus(int article_id){
+        List<StockArticleItems> listProductStockStatus =  stockDao.getProductsStockStatus(article_id);
+        return listProductStockStatus;
+    }
+
 }

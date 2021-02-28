@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -32,6 +33,10 @@ public class OrderItemsEntity {
 
     @Column
     protected int numberItems = 0 ;
+
+    @Column(nullable = true)
+    @ColumnDefault("-1")
+    protected int stockItemId;
 
     @ManyToOne
     protected OrderEntity order;
