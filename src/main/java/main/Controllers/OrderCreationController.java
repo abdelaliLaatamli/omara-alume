@@ -149,9 +149,9 @@ public class OrderCreationController implements Initializable {
         new AutoCompleteBox(clientNameForm);
 
         clientNameForm.getSelectionModel().selectedIndexProperty().addListener( (options, oldValue, newValue) -> {
-            productChosen(aluminumProduct, priceAluminumCombo );
-            productChosen(accessoryProduct, accessoryPrice);
-            productChosen( glassProduct      , glassPrice );
+            productChosen(aluminumProduct  , priceAluminumCombo );
+            productChosen(accessoryProduct , accessoryPrice);
+            productChosen( glassProduct    , glassPrice );
         } );
 
         comboPaymentStatus.setItems( FXCollections.observableArrayList( PaymentStatus.values() ) );
@@ -225,7 +225,9 @@ public class OrderCreationController implements Initializable {
                         btn.setOnAction((ActionEvent event) -> {
                             PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
                             amountToPayText.setText(String.valueOf(data.getAmountPaid()));
-                            paymentMethodGroup.selectToggle( ( data.getPayementMethod() == PayementMethod.CHEQUE ) ? chequeToggleButton: especeToggleButton );
+                            paymentMethodGroup.selectToggle(
+                                    ( data.getPayementMethod() == PayementMethod.CHEQUE ) ? chequeToggleButton: especeToggleButton
+                            );
                             savePayment.setDisable( false );
                             editablePaymentMade = data ;
                             operationPayment = CurrentCrudOperation.EDIT;
@@ -419,8 +421,9 @@ public class OrderCreationController implements Initializable {
                 number = 0f;
             }
 
+            System.out.println( "aaaaa" );
             if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
-
+                System.out.println( "bbbbb" );
                 StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
 
                 if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
@@ -492,14 +495,20 @@ public class OrderCreationController implements Initializable {
 
     private void loadChangeDataAlumStatus(ComboBox productCombo) {
 
-        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
+        AluminumEntity aluminumEntity ;
+        if( productCombo.getSelectionModel().getSelectedIndex() != -1 ){
+            aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
+        }else{
+            aluminumEntity = (AluminumEntity) productCombo.getSelectionModel().getSelectedItem();
+        }
+        if( aluminumEntity == null ) return;
+//        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
         List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
         Collections.sort(listProductsStockStatus);
         List<StockArticleItems> listProductsStockStatusMaped = new ArrayList<>();
         if( operationOrder == CurrentCrudOperation.ADD )
             listProductsStockStatusMaped = listProductsStockStatus.stream().map(
                     e -> {
-//                        orderDetails.getArticleOrders()
                         for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
                             if( orderItems.getStockItemId() == e.getStockItems().getId() )
                                 e.setSold( e.getSold() + orderItems.getQuantity() );
@@ -507,16 +516,6 @@ public class OrderCreationController implements Initializable {
 
                         return e ;
                     }).collect(Collectors.toList());
-
-//            for (StockArticleItems stockItem: listProductsStockStatus  ) {
-//                orderDetails.getArticleOrders().stream().map( e -> {
-//                    if( e.getStockItemId() == stockItem.getStockItems().getId() )
-//                        stockItem.setSold( stockItem.getSold() - e.getQuantity() );
-//                    return e;
-//                } );
-//            }
-            //orderDetails.getArticleOrders().stream().map( e -> e.getStockItemId() ==  );
-//            orderDetails.getArticleOrders().stream().map( e -> e.getStockItemId() );
 
         comboAlumStockArticle.getItems().clear();
         comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
@@ -855,11 +854,14 @@ public class OrderCreationController implements Initializable {
     }
 
     private void loadAluminumEdit(OrderItemsEntity data) {
-        aluminumProduct.getSelectionModel().select((AluminumEntity) data.getArticle());
+
+        aluminumProduct.getSelectionModel().select( (AluminumEntity) data.getArticle() );
+//        System.out.println( aluminumProduct.getSelectionModel().getSelectedItem() );
+        loadChangeDataAlumStatus(aluminumProduct);
+
         aluminumLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
         priceAluminumCombo.getSelectionModel().select( String.valueOf( data.getPrice() ) );
         aluminumQuantity.setText( data.getQuantity() + "");
-
 
         priceAluminumShow.setText( Float.valueOf( data.getQuantity() ) * (
                 ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
