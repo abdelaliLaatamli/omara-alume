@@ -21,21 +21,13 @@ public class StockArticleItems implements Comparable<StockArticleItems>{
     @Override
     public String toString() {
 
-        return stock.getName() + " " + (int) ( stockItems.getQuantity() -  sold ) ;
-//        return "StockArticleItems{" +
-//                "stock=" + stock +
-//                ", stockItems=" + stockItems +
-//                ", sold=" + sold +
-//                '}';
+        return stock.getName() + " - " + (int) ( stockItems.getQuantity() -  sold ) ;
     }
 
     @Override
     public int compareTo(@NotNull StockArticleItems o) {
-//        if( this.stock.getImportedAt() > o.getStock().getImportedAt() )
-        if( this.stock.getImportedAt().compareTo( o.getStock().getImportedAt() ) < 0 )
-            return 1 ;
-        return -1 ;
 
-//        return 0;
+        return ( this.stock.getImportedAt().compareTo( o.getStock().getImportedAt() ) < 0 )  ? 1  : -1;
+
     }
 }

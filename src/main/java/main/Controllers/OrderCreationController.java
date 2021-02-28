@@ -410,7 +410,6 @@ public class OrderCreationController implements Initializable {
 
         });
 
-
         aluminumQuantity.textProperty().addListener( (observable, oldValue, newValue) -> {
 
             float number = 0f;
@@ -464,6 +463,7 @@ public class OrderCreationController implements Initializable {
 
     private void productChosen(ComboBox productCombo , ComboBox priceCombo) {
         priceCombo.getItems().clear();
+
         if( productCombo.getSelectionModel().getSelectedIndex() != -1 ){
             ClientEntity clientChosen = ( clientNameForm.getSelectionModel().getSelectedIndex() != -1 ) ?
                                             clientNameForm.getItems().get( clientNameForm.getSelectionModel().getSelectedIndex() ) : null ;
@@ -484,18 +484,43 @@ public class OrderCreationController implements Initializable {
             priceCombo.setItems( FXCollections.observableArrayList( listPrices ) );
             priceCombo.getSelectionModel().selectFirst();
 
-
-            AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
-
-            List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
-
-            Collections.sort(listProductsStockStatus);
-            comboAlumStockArticle.getItems().clear();
-            comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
-            comboAlumStockArticle.getSelectionModel().selectFirst();
+            loadChangeDataAlumStatus(productCombo);
 
 
         }
+    }
+
+    private void loadChangeDataAlumStatus(ComboBox productCombo) {
+
+        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
+        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
+        Collections.sort(listProductsStockStatus);
+        List<StockArticleItems> listProductsStockStatusMaped = new ArrayList<>();
+        if( operationOrder == CurrentCrudOperation.ADD )
+            listProductsStockStatusMaped = listProductsStockStatus.stream().map(
+                    e -> {
+//                        orderDetails.getArticleOrders()
+                        for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+                            if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                                e.setSold( e.getSold() + orderItems.getQuantity() );
+                        }
+
+                        return e ;
+                    }).collect(Collectors.toList());
+
+//            for (StockArticleItems stockItem: listProductsStockStatus  ) {
+//                orderDetails.getArticleOrders().stream().map( e -> {
+//                    if( e.getStockItemId() == stockItem.getStockItems().getId() )
+//                        stockItem.setSold( stockItem.getSold() - e.getQuantity() );
+//                    return e;
+//                } );
+//            }
+            //orderDetails.getArticleOrders().stream().map( e -> e.getStockItemId() ==  );
+//            orderDetails.getArticleOrders().stream().map( e -> e.getStockItemId() );
+
+        comboAlumStockArticle.getItems().clear();
+        comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
+        comboAlumStockArticle.getSelectionModel().selectFirst();
     }
 
 
@@ -547,10 +572,9 @@ public class OrderCreationController implements Initializable {
         aluminumProduct.setPrice( price );
         float quantity = Float.valueOf( aluminumQuantity.getText() );
         aluminumProduct.setQuantity( quantity );
-        if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
-            aluminumProduct.setStockItemId( comboAlumStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() );
-        }
 
+        aluminumProduct.setStockItemId( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ?
+                comboAlumStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() : -1 );
 
         if( operation == CurrentCrudOperation.ADD )
             orderDetails.getArticleOrders().add(aluminumProduct);
