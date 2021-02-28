@@ -399,7 +399,7 @@ public class StockDao {
         }
     }
 
-    public List<StockArticleItems> getProductsStockStatus(int article_id) {
+    public List<StockArticleItems> getProductsStockStatus(int articleId) {
 
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -409,15 +409,19 @@ public class StockDao {
 
             List<Object[]> rows = session.createQuery(
                     " SELECT " +
+                            "    S  , " +
                             "    SI , " +
-                            "    S  " +
+                            "    ( SELECT COALESCE( SUM(OI.quantity) , 0 ) FROM main.Models.entities.OrderItemsEntity as OI WHERE " +
+                            "           OI.article=SI.article and OI.stockItemId=SI.id and OI.order is not null ) as salled " +
                             " FROM  " +
                             "    main.Models.entities.StockItemsEntity as SI , " +
-                            "    main.Models.entities.StockEntity as S " +
+                            "    main.Models.entities.StockEntity as S ," +
+                            "    main.Models.entities.ArticleEntity as A " +
                             " WHERE " +
                             "    SI.stock=S and " +
-                            "    SI.article_id= :article_id " )
-                    .setParameter( "article_id" , article_id )
+                            "    SI.article= A and " +
+                            "    A.id =:articleId " )
+                    .setParameter( "articleId" , articleId )
                     .getResultList();
 
 
@@ -427,6 +431,7 @@ public class StockDao {
                 StockArticleItems stockArticleItems = new StockArticleItems();
                 stockArticleItems.setStock( (StockEntity) row[0] );
                 stockArticleItems.setStockItems( (StockItemsEntity) row[1] );
+                stockArticleItems.setSold( (Double) row[2] );
                 listProductEnter.add( stockArticleItems ) ;
             }
 

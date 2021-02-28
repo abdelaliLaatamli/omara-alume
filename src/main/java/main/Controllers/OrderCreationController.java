@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.entities.queryContainers.ArticleStockStatus;
+import main.Models.entities.queryContainers.StockArticleItems;
 import main.Models.enums.PayementMethod;
 import main.Models.enums.PaymentStatus;
 import main.Models.utils.CurrentCrudOperation;
@@ -40,6 +41,7 @@ public class OrderCreationController implements Initializable {
     private final AluminumService aluminumService = new AluminumService();
     private final GlassService glassService = new GlassService();
     private final PriceService priceService = new PriceService();
+    private final StockService stockService = new StockService();
 
     private CurrentCrudOperation operation = CurrentCrudOperation.ADD;
     private CurrentCrudOperation operationOrder = CurrentCrudOperation.ADD ;
@@ -66,7 +68,7 @@ public class OrderCreationController implements Initializable {
     @FXML ComboBox<Object> priceAluminumCombo ;
     @FXML TextField aluminumQuantity;
     @FXML Label priceAluminumShow;
-    @FXML ComboBox<ArticleStockStatus> comboAlumStockArticle;
+    @FXML ComboBox<StockArticleItems> comboAlumStockArticle;
 
     // ------------ Accessory Tab --------
 
@@ -445,6 +447,18 @@ public class OrderCreationController implements Initializable {
 
             priceCombo.setItems( FXCollections.observableArrayList( listPrices ) );
             priceCombo.getSelectionModel().selectFirst();
+
+
+            AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
+
+            List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
+
+            Collections.sort(listProductsStockStatus);
+
+            comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
+            comboAlumStockArticle.getSelectionModel().selectFirst();
+
+
         }
     }
 
