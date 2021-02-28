@@ -412,18 +412,54 @@ public class OrderCreationController implements Initializable {
 
 
         aluminumQuantity.textProperty().addListener( (observable, oldValue, newValue) -> {
+
             float number = 0f;
             try{
                 number = Float.valueOf( newValue.equals("") ? "0" : newValue );
             }catch (Exception e) {
-                number = 1f;
+                number = 0f;
             }
+
+            if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
+
+                StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    aluminumQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
+
+
             float total = number * (
                     ( priceAluminumCombo.getSelectionModel().getSelectedItem() == null ) ?
                             0 : getPrice( priceAluminumCombo )
             );
             priceAluminumShow.setText( total + " DH");
         } );
+
+        comboAlumStockArticle.valueProperty().addListener(  (observable, oldValue, newValue) -> {
+
+            float number = 0f;
+            try{
+                number = Float.valueOf( aluminumQuantity.getText().equals("") ? "0" : aluminumQuantity.getText() );
+            }catch (Exception e) {
+                number = 0f;
+            }
+
+            if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
+
+                StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    aluminumQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
+
+
+
+        } );
+
+
     }
 
     private void productChosen(ComboBox productCombo , ComboBox priceCombo) {
@@ -454,7 +490,7 @@ public class OrderCreationController implements Initializable {
             List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
 
             Collections.sort(listProductsStockStatus);
-
+            comboAlumStockArticle.getItems().clear();
             comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
             comboAlumStockArticle.getSelectionModel().selectFirst();
 
@@ -495,30 +531,39 @@ public class OrderCreationController implements Initializable {
     public void addAluminumToOrder(MouseEvent mouseEvent) {
 
 
-            OrderItemsEntity aluminumProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
+        OrderItemsEntity aluminumProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
-            if( this.aluminumProduct.getSelectionModel().getSelectedIndex() == -1 ){
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Avertissement");
-                alert.setHeaderText("veuillez choisir le produit");
-                alert.showAndWait();
-                return;
-            }
+        if( this.aluminumProduct.getSelectionModel().getSelectedIndex() == -1 ){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Avertissement");
+            alert.setHeaderText("veuillez choisir le produit");
+            alert.showAndWait();
+            return;
+        }
 
-            aluminumProduct.setArticle( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) );
-            aluminumProduct.setName( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()).getName() +" " + aluminumLabel.getText() );
-            float price = this.getPrice( priceAluminumCombo) ;
-            aluminumProduct.setPrice( price );
-            aluminumProduct.setQuantity( Float.valueOf( aluminumQuantity.getText() ) );
+        aluminumProduct.setArticle( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) );
+        aluminumProduct.setName( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()).getName() +" " + aluminumLabel.getText() );
+        float price = this.getPrice( priceAluminumCombo) ;
+        aluminumProduct.setPrice( price );
+        float quantity = Float.valueOf( aluminumQuantity.getText() );
+        aluminumProduct.setQuantity( quantity );
+        if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
+            aluminumProduct.setStockItemId( comboAlumStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() );
+        }
 
-        if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(aluminumProduct);
-        else editableOrderArticle = null;
+
+        if( operation == CurrentCrudOperation.ADD )
+            orderDetails.getArticleOrders().add(aluminumProduct);
+        else
+            editableOrderArticle = null;
+
 
         this.loadDataTable();
 
         this.aluminumProduct.getSelectionModel().select(-1);
         aluminumLabel.setText("");
         priceAluminumCombo.getItems().clear();
+        comboAlumStockArticle.getItems().clear();
         aluminumQuantity.setText("1");
         priceAluminumShow.setText(" 00 DH");
         operation = CurrentCrudOperation.ADD;
