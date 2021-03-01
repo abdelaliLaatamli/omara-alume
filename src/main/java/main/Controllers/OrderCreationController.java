@@ -126,7 +126,13 @@ public class OrderCreationController implements Initializable {
         orderReference.setText(  String.format("REF%08d", entity.getId() ) );
 
         orderDetails = entity;
-        orderDetailsReal = entity;
+
+        try {
+            orderDetailsReal = (OrderEntity) entity.clone();
+        }catch (CloneNotSupportedException e){
+            orderDetailsReal = null;
+        }
+
 
         loadDataEdit();
         loadPaymentTable();
@@ -521,16 +527,17 @@ public class OrderCreationController implements Initializable {
                                 return e ;
                             }).collect(Collectors.toList());
         }else{
-            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
-                    .map(
-                            e -> {
-                                for ( OrderItemsEntity orderItems: orderDetails.getArticleOrders() ) {
-                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
-                                        e.setSold( e.getSold() + orderItems.getQuantity() );
-                                }
-
-                                return e ;
-                            }).collect(Collectors.toList());
+            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ) ;
+//            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
+//                    .map(
+//                            e -> {
+//                                for ( OrderItemsEntity orderItems: orderDetails.getArticleOrders() ) {
+//                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
+//                                        e.setSold( e.getSold() + orderItems.getQuantity() );
+//                                }
+//
+//                                return e ;
+//                            }).collect(Collectors.toList());
         }
 
 

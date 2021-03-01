@@ -280,9 +280,7 @@ WHERE
 			<textField>
 				<reportElement x="240" y="4" width="132" height="20" uuid="0ec948e4-cc07-4af4-82e4-ce65b08522a1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-<!--				<textFieldExpression><![CDATA[$F{creditclient} + " DH "]]></textFieldExpression>-->
-				<textFieldExpression><![CDATA[String.format("%.2f DH", $F{creditclient} )]]></textFieldExpression>
-<!--				<textFieldExpression><![CDATA[String.format("%d", $F{order_items_quantity})]]></textFieldExpression>-->
+				<textFieldExpression><![CDATA[$F{creditclient} + " DH "]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="10" y="4" width="70" height="20" uuid="bf11bafe-08b0-4b64-b621-7634839c0c25"/>

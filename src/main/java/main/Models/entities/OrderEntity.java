@@ -16,9 +16,11 @@ import java.util.Set;
 @Setter
 @Getter
 
+
+
 @Entity
 @Table(name = "orders")
-public class OrderEntity {
+public class OrderEntity implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +48,11 @@ public class OrderEntity {
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "order_id")
     protected Set<OrderItemsEntity> articleOrders = new HashSet<>() ;
+
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
+    }
 
 
 }
