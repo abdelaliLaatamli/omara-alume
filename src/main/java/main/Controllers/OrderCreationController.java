@@ -502,18 +502,38 @@ public class OrderCreationController implements Initializable {
 
         if( aluminumEntity == null ) return;
 
+        OrderEntity oo = orderDetailsReal ;
+        OrderEntity ee = orderDetails ;
+
 //        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
 //        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
+        List<StockArticleItems> listProductsStockStatus ;
+        if( operationOrder == CurrentCrudOperation.ADD ){
+            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
+                    .filter( e -> e.getStockItems().getQuantity() - e.getSold() >= 0 )
+                    .map(
+                            e -> {
+                                for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                                        e.setSold( e.getSold() + orderItems.getQuantity() );
+                                }
 
-        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream().map(
-                    e -> {
-                        for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
-                            if( orderItems.getStockItemId() == e.getStockItems().getId() )
-                                e.setSold( e.getSold() + orderItems.getQuantity() );
-                        }
+                                return e ;
+                            }).collect(Collectors.toList());
+        }else{
+            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
+                    .map(
+                            e -> {
+                                for ( OrderItemsEntity orderItems: orderDetails.getArticleOrders() ) {
+                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                                        e.setSold( e.getSold() + orderItems.getQuantity() );
+                                }
 
-                        return e ;
-                    }).collect(Collectors.toList());
+                                return e ;
+                            }).collect(Collectors.toList());
+        }
+
+
 
         Collections.sort(listProductsStockStatus);
 
