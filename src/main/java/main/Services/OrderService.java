@@ -41,7 +41,7 @@ public class OrderService {
         return isSaved ;
     }
 
-    public OrderEntity getCommand(int id ){
+    public OrderEntity getOrder(int id ){
 
         OrderEntity newAlum = orderDao.get( id );
 

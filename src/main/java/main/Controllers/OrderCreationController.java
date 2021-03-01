@@ -124,12 +124,7 @@ public class OrderCreationController implements Initializable {
 
         orderDetails = entity;
 
-        try {
-            orderDetailsReal = (OrderEntity) entity.clone();
-        }catch (CloneNotSupportedException e){
-            orderDetailsReal = null;
-        }
-
+        orderDetailsReal = orderService.getOrder( entity.getId() );
 
         loadDataEdit();
         loadPaymentTable();
@@ -505,11 +500,6 @@ public class OrderCreationController implements Initializable {
 
         if( aluminumEntity == null ) return;
 
-//        OrderEntity oo = orderDetailsReal ;
-//        OrderEntity ee = orderDetails ;
-
-//        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
-//        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
         List<StockArticleItems> listProductsStockStatus ;
         if( operationOrder == CurrentCrudOperation.ADD ){
             listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
@@ -525,31 +515,9 @@ public class OrderCreationController implements Initializable {
                             }).collect(Collectors.toList());
         }else{
             listProductsStockStatus = getStockArticleItemsUpdate( stockService.getProductsStockStatus( aluminumEntity.getId() ) ) ;
-//            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ) ;
-//            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
-//                    .map(
-//                            e -> {
-//                                return getStockArticleItemsUpdate(e);
-//                            }).collect(Collectors.toList());
         }
 
-
-
         Collections.sort(listProductsStockStatus);
-
-//        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
-//        Collections.sort(listProductsStockStatus);
-//        List<StockArticleItems> listProductsStockStatusMaped = new ArrayList<>();
-////        if( operationOrder == CurrentCrudOperation.ADD )
-//        listProductsStockStatusMaped = listProductsStockStatus.stream().map(
-//                e -> {
-//                    for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
-//                        if( orderItems.getStockItemId() == e.getStockItems().getId() )
-//                            e.setSold( e.getSold() + orderItems.getQuantity() );
-//                    }
-//
-//                    return e ;
-//                }).collect(Collectors.toList());
 
         comboAlumStockArticle.getItems().clear();
         comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
@@ -558,27 +526,25 @@ public class OrderCreationController implements Initializable {
 
     private List<StockArticleItems> getStockArticleItemsUpdate(List<StockArticleItems> listStockArticleItems) {
 
-        List<StockArticleItems> newListStockArticleItems = new ArrayList<>();
-
         HashMap< Integer , Float > items = new HashMap<>() ;
 
-        for ( OrderItemsEntity oi :orderDetailsReal.getArticleOrders() ) {
+        for ( OrderItemsEntity oi : orderDetailsReal.getArticleOrders() ) {
             if( oi.getStockItemId() != -1 ){
                 items.put( oi.getStockItemId() , ( items.containsKey( oi.getStockItemId() ) ? items.get( oi.getStockItemId() ) : 0 ) + oi.getQuantity() );
             }
         }
 
-//        orderDetailsReal.getArticleOrders();
+        List<StockArticleItems> newListStockArticleItems = listStockArticleItems.stream()
+                .map( e -> {
+                    for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+                        if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                            e.setSold( e.getSold() + orderItems.getQuantity() );
+                    }
+                     e.setSold( e.getSold() - ( items.containsKey( e.getStockItems().getId() ) ? items.get( e.getStockItems().getId() ) : 0 ) );
+                    return e ;
+                }).collect(Collectors.toList());
 
-
-
-//        for (OrderItemsEntity orderItems : orderDetails.getArticleOrders()) {
-//            if (orderItems.getStockItemId() == e.getStockItems().getId())
-//                e.setSold(e.getSold() + orderItems.getQuantity());
-//        }
-//
-//        return e;
-    return  listStockArticleItems ;
+        return  newListStockArticleItems ;
     }
 
 
