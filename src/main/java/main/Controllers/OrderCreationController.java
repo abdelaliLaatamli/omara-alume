@@ -423,9 +423,8 @@ public class OrderCreationController implements Initializable {
                 number = 0f;
             }
 
-//            System.out.println( "aaaaa" );
             if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 && operationOrder != CurrentCrudOperation.EDIT ) {
-//                System.out.println( "bbbbb" );
+
                 StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
 
                 if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
