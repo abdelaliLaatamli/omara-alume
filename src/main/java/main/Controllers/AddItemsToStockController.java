@@ -35,10 +35,10 @@ public class AddItemsToStockController implements Initializable {
 
 
     @FXML ComboBox<ProviderEntity> sProvider;
-    @FXML TextField sLable;
-    @FXML ComboBox<ProductsType> sProduitType;
-    @FXML ComboBox<ArticleEntity> sProduit;
-    @FXML TextField sQuentity;
+    @FXML TextField sLabel;
+    @FXML ComboBox<ProductsType> sProductType;
+    @FXML ComboBox<ArticleEntity> sProduct;
+    @FXML TextField sQuantity;
     @FXML TextField sPriceOfBuy;
 
 
@@ -71,7 +71,7 @@ public class AddItemsToStockController implements Initializable {
         sProvider.getSelectionModel().select( stockEntity.getProvider() );
         sProvider.setDisable( true );
 
-        sLable.setText( stockEntity.getName() );
+        sLabel.setText( stockEntity.getName() );
 
         this.loadDataTable();
     }
@@ -82,25 +82,25 @@ public class AddItemsToStockController implements Initializable {
         stockEntity = new StockEntity();
 
         sProvider.setItems( FXCollections.observableArrayList( providerService.getAll() ) );
-        sProduitType.setItems( FXCollections.observableArrayList( ProductsType.values() ) );
+        sProductType.setItems( FXCollections.observableArrayList( ProductsType.values() ) );
 
 
-        sProduitType.getSelectionModel().selectedIndexProperty().addListener( ( (options, oldValue, newValue) -> {
+        sProductType.getSelectionModel().selectedIndexProperty().addListener( ( (options, oldValue, newValue) -> {
 
             switch ( (int) newValue ){
                 case 0 :
-                    sProduit.getItems().clear();
-                    sProduit.setItems( FXCollections.observableArrayList( aluminumService.getAllAlumunuimProducts() ) );
+                    sProduct.getItems().clear();
+                    sProduct.setItems( FXCollections.observableArrayList( aluminumService.getAllAlumunuimProducts() ) );
                     break;
 
                 case 1 :
-                    sProduit.getItems().clear();
-                    sProduit.setItems( FXCollections.observableArrayList( accessoryService.getAllAccessoryProducts() ) );
+                    sProduct.getItems().clear();
+                    sProduct.setItems( FXCollections.observableArrayList( accessoryService.getAllAccessoryProducts() ) );
                     break;
 
                 case 2:
-                    sProduit.getItems().clear();
-                    sProduit.setItems( FXCollections.observableArrayList( glassService.getAllGlassProducts() ) );
+                    sProduct.getItems().clear();
+                    sProduct.setItems( FXCollections.observableArrayList( glassService.getAllGlassProducts() ) );
                     break;
 
             }
@@ -108,7 +108,7 @@ public class AddItemsToStockController implements Initializable {
 
         } )  );
 
-        sProduitType.getSelectionModel().selectFirst();
+        sProductType.getSelectionModel().selectFirst();
 
     }
 
@@ -136,23 +136,23 @@ public class AddItemsToStockController implements Initializable {
 
                             switch (data.getArticle().getType()){
                                 case ALUMINIUM :
-                                    sProduitType.getSelectionModel().select(0);
+                                    sProductType.getSelectionModel().select(0);
                                     break;
 
                                 case ACCESSOIRE :
-                                    sProduitType.getSelectionModel().select(1);
+                                    sProductType.getSelectionModel().select(1);
                                     break;
 
                                 case VERRE:
-                                    sProduitType.getSelectionModel().select(2);
+                                    sProductType.getSelectionModel().select(2);
                                     break;
 
                                 default:
                                     System.out.println(" there no type of avalaibele types ");
                             }
 
-                            sProduit.getSelectionModel().select(data.getArticle());
-                            sQuentity.setText( String.valueOf( data.getQuantity()) );
+                            sProduct.getSelectionModel().select(data.getArticle());
+                            sQuantity.setText( String.valueOf( data.getQuantity()) );
                             sPriceOfBuy.setText( String.valueOf( data.getPriceOfBuy() ) );
 
                             currentStockItemEdited = data;
@@ -219,14 +219,14 @@ public class AddItemsToStockController implements Initializable {
 
         if( currentOperationStockItem == CurrentCrudOperation.ADD ){
             StockItemsEntity stockItemsEntity = new StockItemsEntity();
-            stockItemsEntity.setArticle( sProduit.getSelectionModel().getSelectedItem());
-            stockItemsEntity.setQuantity( Float.valueOf( sQuentity.getText()) );
+            stockItemsEntity.setArticle( sProduct.getSelectionModel().getSelectedItem());
+            stockItemsEntity.setQuantity( Float.valueOf( sQuantity.getText()) );
             stockItemsEntity.setPriceOfBuy( Float.valueOf( sPriceOfBuy.getText() ) );
             stockEntity.getStockItems().add( stockItemsEntity );
         }else{
             StockItemsEntity stockItemsEntity = currentStockItemEdited;
-            stockItemsEntity.setArticle( sProduit.getSelectionModel().getSelectedItem());
-            stockItemsEntity.setQuantity( Float.valueOf( sQuentity.getText()) );
+            stockItemsEntity.setArticle( sProduct.getSelectionModel().getSelectedItem());
+            stockItemsEntity.setQuantity( Float.valueOf( sQuantity.getText()) );
             stockItemsEntity.setPriceOfBuy( Float.valueOf( sPriceOfBuy.getText() ) );
             currentStockItemEdited = null ;
 
@@ -234,9 +234,9 @@ public class AddItemsToStockController implements Initializable {
 
         loadDataTable();
         currentOperationStockItem = CurrentCrudOperation.ADD;
-        sProduitType.getSelectionModel().select(0);
-        sProduit.getSelectionModel().select(null);
-        sQuentity.setText( "1" );
+        sProductType.getSelectionModel().select(0);
+        sProduct.getSelectionModel().select(null);
+        sQuantity.setText( "1" );
         sPriceOfBuy.setText( "0" );
 
     }
@@ -244,7 +244,7 @@ public class AddItemsToStockController implements Initializable {
 
 
     public void saveStockOrder(MouseEvent mouseEvent) throws IOException {
-        stockEntity.setName( sLable.getText() );
+        stockEntity.setName( sLabel.getText() );
         stockEntity.setProvider( sProvider.getSelectionModel().getSelectedItem() );
 
         if( sProvider.getSelectionModel().getSelectedItem() == null ){
@@ -268,11 +268,6 @@ public class AddItemsToStockController implements Initializable {
 
             goBack(null);
 
-//            Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
-//            main.JavaFxApplication.mainStage.setScene(new Scene(root));
-//            main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
-//            main.JavaFxApplication.mainStage.show();
-
         }else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error D'enregistrement");
@@ -285,11 +280,6 @@ public class AddItemsToStockController implements Initializable {
 
 
     public void goBack(MouseEvent mouseEvent) throws IOException {
-
-//        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/StockManagementView.fxml"));
-//        main.JavaFxApplication.mainStage.setScene(new Scene(root));
-//        main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
-//        main.JavaFxApplication.mainStage.show();
 
         try {
 

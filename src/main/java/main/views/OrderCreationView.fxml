@@ -163,7 +163,7 @@
             
                               <Label layoutX="25.0" layoutY="26.0" prefHeight="17.0" prefWidth="139.0" text="Le montant payé :" />
                               <TextField fx:id="amountToPayText" layoutX="199.0" layoutY="22.0" prefHeight="25.0" prefWidth="210.0" text="0.0" />
-                              <RadioButton fx:id="especeToggleButton" layoutX="25.0" layoutY="88.0" mnemonicParsing="false" selected="true" text="Espéce">
+                              <RadioButton fx:id="cashToggleButton" layoutX="25.0" layoutY="88.0" mnemonicParsing="false" selected="true" text="Espéce">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="paymentMethodGroup" />
                                  </toggleGroup>

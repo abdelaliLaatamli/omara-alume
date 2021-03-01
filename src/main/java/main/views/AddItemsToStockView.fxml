@@ -29,18 +29,18 @@
                         <ComboBox fx:id="sProvider" layoutX="134.0" layoutY="31.0" prefHeight="25.0" prefWidth="240.0" />
 
                         <Label layoutX="14.0" layoutY="101.0" prefHeight="17.0" prefWidth="139.0" text="Label :" />
-                        <TextField fx:id="sLable" layoutX="134.0" layoutY="97.0" prefHeight="25.0" prefWidth="240.0" />
+                        <TextField fx:id="sLabel" layoutX="134.0" layoutY="97.0" prefHeight="25.0" prefWidth="240.0" />
 
                         <AnchorPane layoutX="10.0" layoutY="165.0" prefHeight="350.0" prefWidth="480.0" style="-fx-background-color: #fff;">
 
                             <Label layoutX="14.0" layoutY="16.0" prefHeight="17.0" prefWidth="200.0" text="Produit Type :" />
-                            <ComboBox fx:id="sProduitType" layoutX="14.0" layoutY="32.0" prefHeight="25.0" prefWidth="450.0" />
+                            <ComboBox fx:id="sProductType" layoutX="14.0" layoutY="32.0" prefHeight="25.0" prefWidth="450.0" />
 
                             <Label layoutX="14.0" layoutY="88.0" prefHeight="17.0" prefWidth="120.0" text="Produit :" />
-                            <ComboBox fx:id="sProduit" layoutX="14.0" layoutY="106.0" prefHeight="25.0" prefWidth="450.0" />
+                            <ComboBox fx:id="sProduct" layoutX="14.0" layoutY="106.0" prefHeight="25.0" prefWidth="450.0" />
 
                             <Label layoutX="14.0" layoutY="160.0" prefHeight="17.0" prefWidth="150.0" text="Quentité :" />
-                            <TextField fx:id="sQuentity" layoutX="14.0" layoutY="180.0" prefHeight="25.0" prefWidth="450.0" text="1" />
+                            <TextField fx:id="sQuantity" layoutX="14.0" layoutY="180.0" prefHeight="25.0" prefWidth="450.0" text="1" />
 
                             <Label layoutX="14.0" layoutY="232.0" prefHeight="17.0" prefWidth="150.0" text="Prix d'achat :" />
                             <TextField fx:id="sPriceOfBuy" layoutX="14.0" layoutY="254.0" prefHeight="25.0" prefWidth="450.0" text="0.0" />

@@ -14,10 +14,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
-import main.Models.entities.queryContainers.ArticleStockStatus;
 import main.Models.entities.queryContainers.StockArticleItems;
 import main.Models.enums.PayementMethod;
 import main.Models.enums.PaymentStatus;
+import main.Models.enums.StockSearchProduct;
 import main.Models.utils.CurrentCrudOperation;
 import main.Services.*;
 
@@ -55,7 +55,7 @@ public class OrderCreationController implements Initializable {
     @FXML TextField amountToPayText ;
 
     @FXML ToggleGroup paymentMethodGroup;
-    @FXML RadioButton especeToggleButton;
+    @FXML RadioButton cashToggleButton;
     @FXML RadioButton chequeToggleButton;
 
     @FXML Label orderReference;
@@ -112,6 +112,7 @@ public class OrderCreationController implements Initializable {
     ObservableList<OrderItemsEntity> observableArticleOrder = FXCollections.observableArrayList();
 
     public OrderEntity orderDetails;
+    public OrderEntity orderDetailsReal;
     private float payedMount ;
     private OrderItemsEntity editableOrderArticle = null;
     private PaymentsMadeEntity editablePaymentMade = null ;
@@ -125,6 +126,7 @@ public class OrderCreationController implements Initializable {
         orderReference.setText(  String.format("REF%08d", entity.getId() ) );
 
         orderDetails = entity;
+        orderDetailsReal = entity;
 
         loadDataEdit();
         loadPaymentTable();
@@ -226,7 +228,7 @@ public class OrderCreationController implements Initializable {
                             PaymentsMadeEntity data = getTableView().getItems().get(getIndex());
                             amountToPayText.setText(String.valueOf(data.getAmountPaid()));
                             paymentMethodGroup.selectToggle(
-                                    ( data.getPayementMethod() == PayementMethod.CHEQUE ) ? chequeToggleButton: especeToggleButton
+                                    ( data.getPayementMethod() == PayementMethod.CHEQUE ) ? chequeToggleButton: cashToggleButton
                             );
                             savePayment.setDisable( false );
                             editablePaymentMade = data ;
@@ -421,9 +423,9 @@ public class OrderCreationController implements Initializable {
                 number = 0f;
             }
 
-            System.out.println( "aaaaa" );
-            if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
-                System.out.println( "bbbbb" );
+//            System.out.println( "aaaaa" );
+            if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 && operationOrder != CurrentCrudOperation.EDIT ) {
+//                System.out.println( "bbbbb" );
                 StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
 
                 if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
@@ -495,19 +497,16 @@ public class OrderCreationController implements Initializable {
 
     private void loadChangeDataAlumStatus(ComboBox productCombo) {
 
-        AluminumEntity aluminumEntity ;
-        if( productCombo.getSelectionModel().getSelectedIndex() != -1 ){
-            aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
-        }else{
-            aluminumEntity = (AluminumEntity) productCombo.getSelectionModel().getSelectedItem();
-        }
+        AluminumEntity aluminumEntity =  ( productCombo.getSelectionModel().getSelectedIndex() != -1 ) ?
+                (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() ):
+                (AluminumEntity) productCombo.getSelectionModel().getSelectedItem();
+
         if( aluminumEntity == null ) return;
+
 //        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
-        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
-        Collections.sort(listProductsStockStatus);
-        List<StockArticleItems> listProductsStockStatusMaped = new ArrayList<>();
-        if( operationOrder == CurrentCrudOperation.ADD )
-            listProductsStockStatusMaped = listProductsStockStatus.stream().map(
+//        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
+
+        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream().map(
                     e -> {
                         for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
                             if( orderItems.getStockItemId() == e.getStockItems().getId() )
@@ -516,6 +515,22 @@ public class OrderCreationController implements Initializable {
 
                         return e ;
                     }).collect(Collectors.toList());
+
+        Collections.sort(listProductsStockStatus);
+
+//        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
+//        Collections.sort(listProductsStockStatus);
+//        List<StockArticleItems> listProductsStockStatusMaped = new ArrayList<>();
+////        if( operationOrder == CurrentCrudOperation.ADD )
+//        listProductsStockStatusMaped = listProductsStockStatus.stream().map(
+//                e -> {
+//                    for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+//                        if( orderItems.getStockItemId() == e.getStockItems().getId() )
+//                            e.setSold( e.getSold() + orderItems.getQuantity() );
+//                    }
+//
+//                    return e ;
+//                }).collect(Collectors.toList());
 
         comboAlumStockArticle.getItems().clear();
         comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
@@ -777,6 +792,8 @@ public class OrderCreationController implements Initializable {
 
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
+                            if( data.getArticle().getType() == StockSearchProduct.ALUMINIUM )
+                                loadChangeDataAlumStatus(comboAlumStockArticle);
                             System.out.println("selectedData delete: " + data.getId());
                             orderDetails.getArticleOrders().remove( data );
                             loadDataTable();
@@ -980,7 +997,7 @@ public class OrderCreationController implements Initializable {
         loadPaymentTable();
         loadPaymentLabelsValues();
         amountToPayText.setText("0");
-        paymentMethodGroup.selectToggle(especeToggleButton);
+        paymentMethodGroup.selectToggle(cashToggleButton);
         operationPayment = CurrentCrudOperation.ADD;
 
     }
