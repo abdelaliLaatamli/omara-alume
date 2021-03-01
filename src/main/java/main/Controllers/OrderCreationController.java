@@ -25,10 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -508,8 +505,8 @@ public class OrderCreationController implements Initializable {
 
         if( aluminumEntity == null ) return;
 
-        OrderEntity oo = orderDetailsReal ;
-        OrderEntity ee = orderDetails ;
+//        OrderEntity oo = orderDetailsReal ;
+//        OrderEntity ee = orderDetails ;
 
 //        AluminumEntity aluminumEntity = (AluminumEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() );
 //        List<StockArticleItems> listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() );
@@ -527,16 +524,12 @@ public class OrderCreationController implements Initializable {
                                 return e ;
                             }).collect(Collectors.toList());
         }else{
-            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ) ;
+            listProductsStockStatus = getStockArticleItemsUpdate( stockService.getProductsStockStatus( aluminumEntity.getId() ) ) ;
+//            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ) ;
 //            listProductsStockStatus = stockService.getProductsStockStatus( aluminumEntity.getId() ).stream()
 //                    .map(
 //                            e -> {
-//                                for ( OrderItemsEntity orderItems: orderDetails.getArticleOrders() ) {
-//                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
-//                                        e.setSold( e.getSold() + orderItems.getQuantity() );
-//                                }
-//
-//                                return e ;
+//                                return getStockArticleItemsUpdate(e);
 //                            }).collect(Collectors.toList());
         }
 
@@ -561,6 +554,31 @@ public class OrderCreationController implements Initializable {
         comboAlumStockArticle.getItems().clear();
         comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
         comboAlumStockArticle.getSelectionModel().selectFirst();
+    }
+
+    private List<StockArticleItems> getStockArticleItemsUpdate(List<StockArticleItems> listStockArticleItems) {
+
+        List<StockArticleItems> newListStockArticleItems = new ArrayList<>();
+
+        HashMap< Integer , Float > items = new HashMap<>() ;
+
+        for ( OrderItemsEntity oi :orderDetailsReal.getArticleOrders() ) {
+            if( oi.getStockItemId() != -1 ){
+                items.put( oi.getStockItemId() , ( items.containsKey( oi.getStockItemId() ) ? items.get( oi.getStockItemId() ) : 0 ) + oi.getQuantity() );
+            }
+        }
+
+//        orderDetailsReal.getArticleOrders();
+
+
+
+//        for (OrderItemsEntity orderItems : orderDetails.getArticleOrders()) {
+//            if (orderItems.getStockItemId() == e.getStockItems().getId())
+//                e.setSold(e.getSold() + orderItems.getQuantity());
+//        }
+//
+//        return e;
+    return  listStockArticleItems ;
     }
 
 
