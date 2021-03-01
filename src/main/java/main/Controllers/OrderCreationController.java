@@ -74,7 +74,7 @@ public class OrderCreationController implements Initializable {
     @FXML ComboBox<Object> accessoryPrice;
     @FXML TextField accessoryQuantity;
     @FXML Label accessoryTotal;
-
+    @FXML ComboBox<StockArticleItems> comboAccesStockArticle;
     // --------------- GlassTab  -----------------
     @FXML ComboBox<GlassEntity> glassProduct;
     @FXML TextField glassLabel ;
