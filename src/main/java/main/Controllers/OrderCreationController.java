@@ -11,13 +11,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 import main.Models.entities.*;
 import main.Models.entities.queryContainers.StockArticleItems;
 import main.Models.enums.PayementMethod;
 import main.Models.enums.PaymentStatus;
-import main.Models.enums.StockSearchProduct;
 import main.Models.utils.CurrentCrudOperation;
 import main.Services.*;
 
@@ -246,7 +244,6 @@ public class OrderCreationController implements Initializable {
                         }
                     }
                 };
-                //return cell;
             }
         };
 
@@ -340,10 +337,38 @@ public class OrderCreationController implements Initializable {
                 number = 1f;
             }
 
+            if( comboGlassStockArticle.getSelectionModel().getSelectedIndex() != -1 && operationOrder != CurrentCrudOperation.EDIT ) {
+
+                StockArticleItems stockArticleItems = comboGlassStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    glassQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
+
             glassTotal.setText( String.format( "%.2f DH" , number * (
                     ( glassPrice.getSelectionModel().getSelectedItem() == null ) ?
                             0 : getPrice(glassPrice)
             )));
+
+        } );
+
+        comboGlassStockArticle.valueProperty().addListener(  (observable, oldValue, newValue) -> {
+
+            float number ;
+            try{
+                number = Float.valueOf( glassQuantity.getText().equals("") ? "0" : glassQuantity.getText() );
+            }catch (Exception e) {
+                number = 0f;
+            }
+            if( comboGlassStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
+
+                StockArticleItems stockArticleItems = comboGlassStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    glassQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
 
         } );
     }
@@ -519,8 +544,10 @@ public class OrderCreationController implements Initializable {
                 loadChangeDataAlumStatus(productCombo);
             else if( productCombo == accessoryProduct )
                 loadChangeDataAccesStatus(productCombo);
+            else if( productCombo == glassProduct ){
+                loadChangeDataGlassStatus(productCombo);
+            }
 
-//            loadChangeDataAlumStatus(productCombo);
 
 
         }
@@ -590,6 +617,38 @@ public class OrderCreationController implements Initializable {
         comboAccesStockArticle.getSelectionModel().selectFirst();
     }
 
+    private void loadChangeDataGlassStatus( ComboBox productCombo ) {
+
+        GlassEntity glassEntity =  ( productCombo.getSelectionModel().getSelectedIndex() != -1 ) ?
+                (GlassEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() ):
+                (GlassEntity) productCombo.getSelectionModel().getSelectedItem();
+
+        if( glassEntity == null ) return;
+
+        List<StockArticleItems> listProductsStockStatus ;
+        if( operationOrder == CurrentCrudOperation.ADD ){
+            listProductsStockStatus = stockService.getProductsStockStatus( glassEntity.getId() ).stream()
+                    .filter( e -> e.getStockItems().getQuantity() - e.getSold() >= 0 )
+                    .map(
+                            e -> {
+                                for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                                        e.setSold( e.getSold() + orderItems.getQuantity() );
+                                }
+
+                                return e ;
+                            }).collect(Collectors.toList());
+        }else{
+            listProductsStockStatus = getStockArticleItemsUpdate( stockService.getProductsStockStatus( glassEntity.getId() ) ) ;
+        }
+
+        Collections.sort(listProductsStockStatus);
+
+        comboGlassStockArticle.getItems().clear();
+        comboGlassStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
+        comboGlassStockArticle.getSelectionModel().selectFirst();
+    }
+
     private List<StockArticleItems> getStockArticleItemsUpdate(List<StockArticleItems> listStockArticleItems) {
 
         HashMap< Integer , Float > items = new HashMap<>() ;
@@ -654,7 +713,6 @@ public class OrderCreationController implements Initializable {
                     (this.aluminumProduct.getSelectionModel().getSelectedItem() != null ) ?
                             this.aluminumProduct.getSelectionModel().getSelectedItem() : null ;
 
-//        if( this.aluminumProduct.getSelectionModel().getSelectedIndex() == -1 ){
         if( aluminumEntity == null ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Avertissement");
@@ -664,9 +722,7 @@ public class OrderCreationController implements Initializable {
         }
 
 
-//        aluminumProduct.setArticle( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) );
         aluminumProduct.setArticle( aluminumEntity );
-//        aluminumProduct.setName( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()).getName() +" " + aluminumLabel.getText() );
         aluminumProduct.setName( aluminumEntity + " " + aluminumLabel.getText() );
         float price = this.getPrice( priceAluminumCombo) ;
         aluminumProduct.setPrice( price );
@@ -787,7 +843,13 @@ public class OrderCreationController implements Initializable {
 
         OrderItemsEntity glassArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
-        if( glassProduct.getSelectionModel().getSelectedIndex() == -1 ){
+        GlassEntity glassEntity = ( this.glassProduct.getSelectionModel().getSelectedIndex() != -1 ) ?
+                this.glassProduct.getItems().get( this.glassProduct.getSelectionModel().getSelectedIndex()) :
+                (this.glassProduct.getSelectionModel().getSelectedItem() != null ) ?
+                        this.glassProduct.getSelectionModel().getSelectedItem() : null ;
+
+//        if( glassProduct.getSelectionModel().getSelectedIndex() == -1 ){
+        if( glassEntity == null ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Avertissement");
             alert.setHeaderText("veuillez choisir le produit");
@@ -795,11 +857,19 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        glassArticle.setArticle( glassProduct.getItems().get( glassProduct.getSelectionModel().getSelectedIndex()));
-        glassArticle.setName( glassProduct.getItems().get( glassProduct.getSelectionModel().getSelectedIndex()).getName() + " " + glassLabel.getText());
+//        glassArticle.setArticle( glassProduct.getItems().get( glassProduct.getSelectionModel().getSelectedIndex()));
+//        glassArticle.setName( glassProduct.getItems().get( glassProduct.getSelectionModel().getSelectedIndex()).getName() + " " + glassLabel.getText());
+        glassArticle.setArticle( glassEntity );
+        glassArticle.setName( glassEntity + " " + glassLabel.getText());
         glassArticle.setPrice( getPrice(glassPrice) );
-        glassArticle.setQuantity(Float.valueOf(glassQuantity.getText()));
         glassArticle.setNumberItems( numberPieceGlass.getValue() );
+
+        float quantity =Float.valueOf(glassQuantity.getText());
+        glassArticle.setQuantity( quantity );
+
+        glassArticle.setStockItemId( comboGlassStockArticle.getSelectionModel().getSelectedIndex() != -1 ?
+                comboGlassStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() : -1  );
+
 
         if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(glassArticle);
         else editableOrderArticle = null;
@@ -807,9 +877,10 @@ public class OrderCreationController implements Initializable {
         this.loadDataTable();
 
         glassProduct.getSelectionModel().select(-1);
-//        glassProduct.getSelectionModel().select(null);
+        glassProduct.getSelectionModel().select(null);
         glassLabel.setText("");
         glassPrice.getItems().clear();
+        comboGlassStockArticle.getItems().clear();
         glassQuantity.setText("1");
         numberPieceGlass.getValueFactory().setValue(1);
         glassTotal.setText(" 00 DH");
@@ -948,6 +1019,14 @@ public class OrderCreationController implements Initializable {
     private void loadGlassEdit(OrderItemsEntity data) {
 
         glassProduct.getSelectionModel().select((GlassEntity) data.getArticle());
+
+        loadChangeDataGlassStatus(glassProduct);
+
+        for (StockArticleItems stockArticleItems: comboGlassStockArticle.getItems() ) {
+            if( stockArticleItems.getStockItems().getId() == data.getStockItemId() )
+                comboGlassStockArticle.getSelectionModel().select(stockArticleItems);
+        }
+
         glassLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
         glassPrice.getSelectionModel().select( data.getPrice()+"" );
         glassQuantity.setText( data.getQuantity() + "" );
