@@ -612,7 +612,7 @@ public class OrderCreationController implements Initializable {
     }
 
 
-    public void goBack(MouseEvent mouseEvent) throws IOException {
+    public void goBack() throws IOException {
 
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListOrdersView.fxml"));
@@ -622,7 +622,7 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void goHome(MouseEvent mouseEvent) throws IOException {
+    public void goHome() throws IOException {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/MainView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
@@ -646,7 +646,14 @@ public class OrderCreationController implements Initializable {
 
         OrderItemsEntity aluminumProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
-        if( this.aluminumProduct.getSelectionModel().getSelectedIndex() == -1 ){
+
+        AluminumEntity aluminumEntity = ( this.aluminumProduct.getSelectionModel().getSelectedIndex() != -1 ) ?
+                    this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) :
+                    (this.aluminumProduct.getSelectionModel().getSelectedItem() != null ) ?
+                            this.aluminumProduct.getSelectionModel().getSelectedItem() : null ;
+
+//        if( this.aluminumProduct.getSelectionModel().getSelectedIndex() == -1 ){
+        if( aluminumEntity == null ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Avertissement");
             alert.setHeaderText("veuillez choisir le produit");
@@ -654,8 +661,11 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        aluminumProduct.setArticle( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) );
-        aluminumProduct.setName( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()).getName() +" " + aluminumLabel.getText() );
+
+//        aluminumProduct.setArticle( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()) );
+        aluminumProduct.setArticle( aluminumEntity );
+//        aluminumProduct.setName( this.aluminumProduct.getItems().get( this.aluminumProduct.getSelectionModel().getSelectedIndex()).getName() +" " + aluminumLabel.getText() );
+        aluminumProduct.setName( aluminumEntity + " " + aluminumLabel.getText() );
         float price = this.getPrice( priceAluminumCombo) ;
         aluminumProduct.setPrice( price );
         float quantity = Float.valueOf( aluminumQuantity.getText() );
@@ -673,8 +683,10 @@ public class OrderCreationController implements Initializable {
         this.loadDataTable();
 
         this.aluminumProduct.getSelectionModel().select(-1);
+        this.aluminumProduct.getSelectionModel().select(null);
         aluminumLabel.setText("");
         priceAluminumCombo.getItems().clear();
+        priceAluminumCombo.getSelectionModel().select(null);
         comboAlumStockArticle.getItems().clear();
         aluminumQuantity.setText("1");
         priceAluminumShow.setText(" 00 DH");
@@ -723,11 +735,16 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void addAccessoryToOrder(MouseEvent mouseEvent) {
+    public void addAccessoryToOrder() {
 
         OrderItemsEntity accessoryArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
-        if( accessoryProduct.getSelectionModel().getSelectedIndex() == -1 ){
+        AccessoryEntity accessoryEntity = ( this.accessoryProduct.getSelectionModel().getSelectedIndex() != -1 ) ?
+                this.accessoryProduct.getItems().get( this.accessoryProduct.getSelectionModel().getSelectedIndex()) :
+                (this.accessoryProduct.getSelectionModel().getSelectedItem() != null ) ?
+                        this.accessoryProduct.getSelectionModel().getSelectedItem() : null ;
+
+        if( accessoryEntity == null ){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Avertissement");
             alert.setHeaderText("veuillez choisir le produit");
@@ -735,8 +752,9 @@ public class OrderCreationController implements Initializable {
             return;
         }
 
-        accessoryArticle.setArticle( accessoryProduct.getItems().get( accessoryProduct.getSelectionModel().getSelectedIndex() ) );
-        accessoryArticle.setName( accessoryProduct.getItems().get( accessoryProduct.getSelectionModel().getSelectedIndex() ).getName() + " " + accessoryLabel.getText());
+
+        accessoryArticle.setArticle( accessoryEntity );
+        accessoryArticle.setName( accessoryEntity.getName() + " " + accessoryLabel.getText());
         accessoryArticle.setPrice( getPrice(accessoryPrice) );
 
         float quantity =Float.valueOf(accessoryQuantity.getText()) ;
@@ -751,8 +769,10 @@ public class OrderCreationController implements Initializable {
         this.loadDataTable();
 
         accessoryProduct.getSelectionModel().select(-1);
+        accessoryProduct.getSelectionModel().select(null);
         accessoryLabel.setText("");
         accessoryPrice.getItems().clear();
+        accessoryPrice.getSelectionModel().select(null);
         comboAccesStockArticle.getItems().clear();
         accessoryQuantity.setText("1");
         accessoryTotal.setText(" 00 DH");
@@ -784,10 +804,11 @@ public class OrderCreationController implements Initializable {
         this.loadDataTable();
 
         glassProduct.getSelectionModel().select(-1);
+//        glassProduct.getSelectionModel().select(null);
         glassLabel.setText("");
         glassPrice.getItems().clear();
         glassQuantity.setText("1");
-        numberPieceGlass.getValueFactory().setValue(1);//.setText("1");
+        numberPieceGlass.getValueFactory().setValue(1);
         glassTotal.setText(" 00 DH");
         this.operation = CurrentCrudOperation.ADD;
     }
@@ -871,9 +892,6 @@ public class OrderCreationController implements Initializable {
 
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
-
-//                            if( data.getArticle().getType() == StockSearchProduct.ALUMINIUM )
-//                                loadChangeDataAlumStatus(comboAlumStockArticle);
 
                             switch ( data.getArticle().getType() ){
                                 case ALUMINIUM :
@@ -976,14 +994,10 @@ public class OrderCreationController implements Initializable {
 
         loadChangeDataAlumStatus(aluminumProduct);
 
-
         for (StockArticleItems stockArticleItems: comboAlumStockArticle.getItems() ) {
             if( stockArticleItems.getStockItems().getId() == data.getStockItemId() )
                 comboAlumStockArticle.getSelectionModel().select(stockArticleItems);
         }
-//        comboAccesStockArticle.getItems().stream().
-
-        //        comboAccesStockArticle.getSelectionModel().selectFirst();
 
         aluminumLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
         priceAluminumCombo.getSelectionModel().select( String.valueOf( data.getPrice() ) );
@@ -1007,7 +1021,6 @@ public class OrderCreationController implements Initializable {
                           .collect( Collectors.toList() )
                           .stream()
                           .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
-//        return total;
     }
 
     private Float calculateAmountPaid(){
@@ -1049,13 +1062,11 @@ public class OrderCreationController implements Initializable {
             alert.showAndWait();
         }
 
-        this.goBack(null);
+        this.goBack();
 
     }
 
     private void savePricesClient(){
-
-        //orderDetails.getArticleOrders();
 
         List<PriceEntity> newPrices = new ArrayList<>();
         for( OrderItemsEntity articleOrder : orderDetails.getArticleOrders()){
