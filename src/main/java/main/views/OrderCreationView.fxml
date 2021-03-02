@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.OrderCreationController">
+<AnchorPane prefHeight="700.0" prefWidth="1200.0" style="-fx-background-color: #a8dadc;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Controllers.OrderCreationController">
 
     <children>
 
@@ -73,7 +73,7 @@
                                      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="Produit :" />
                                      <ComboBox fx:id="accessoryProduct" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="180.0" />
 
-                                     <Label layoutX="366.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Produit Label :" />
+                                     <Label layoutX="372.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Produit Label :" />
                                      <TextField fx:id="accessoryLabel" layoutX="372.0" layoutY="31.0" prefHeight="25.0" prefWidth="190.0" />
 
 
@@ -89,6 +89,7 @@
                                      
                                      <Button layoutX="435.0" layoutY="111.0" mnemonicParsing="false" onMouseClicked="#addAccessoryToOrder" prefHeight="25.0" prefWidth="120.0" text="Enregistrer" />
                                     <ComboBox fx:id="comboAccesStockArticle" layoutX="205.0" layoutY="31.0" prefWidth="160.0" />
+                                    <Label layoutX="206.0" layoutY="14.0" text="Stock Statu : " />
 
                                  </children>
                           </AnchorPane>
@@ -102,21 +103,23 @@
                                      <Label layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="200.0" text="Produit :" />
                                      <ComboBox fx:id="glassProduct" layoutX="14.0" layoutY="31.0" prefHeight="25.0" prefWidth="180.0" />
 
-                                     <Label layoutX="201.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Produit Label :" />
-                                     <TextField fx:id="glassLabel" layoutX="201.0" layoutY="31.0" prefHeight="25.0" prefWidth="180.0" />
+                                     <Label layoutX="382.0" layoutY="14.0" prefHeight="17.0" prefWidth="150.0" text="Produit Label :" />
+                                     <TextField fx:id="glassLabel" layoutX="382.0" layoutY="31.0" prefHeight="25.0" prefWidth="180.0" />
 
-                                     <Label layoutX="14.0" layoutY="94.0" prefHeight="17.0" prefWidth="120.0" text="Prix :" />
-                                     <ComboBox fx:id="glassPrice" editable="true" layoutX="14.0" layoutY="111.0" prefHeight="25.0" prefWidth="160.0" />
+                                     <Label layoutX="14.0" layoutY="85.0" prefHeight="17.0" prefWidth="120.0" text="Prix :" />
+                                     <ComboBox fx:id="glassPrice" editable="true" layoutX="14.0" layoutY="99.0" prefHeight="25.0" prefWidth="160.0" />
 
-                                     <Label layoutX="181.0" layoutY="94.0" prefHeight="17.0" prefWidth="120.0" text="Quentité :" />
-                                     <TextField fx:id="glassQuantity" layoutX="181.0" layoutY="111.0" prefHeight="25.0" prefWidth="150.0" text="1" />
+                                     <Label layoutX="14.0" layoutY="145.0" prefHeight="17.0" prefWidth="120.0" text="Quentité :" />
+                                     <TextField fx:id="glassQuantity" layoutX="14.0" layoutY="164.0" prefHeight="25.0" prefWidth="150.0" text="1" />
 
-                                     <Label layoutX="340.0" layoutY="94.0" prefHeight="17.0" prefWidth="93.0" text="Total :" />
-                                     <Label fx:id="glassTotal" layoutX="340.0" layoutY="115.0" prefHeight="17.0" prefWidth="100.0" text="00 DH" />
+                                     <Label layoutX="174.0" layoutY="151.0" prefHeight="17.0" prefWidth="93.0" text="Total :" />
+                                     <Label fx:id="glassTotal" layoutX="186.0" layoutY="168.0" prefHeight="17.0" prefWidth="108.0" text="00 DH" />
 
-                                    <Button layoutX="435.0" layoutY="111.0" mnemonicParsing="false" onMouseClicked="#addGlassInOrder" prefHeight="25.0" prefWidth="120.0" text="Enregistrer" />
-                                    <Label layoutX="387.0" layoutY="14.0" prefHeight="17.0" prefWidth="120.0" text="nombre des morceau :" />
-                                    <Spinner fx:id="numberPieceGlass" layoutX="387.0" layoutY="31.0" prefHeight="25.0" prefWidth="170.0" />
+                                    <Button layoutX="436.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#addGlassInOrder" prefHeight="25.0" prefWidth="120.0" text="Enregistrer" />
+                                    <Label layoutX="194.0" layoutY="85.0" prefHeight="17.0" prefWidth="120.0" text="nombre des morceau :" />
+                                    <Spinner fx:id="numberPieceGlass" layoutX="194.0" layoutY="99.0" prefHeight="25.0" prefWidth="170.0" />
+                                    <ComboBox fx:id="comboGlassStockArticle" layoutX="204.0" layoutY="31.0" prefHeight="25.0" prefWidth="170.0" />
+                                    <Label layoutX="207.0" layoutY="14.0" text="Stock Statu :  " />
 
                                  </children>
                                 </AnchorPane>

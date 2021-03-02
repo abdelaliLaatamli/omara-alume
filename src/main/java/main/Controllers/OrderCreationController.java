@@ -76,12 +76,14 @@ public class OrderCreationController implements Initializable {
     @FXML Label accessoryTotal;
     @FXML ComboBox<StockArticleItems> comboAccesStockArticle;
     // --------------- GlassTab  -----------------
+
     @FXML ComboBox<GlassEntity> glassProduct;
     @FXML TextField glassLabel ;
     @FXML ComboBox<Object> glassPrice ;
     @FXML TextField glassQuantity;
     @FXML Label glassTotal ;
     @FXML Spinner<Integer> numberPieceGlass;
+    @FXML ComboBox<StockArticleItems> comboGlassStockArticle;
 
     // --------- TABPANE Switch Products-----------
 
@@ -759,6 +761,7 @@ public class OrderCreationController implements Initializable {
 
         float quantity =Float.valueOf(accessoryQuantity.getText()) ;
         accessoryArticle.setQuantity(quantity);
+
         accessoryArticle.setStockItemId(  comboAccesStockArticle.getSelectionModel().getSelectedIndex() != -1 ?
                 comboAccesStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() : -1  );
 
