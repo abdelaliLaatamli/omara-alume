@@ -173,7 +173,7 @@ public class OrderCreationController implements Initializable {
                     .map( e -> e.getPrice() * e.getQuantity() )
                     .reduce( 0f , ( subTotal , element ) -> subTotal + element );
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.parseFloat( newValue ) ;
             }catch (Exception e) {
@@ -218,7 +218,7 @@ public class OrderCreationController implements Initializable {
         Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>> editCellFactory = new Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>>() {
             @Override
             public TableCell<PaymentsMadeEntity, Void> call(final TableColumn<PaymentsMadeEntity, Void> param) {
-                final TableCell<PaymentsMadeEntity, Void> cell = new TableCell<PaymentsMadeEntity, Void>() {
+                return new TableCell<PaymentsMadeEntity, Void>() {
 
                     private final Button btn = new Button("Modifier");
                     {
@@ -244,7 +244,7 @@ public class OrderCreationController implements Initializable {
                         }
                     }
                 };
-                return cell;
+                //return cell;
             }
         };
 
@@ -252,7 +252,7 @@ public class OrderCreationController implements Initializable {
         Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>> deleteCellFactory = new Callback<TableColumn<PaymentsMadeEntity, Void>, TableCell<PaymentsMadeEntity, Void>>() {
             @Override
             public TableCell<PaymentsMadeEntity, Void> call(final TableColumn<PaymentsMadeEntity, Void> param) {
-                final TableCell<PaymentsMadeEntity, Void> cell = new TableCell<PaymentsMadeEntity, Void>() {
+                return new TableCell<PaymentsMadeEntity, Void>() {
 
                     private final Button btn = new Button("Delete");
                     {
@@ -276,7 +276,7 @@ public class OrderCreationController implements Initializable {
                         }
                     }
                 };
-                return cell;
+
             }
         };
 
@@ -315,7 +315,7 @@ public class OrderCreationController implements Initializable {
 
         glassPrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.valueOf( glassQuantity.getText().equals("") ? "0" : glassQuantity.getText() );
             }catch (Exception e) {
@@ -331,7 +331,7 @@ public class OrderCreationController implements Initializable {
 
         glassQuantity.textProperty().addListener( (observable, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.valueOf( newValue.equals("") ? "0" : newValue );
             }catch (Exception e) {
@@ -355,7 +355,7 @@ public class OrderCreationController implements Initializable {
 
         accessoryPrice.valueProperty().addListener(  (options, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.valueOf( accessoryQuantity.getText().equals("") ? "0" : accessoryQuantity.getText() );
             }catch (Exception e) {
@@ -371,17 +371,46 @@ public class OrderCreationController implements Initializable {
 
         accessoryQuantity.textProperty().addListener( (observable, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number;
             try{
                 number = Float.valueOf( newValue.equals("") ? "0" : newValue );
             }catch (Exception e) {
                 number = 1f;
             }
 
+
+            if( comboAccesStockArticle.getSelectionModel().getSelectedIndex() != -1 && operationOrder != CurrentCrudOperation.EDIT ) {
+
+                StockArticleItems stockArticleItems = comboAccesStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    accessoryQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
+
             accessoryTotal.setText( number * (
                     ( accessoryPrice.getSelectionModel().getSelectedItem() == null ) ?
                             0 : getPrice(accessoryPrice)
             ) + " DH");
+
+        } );
+
+        comboAccesStockArticle.valueProperty().addListener(  (observable, oldValue, newValue) -> {
+
+            float number ;
+            try{
+                number = Float.valueOf( accessoryQuantity.getText().equals("") ? "0" : accessoryQuantity.getText() );
+            }catch (Exception e) {
+                number = 0f;
+            }
+            if( comboAccesStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
+
+                StockArticleItems stockArticleItems = comboAccesStockArticle.getSelectionModel().getSelectedItem();
+
+                if( number > stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) {
+                    accessoryQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
+                }
+            }
 
         } );
     }
@@ -396,7 +425,7 @@ public class OrderCreationController implements Initializable {
 
         priceAluminumCombo.valueProperty().addListener( (options, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.valueOf( aluminumQuantity.getText().equals("") ? "0" : aluminumQuantity.getText() );
             }catch (Exception e) {
@@ -414,7 +443,7 @@ public class OrderCreationController implements Initializable {
 
         aluminumQuantity.textProperty().addListener( (observable, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number;
             try{
                 number = Float.valueOf( newValue.equals("") ? "0" : newValue );
             }catch (Exception e) {
@@ -440,13 +469,12 @@ public class OrderCreationController implements Initializable {
 
         comboAlumStockArticle.valueProperty().addListener(  (observable, oldValue, newValue) -> {
 
-            float number = 0f;
+            float number ;
             try{
                 number = Float.valueOf( aluminumQuantity.getText().equals("") ? "0" : aluminumQuantity.getText() );
             }catch (Exception e) {
                 number = 0f;
             }
-
             if( comboAlumStockArticle.getSelectionModel().getSelectedIndex() != -1 ) {
 
                 StockArticleItems stockArticleItems = comboAlumStockArticle.getSelectionModel().getSelectedItem();
@@ -455,8 +483,6 @@ public class OrderCreationController implements Initializable {
                     aluminumQuantity.setText( String.valueOf( stockArticleItems.getStockItems().getQuantity() - stockArticleItems.getSold() ) );
                 }
             }
-
-
 
         } );
 
@@ -486,7 +512,13 @@ public class OrderCreationController implements Initializable {
             priceCombo.setItems( FXCollections.observableArrayList( listPrices ) );
             priceCombo.getSelectionModel().selectFirst();
 
-            loadChangeDataAlumStatus(productCombo);
+
+            if( productCombo == aluminumProduct )
+                loadChangeDataAlumStatus(productCombo);
+            else if( productCombo == accessoryProduct )
+                loadChangeDataAccesStatus(productCombo);
+
+//            loadChangeDataAlumStatus(productCombo);
 
 
         }
@@ -522,6 +554,38 @@ public class OrderCreationController implements Initializable {
         comboAlumStockArticle.getItems().clear();
         comboAlumStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
         comboAlumStockArticle.getSelectionModel().selectFirst();
+    }
+
+    private void loadChangeDataAccesStatus( ComboBox productCombo ) {
+
+        AccessoryEntity accessoryEntity =  ( productCombo.getSelectionModel().getSelectedIndex() != -1 ) ?
+                (AccessoryEntity) productCombo.getItems().get( productCombo.getSelectionModel().getSelectedIndex() ):
+                (AccessoryEntity) productCombo.getSelectionModel().getSelectedItem();
+
+        if( accessoryEntity == null ) return;
+
+        List<StockArticleItems> listProductsStockStatus ;
+        if( operationOrder == CurrentCrudOperation.ADD ){
+            listProductsStockStatus = stockService.getProductsStockStatus( accessoryEntity.getId() ).stream()
+                    .filter( e -> e.getStockItems().getQuantity() - e.getSold() >= 0 )
+                    .map(
+                            e -> {
+                                for ( OrderItemsEntity orderItems:  orderDetails.getArticleOrders() ) {
+                                    if( orderItems.getStockItemId() == e.getStockItems().getId() )
+                                        e.setSold( e.getSold() + orderItems.getQuantity() );
+                                }
+
+                                return e ;
+                            }).collect(Collectors.toList());
+        }else{
+            listProductsStockStatus = getStockArticleItemsUpdate( stockService.getProductsStockStatus( accessoryEntity.getId() ) ) ;
+        }
+
+        Collections.sort(listProductsStockStatus);
+
+        comboAccesStockArticle.getItems().clear();
+        comboAccesStockArticle.setItems( FXCollections.observableArrayList( listProductsStockStatus ) );
+        comboAccesStockArticle.getSelectionModel().selectFirst();
     }
 
     private List<StockArticleItems> getStockArticleItemsUpdate(List<StockArticleItems> listStockArticleItems) {
@@ -568,7 +632,7 @@ public class OrderCreationController implements Initializable {
     }
 
 
-    public void goToClientView(MouseEvent mouseEvent) throws IOException {
+    public void goToClientView() throws IOException {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ClientView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
@@ -577,7 +641,7 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void addAluminumToOrder(MouseEvent mouseEvent) {
+    public void addAluminumToOrder() {
 
 
         OrderItemsEntity aluminumProduct = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
@@ -674,23 +738,29 @@ public class OrderCreationController implements Initializable {
         accessoryArticle.setArticle( accessoryProduct.getItems().get( accessoryProduct.getSelectionModel().getSelectedIndex() ) );
         accessoryArticle.setName( accessoryProduct.getItems().get( accessoryProduct.getSelectionModel().getSelectedIndex() ).getName() + " " + accessoryLabel.getText());
         accessoryArticle.setPrice( getPrice(accessoryPrice) );
-        accessoryArticle.setQuantity(Float.valueOf(accessoryQuantity.getText()));
+
+        float quantity =Float.valueOf(accessoryQuantity.getText()) ;
+        accessoryArticle.setQuantity(quantity);
+        accessoryArticle.setStockItemId(  comboAccesStockArticle.getSelectionModel().getSelectedIndex() != -1 ?
+                comboAccesStockArticle.getSelectionModel().getSelectedItem().getStockItems().getId() : -1  );
+
 
         if( operation == CurrentCrudOperation.ADD ) orderDetails.getArticleOrders().add(accessoryArticle);
         else editableOrderArticle = null;
 
         this.loadDataTable();
 
-        accessoryProduct.getSelectionModel().select(-1); ;
-        accessoryLabel.setText(""); ;
-        accessoryPrice.getItems().clear(); ;
-        accessoryQuantity.setText("1"); ;
-        accessoryTotal.setText(" 00 DH"); ;
+        accessoryProduct.getSelectionModel().select(-1);
+        accessoryLabel.setText("");
+        accessoryPrice.getItems().clear();
+        comboAccesStockArticle.getItems().clear();
+        accessoryQuantity.setText("1");
+        accessoryTotal.setText(" 00 DH");
         operation = CurrentCrudOperation.ADD;
 
     }
 
-    public void addGlassInOrder(MouseEvent mouseEvent) {
+    public void addGlassInOrder() {
 
         OrderItemsEntity glassArticle = ( operation == CurrentCrudOperation.ADD ) ? new OrderItemsEntity() : editableOrderArticle;
 
@@ -743,7 +813,7 @@ public class OrderCreationController implements Initializable {
         Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>> editCellFactory = new Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>>() {
             @Override
             public TableCell<OrderItemsEntity, Void> call(final TableColumn<OrderItemsEntity, Void> param) {
-                final TableCell<OrderItemsEntity, Void> cell = new TableCell<OrderItemsEntity, Void>() {
+                return new TableCell<OrderItemsEntity, Void>() {
 
                     private final Button btn = new Button("Modifier");
                     {
@@ -786,7 +856,6 @@ public class OrderCreationController implements Initializable {
                         }
                     }
                 };
-                return cell;
             }
         };
 
@@ -794,7 +863,7 @@ public class OrderCreationController implements Initializable {
         Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>> deleteCellFactory = new Callback<TableColumn<OrderItemsEntity, Void>, TableCell<OrderItemsEntity, Void>>() {
             @Override
             public TableCell<OrderItemsEntity, Void> call(final TableColumn<OrderItemsEntity, Void> param) {
-                final TableCell<OrderItemsEntity, Void> cell = new TableCell<OrderItemsEntity, Void>() {
+                return  new TableCell<OrderItemsEntity, Void>() {
 
                     private final Button btn = new Button("Delete");
 
@@ -802,8 +871,21 @@ public class OrderCreationController implements Initializable {
 
                         btn.setOnAction((ActionEvent event) -> {
                             OrderItemsEntity data = getTableView().getItems().get(getIndex());
-                            if( data.getArticle().getType() == StockSearchProduct.ALUMINIUM )
-                                loadChangeDataAlumStatus(comboAlumStockArticle);
+
+//                            if( data.getArticle().getType() == StockSearchProduct.ALUMINIUM )
+//                                loadChangeDataAlumStatus(comboAlumStockArticle);
+
+                            switch ( data.getArticle().getType() ){
+                                case ALUMINIUM :
+                                    loadChangeDataAlumStatus(comboAlumStockArticle);
+                                break ;
+                                case ACCESSOIRE:
+                                    loadChangeDataAlumStatus(comboAccesStockArticle);
+                                    break;
+
+                            }
+
+
                             System.out.println("selectedData delete: " + data.getId());
                             orderDetails.getArticleOrders().remove( data );
                             loadDataTable();
@@ -820,7 +902,6 @@ public class OrderCreationController implements Initializable {
                         }
                     }
                 };
-                return cell;
             }
         };
 
@@ -865,7 +946,16 @@ public class OrderCreationController implements Initializable {
     }
 
     private void loadAccessoryEdit(OrderItemsEntity data) {
+
         accessoryProduct.getSelectionModel().select((AccessoryEntity) data.getArticle());
+
+        loadChangeDataAccesStatus( accessoryProduct );
+
+        for (StockArticleItems stockArticleItems: comboAccesStockArticle.getItems() ) {
+            if( stockArticleItems.getStockItems().getId() == data.getStockItemId() )
+                comboAccesStockArticle.getSelectionModel().select(stockArticleItems);
+        }
+
         accessoryLabel.setText( data.getName().replace( data.getArticle().getName() , "" ).trim() );
         accessoryPrice.getSelectionModel().select( data.getPrice() + "" );
         accessoryQuantity.setText( data.getQuantity() + "" );
@@ -883,8 +973,17 @@ public class OrderCreationController implements Initializable {
     private void loadAluminumEdit(OrderItemsEntity data) {
 
         aluminumProduct.getSelectionModel().select( (AluminumEntity) data.getArticle() );
-//        System.out.println( aluminumProduct.getSelectionModel().getSelectedItem() );
+
         loadChangeDataAlumStatus(aluminumProduct);
+
+
+        for (StockArticleItems stockArticleItems: comboAlumStockArticle.getItems() ) {
+            if( stockArticleItems.getStockItems().getId() == data.getStockItemId() )
+                comboAlumStockArticle.getSelectionModel().select(stockArticleItems);
+        }
+//        comboAccesStockArticle.getItems().stream().
+
+        //        comboAccesStockArticle.getSelectionModel().selectFirst();
 
         aluminumLabel.setText( data.getName().replace(  data.getArticle().getName() , "").trim() );
         priceAluminumCombo.getSelectionModel().select( String.valueOf( data.getPrice() ) );
@@ -903,12 +1002,12 @@ public class OrderCreationController implements Initializable {
 
     private Float getTotal(){
 
-        float total = orderDetails.getArticleOrders().stream()
+        return orderDetails.getArticleOrders().stream()
                           .map( n -> n.getPrice()* n.getQuantity() )
                           .collect( Collectors.toList() )
                           .stream()
                           .reduce( 0f ,  ( subtotal , element ) -> subtotal + element );
-        return total;
+//        return total;
     }
 
     private Float calculateAmountPaid(){
@@ -919,7 +1018,7 @@ public class OrderCreationController implements Initializable {
         return payedMount;
     }
 
-    public void saveOrderEvent(MouseEvent mouseEvent) throws IOException {
+    public void saveOrderEvent() throws IOException {
 
         if( clientNameForm.getSelectionModel().getSelectedIndex() == -1 ){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -956,7 +1055,7 @@ public class OrderCreationController implements Initializable {
 
     private void savePricesClient(){
 
-        orderDetails.getArticleOrders();
+        //orderDetails.getArticleOrders();
 
         List<PriceEntity> newPrices = new ArrayList<>();
         for( OrderItemsEntity articleOrder : orderDetails.getArticleOrders()){
@@ -971,6 +1070,7 @@ public class OrderCreationController implements Initializable {
             for (PriceEntity price : priceItems ) {
                 if( priceChosen == price.getPrice()){
                     alreadyUsed = true ;
+                    break;
                 }
             }
 
@@ -989,7 +1089,7 @@ public class OrderCreationController implements Initializable {
 
     }
 
-    public void addPaymentMade(MouseEvent mouseEvent) {
+    public void addPaymentMade() {
 
         PayementMethod payementMethod = ((RadioButton) paymentMethodGroup.getSelectedToggle()).getText().equals("Espéce") ?
                         PayementMethod.ESPECE : PayementMethod.CHEQUE ;
