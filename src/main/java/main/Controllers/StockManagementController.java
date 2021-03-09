@@ -144,8 +144,6 @@ public class StockManagementController implements Initializable {
                                 alert.setHeaderText("Look, an Exception Dialog");
                                 alert.setContentText("Could not find file blabla.txt!");
 
-
-//                                e.printStackTrace();
                                 String exceptionText = e.toString();
 
                                 Label label = new Label("The exception stacktrace was:");
@@ -167,7 +165,6 @@ public class StockManagementController implements Initializable {
                                 alert.getDialogPane().setExpandableContent(expContent);
 
                                 alert.showAndWait();
-                                //e.printStackTrace();
                             }
 
                         });
@@ -414,11 +411,6 @@ public class StockManagementController implements Initializable {
 
 
     public void goToStockView(MouseEvent mouseEvent) throws IOException {
-
-//        Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/ListStockView.fxml"));
-//        main.JavaFxApplication.mainStage.setScene(new Scene(root));
-//        main.JavaFxApplication.mainStage.setTitle(" Stock -- Aluminium et verre");
-//        main.JavaFxApplication.mainStage.show();
 
         Parent root = FXMLLoader.load(this.getClass().getResource("/main/views/AddItemsToStockView.fxml"));
         main.JavaFxApplication.mainStage.setScene(new Scene(root));

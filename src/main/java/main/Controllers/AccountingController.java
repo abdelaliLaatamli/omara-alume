@@ -176,7 +176,6 @@ public class AccountingController implements Initializable {
 
         priceOfSellingColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f" , cellData.getValue().getPriceOfBuy() ) ) );
         productQuantityColumnOut.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.2f" , cellData.getValue().getQuantity() ) ) );
-//        productQuantityColumnOut.setCellValueFactory( new PropertyValueFactory<>("quantity") );
 
         dateOfOrderColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
@@ -246,7 +245,6 @@ public class AccountingController implements Initializable {
 
         priceOfBuyingColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.3f" , cellData.getValue().getPriceOfBuy() ) ) );
         productQuantityColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper( String.format( "%.3f" , cellData.getValue().getQuantity() ) ) );
-//        productQuantityColumn.setCellValueFactory( new PropertyValueFactory<>("quantity") );
 
         dateOfImportColumn.setCellValueFactory(cellData -> new ReadOnlyObjectWrapper(
                 DateTimeFormatter.ofPattern( "dd/MM/yyyy" ).withZone(ZoneId.systemDefault()).format(cellData.getValue().getDateImportation())
@@ -324,7 +322,6 @@ public class AccountingController implements Initializable {
         main.JavaFxApplication.mainStage.setScene(new Scene(root));
         main.JavaFxApplication.mainStage.setTitle("Home -- Aluminium et verre");
         main.JavaFxApplication.mainStage.show();
-
     }
 
 
