@@ -126,7 +126,6 @@ public class OrderDao {
             return false;
         }
         return true;
-        //return entity;
     }
 
     /**
@@ -206,8 +205,7 @@ public class OrderDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-            //e.printStackTrace();
-            return new ArrayList<OrderEntity>();
+            return new ArrayList<>();
         }
         return listOfEntities;
     }
