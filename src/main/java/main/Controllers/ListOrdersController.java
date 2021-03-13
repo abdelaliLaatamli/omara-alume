@@ -176,8 +176,6 @@ public class ListOrdersController implements Initializable {
 
                             }
 
-                            // lockOrder( order );
-
                         });
                     }
 

@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import main.Models.dao.PaymentsMadeDao;
 import main.Models.dao.StockItemsDao;
+import main.Models.utils.DBConnection;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
@@ -94,9 +95,12 @@ public class JavaFxApplication extends Application {
 
     private static void saveDbFile( String filePath  , String date ) throws IOException {
         Process run = Runtime.getRuntime().exec(
-                "C:/xampp/mysql/bin/mysqldump --user=root --password=  omar_alum"
+
+                "C:/Program Files/MariaDB 10.5/bin/mysqldump --user="+ DBConnection.dbUSER
+                        +" --password="+DBConnection.dbPASS+" --port="+DBConnection.dbPORT+" "+DBConnection.dbDTBS
         );
         InputStream in = run.getInputStream();
+//        System.out.println( in );
 
         in.read(new byte[in.available()]);
 
