@@ -102,7 +102,7 @@ public class ListOrdersController implements Initializable {
                                 OrderCreationController controller = loader.<OrderCreationController>getController();
                                 controller.setData(data);
                                 main.JavaFxApplication.mainStage.setScene(new Scene(root));
-                                main.JavaFxApplication.mainStage.setTitle("Command Generator -- Aluminium et verre");
+                                main.JavaFxApplication.mainStage.setTitle("Order Generator -- Aluminium et verre");
                                 main.JavaFxApplication.mainStage.show();
 
                             } catch (IOException e) {
@@ -150,8 +150,7 @@ public class ListOrdersController implements Initializable {
 
                             Optional<ButtonType> result = alert.showAndWait();
                             if (result.get() == ButtonType.OK){
-                                // ... user chose OK
-                                // System.out.println("OK");
+
                                 float total = order
                                                 .getArticleOrders()
                                                 .stream()
@@ -204,8 +203,8 @@ public class ListOrdersController implements Initializable {
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
+
                             OrderEntity order = getTableView().getItems().get(getIndex());
-                            //System.out.println("selectedData Annuler : " + order.getId());
                             cancleOrder( order );
 
                         });
